@@ -79,12 +79,12 @@
                         <div class="card-body">
                             <p class="card-title">Add meg az adataidat:</p>
                             <form class="form-inline form-group" action="/reserve-package/<?php echo $params['package']["id"] ?>" method="POST" id="resForm">
-                                <input type="text" name="name" placeholder="Név" autocomplete="off"/>
-                                <input type="text" name="email" placeholder="Email" autocomplete="off"/>
-                                <input type="text" name="phone" placeholder="Telefonszám" autocomplete="off"/>
-                                <input type="number" name="guests" placeholder="Személyek száma" min="1" autocomplete="off"/>
-                                <input type="date" name="checkin" placeholder="Érkezés" min="<?php echo date("Y-m-d"); ?>" autocomplete="off"/>
-                                <input type="date" name="checkout" placeholder="Távozás" min="<?php echo date("Y-m-d"); ?>" autocomplete="off"/>
+                                <input type="text" name="name" placeholder="Név" value="<?= $params['values']['name'] ?? '' ?>" autocomplete="off"/>
+                                <input type="text" name="email" placeholder="Email" value="<?= $params['values']['email'] ?? '' ?>" autocomplete="off"/>
+                                <input type="text" name="phone" placeholder="Telefonszám" value="<?= $params['values']['phone'] ?? '' ?>" autocomplete="off"/>
+                                <input type="number" name="guests" placeholder="Személyek száma" min="1" value="<?= $params['values']['guests'] ?? '' ?>" autocomplete="off"/>
+                                <input type="date" name="checkin" placeholder="Érkezés" min="<?php echo date("Y-m-d"); ?>" value="<?= $params['values']['checkin'] ?? '' ?>" autocomplete="off"/>
+                                <input type="date" name="checkout" placeholder="Távozás" min="<?php echo date("Y-m-d"); ?>" value="<?= $params['values']['checkout'] ?? '' ?>" autocomplete="off"/>
                                 <br>
                                 <br>
                                 <div class="btn-group">

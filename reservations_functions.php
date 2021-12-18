@@ -31,7 +31,7 @@ function reservePackageHandler($urlParams)
         OR empty($_POST["checkin"])
         OR empty($_POST["checkout"])
         OR empty($_POST["phone"])) {
-        header('Location: /csomagok/' . $package['slug'] .'?res=1&info=emptyValue&href=#infoMessage');
+        header('Location: /csomagok/' . $package['slug'] .'?res=1&info=emptyValue&values=' . base64_encode(json_encode($_POST)) . '&href=#infoMessage');
 
         return ;
     }

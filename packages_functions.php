@@ -139,7 +139,8 @@ function packagePageHandler($slug)
             "addImgToPckId" => isset($_GET["addimage"]),
             'isAuthorized' => isLoggedIn(),
             'isAdmin' => isAdmin() ?? "",
-            'info' => $_GET['info'] ?? ""
+            'info' => $_GET['info'] ?? "",
+            'values' => json_decode(base64_decode($_GET['values'] ?? ''), true)
         ]),
         "isAuthorized" => isLoggedIn(),
         "isAdmin" => isAdmin(),
