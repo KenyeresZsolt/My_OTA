@@ -1,0 +1,30 @@
+.ST-text-center
+{
+    text-align: center;
+}
+.ST-table 
+{
+border: 1px solid black;
+border-collapse: collapse;
+margin:auto; 
+}
+.ST-tr 
+{
+border: 1px solid black;
+border-collapse: collapse;
+height: 50px;
+}
+.ST-td
+{
+border: 1px solid black;
+border-collapse: collapse;
+width: 50px;
+}
+.ST-black
+{
+background: black;
+}
+/*table tr:nth-child(odd) td:nth-child(odd),
+table tr:nth-child(even) td:nth-child(even){
+background: black;
+}

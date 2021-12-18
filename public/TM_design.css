@@ -1,0 +1,63 @@
+/*Oldal háttere*/
+.TM_body
+{
+    background-color: #e6e6e6;
+}
+/*Logo*/
+.TM_logo
+{
+    font-family: sans-serif;
+    background-color: #71246B;
+    border:10px solid #F8980D;
+    border-radius: 10px;
+    color:white;
+    font-weight: bold;
+    text-align:center;
+    font-size:3.8vw;
+    margin:auto;
+    width:50%;
+    padding:1%;
+    }
+/*linket tisztít*/
+.TM_clearlink
+{
+    text-decoration: none;
+}
+/*Animáció*/
+@keyframes animacio 
+{
+    from {
+        background-color: #F8980D;
+        border:1px solid #F8980D;
+        border-radius: 10px;
+        width: 50%;
+        margin:2% auto;
+    }
+    to {
+        background-color: #71246B;
+        border:1px solid #71246B;
+        border-radius: 10px;
+        width: 50%;
+        margin:13% auto;
+    }
+    }
+/*Animáció alapbeállítása*/
+.TM_anim
+{
+    animation-name: animacio;
+    animation-duration: 3s;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+    animation-timing-function: ease-in-out;
+}
+/*Animáció kurzor ráhelyezésekor*/
+.TM_anim:hover
+{
+    animation: animacio;
+    animation-duration: 3s;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+    animation-timing-function: ease-in-out;
+    animation-play-state:paused;
+
+}

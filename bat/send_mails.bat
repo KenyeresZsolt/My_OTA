@@ -1,0 +1,1 @@
+php "C:\xampp\htdocs\kodbazis\Projekt_3_travelminit\src\send_mails_handler.php"
