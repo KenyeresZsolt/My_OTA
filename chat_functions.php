@@ -20,7 +20,8 @@ function chatPageHandler()
             'SELECT cm.*, u.name sender
             FROM chat_messages cm
             LEFT JOIN users u ON cm.fromUserId = u.id 
-            WHERE conversationId = ?');
+            WHERE cm.conversationId = ?
+            ORDER BY cm.sentAt DESC');
         $statement->execute([$conversation['id']]);
         $messages = $statement->fetchAll(PDO::FETCH_ASSOC);
         $conversations[$index]['messages'] = $messages;

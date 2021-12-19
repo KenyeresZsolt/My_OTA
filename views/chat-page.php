@@ -46,7 +46,7 @@
                                 </div>
                             </div>
                         </div>
-                            <div class="card-body" style="overflow: auto; height:200px">
+                            <div class="card-body" style="overflow: auto; height:200px; display: flex; flex-direction: column-reverse;">
                                 <?php foreach($conversation['messages'] as $message): ?>
                                     <div>
                                         <small style="font-size:0.8rem" <?= $message['fromUserId'] === $params["userId"] ? "class=" . "float-end" : ""?>><?=$message['sender'] . " (" . date("Y.m.d H:i", $message['sentAt']) . "):" ?></small><br>
