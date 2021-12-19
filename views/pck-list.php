@@ -37,7 +37,7 @@
     <hr>
     <div class="row">
         <?php foreach($params['packages'] as $package): ?>
-            <div class="card border-success ms-auto mb-5 me-auto col-auto" id="<?php echo $package['id']?>" style="max-width:20rem">
+            <div class="card border-success ms-auto mb-5 me-auto col-auto" id="<?php echo $package['id']?>" style="width:20rem">
                     <div class="card-header container-fluid h4">
                         <?php echo $package['name'] . " " . $package['location'];?>
                     </div>

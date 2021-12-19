@@ -1,4 +1,8 @@
 <div class="card container p-5 m-5">
+    <a href="/csomagok">
+        <button class="btn btn-sm btn-outline-success">Vissza</button>
+    </a>
+    <br>
     <div class="card border-success mb-3" id="<?php echo $params['package']['id']?>">
         <h4><div class="card-header"><?php echo $params['package']['name'] . " " . $params['package']['location'];?> </div></h4>
             <div class="card-body container">
