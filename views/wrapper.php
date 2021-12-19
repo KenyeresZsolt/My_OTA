@@ -5,6 +5,7 @@
     <link rel="stylesheet" href="/public/TM_design.css">
     <link rel="stylesheet" href="/public/sakktabla.css">
     <title><?php echo $params['title']?></title>
+    <meta http-equiv="refresh" content="30">
 </head>
 <body class="TM_body">
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-navbar">
