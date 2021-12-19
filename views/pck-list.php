@@ -35,40 +35,34 @@
         <?php endif; ?>
     <?php endif; ?>
     <hr>
-    <?php foreach($params['packages'] as $package): ?>
-        <div class="card border-success mb-3" style="max-width: 22rem;" id="<?php echo $package['id']?>">
-            <h4>
-                <div class="card-header container">
-                    <div class="row">
-                        <div class="col-md-10">
-                            <?php echo $package['name'] . " " . $package['location'];?>
-                        </div>
-                        <div class="col-md-2">
+    <div class="row">
+        <?php foreach($params['packages'] as $package): ?>
+            <div class="card border-success ms-auto mb-5 me-auto col-auto" id="<?php echo $package['id']?>" style="max-width:20rem">
+                    <div class="card-header container-fluid h4">
+                        <?php echo $package['name'] . " " . $package['location'];?>
+                    </div>
+                <div class="card-body container-fluid">
+                    <div class="align-middle">    
+                        <?php if(isset($package['image'])): ?>
+                            <img class="img-fluid img-thumbnail" src="<?php echo $package['image']?>" alt="<?php echo $package['name'] ?>" style="width:318px">
+                        <?php endif; ?>
+                    </div>
+                    <br>
+                    <br>
+                        <a href="/csomagok/<?php echo $package["slug"] ?>">
+                            <button class="btn btn-sm btn-outline-success float-end">Részletek</button>
+                        </a>
                         <?php if($params['isAuthorized'] AND $params['isAdmin'] === "1"): ?>
                             <form action="/delete-package/<?php echo $package['id'] ?>" method="post">
                                 <button type="submit" class="btn btn-sm btn-danger float-end">Törlés</button>
                             </form>
                         <?php endif; ?>
-                        </div>
-                    </div>
                 </div>
-            </h4>
-            <div class="card-body container">
-                <div class="align-middle">    
-                    <?php if(isset($package['image'])): ?>
-                        <img src="<?php echo $package['image']?>" alt="<?php echo $package['name'] ?>" style="width:318px">
-                    <?php endif; ?>
-                </div>
-                <br>
-                <br>
-                        <a href="/csomagok/<?php echo $package["slug"] ?>">
-                            <button class="btn btn-sm btn-outline-success float-end">Részletek</button>
-                        </a>
             </div>
-        </div>
-        <hr>
-    <?php endforeach; ?>
+        <?php endforeach; ?>
+    </div>
     <?php if($params['isAuthorized'] AND $params['isAdmin'] === "1"): ?>
+        <hr>
         <a href="/csomagok?add=1">
             <button class="btn btn-sm btn-primary float-end">Új csomag</button>
         </a>
