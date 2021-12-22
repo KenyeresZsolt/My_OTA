@@ -141,7 +141,8 @@ function subsFormHandler()
             'isRegistration' => isset($_GET['isRegistration'])
         ]),
         'isAuthorized' => false,
-        'title' => "Bejelentkezés"
+        'title' => "Bejelentkezés",
+        'activeLink' => '/bejelentkezes'
     ]);
 }
 

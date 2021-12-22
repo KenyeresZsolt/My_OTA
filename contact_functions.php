@@ -10,7 +10,8 @@ function contactPageHandler()
         'isAuthorized' => isLoggedIn(),
         'isAdmin' => isAdmin(),
         'unreadMessages' => countUnreadMessages(),
-        'title' => "Kapcsolat"
+        'title' => "Kapcsolat",
+        'activeLink' => '/kapcsolat'
     ]);
 }
 
