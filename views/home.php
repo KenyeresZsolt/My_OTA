@@ -1,4 +1,3 @@
-<div style="heigh:1024px">
     <div class="TM_anim">
         <br>
         <br>
@@ -8,4 +7,3 @@
         <br>
         <br>
     </div>
-</div>

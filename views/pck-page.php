@@ -78,20 +78,43 @@
                             Tölts ki minden mezőt!
                         </div>
                     <?php endif; ?>
-                    <div class="card border-primary mb-3" style="max-width: 20rem;">
+                    <div class="card border-primary mb-3">
                         <div class="card-header">Küldd el foglalásod most! </div>
                         <div class="card-body">
                             <p class="card-title">Add meg az adataidat:</p>
-                            <form class="form-inline form-group" action="/reserve-package/<?php echo $params['package']["id"] ?>" method="POST" id="resForm">
-                                <input type="text" name="name" placeholder="Név" value="<?= $params['values']['name'] ?? '' ?>" autocomplete="off"/>
-                                <input type="text" name="email" placeholder="Email" value="<?= $params['values']['email'] ?? '' ?>" autocomplete="off"/>
-                                <input type="text" name="phone" placeholder="Telefonszám" value="<?= $params['values']['phone'] ?? '' ?>" autocomplete="off"/>
-                                <input type="number" name="guests" placeholder="Személyek száma" min="1" value="<?= $params['values']['guests'] ?? '' ?>" autocomplete="off"/>
-                                <input type="date" name="checkin" placeholder="Érkezés" min="<?php echo date("Y-m-d"); ?>" value="<?= $params['values']['checkin'] ?? '' ?>" autocomplete="off"/>
-                                <input type="date" name="checkout" placeholder="Távozás" min="<?php echo date("Y-m-d"); ?>" value="<?= $params['values']['checkout'] ?? '' ?>" autocomplete="off"/>
+                            <form class="form-inline" action="/reserve-package/<?php echo $params['package']["id"] ?>" method="POST" id="resForm">
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div style="max-width: 15rem;">
+                                            <label for="name">Név</label>
+                                            <input class="form-control" type="text" name="name" value="<?= $params['values']['name'] ?? '' ?>" autocomplete="off"/>                                        
+                                        </div>
+                                        <div style="max-width: 15rem;">
+                                            <label for="email">Email</label>
+                                            <input class="form-control" type="text" name="email" value="<?= $params['values']['email'] ?? '' ?>" autocomplete="off"/>                                        
+                                        </div>
+                                        <div style="max-width: 15rem;">
+                                            <label for="phone">Telefonszám</label>
+                                            <input class="form-control" type="text" name="phone" value="<?= $params['values']['phone'] ?? '' ?>" autocomplete="off"/>                                        
+                                        </div>
+                                        <div style="max-width: 15rem;">
+                                            <label for="guests">Személyek száma</label>
+                                            <input class="form-control" type="number" name="guests" min="1" value="<?= $params['values']['guests'] ?? '' ?>" autocomplete="off"/>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div style="max-width: 15rem;">
+                                            <label for="checkin">Érkezés dátuma</label>
+                                            <input class="form-control" type="date" name="checkin" min="<?php echo date("Y-m-d"); ?>" value="<?= $params['values']['checkin'] ?? '' ?>" autocomplete="off"/>
+                                        </div>
+                                        <div style="max-width: 15rem;">
+                                            <label for="checkout">Távozás dátuma</label>
+                                            <input class="form-control" type="date" name="checkout" min="<?php echo date("Y-m-d"); ?>" value="<?= $params['values']['checkout'] ?? '' ?>" autocomplete="off"/>
+                                        </div>
+                                    </div>
                                 <br>
                                 <br>
-                                <div class="btn-group">
+                                <div class="btn-group float-end">
                                     <a href="/csomagok/<?php echo $params['package']["slug"]?>">
                                         <button type="button" class="btn btn-sm btn-outline-primary mr-2">Vissza</button>
                                     </a>

@@ -56,17 +56,15 @@
     </nav>
 
         <?php echo $params['innerTemplate'] ?>
-    <footer class="bg-dark text-lg-start fixed-bottom">
-        <div class="container">
+    <footer class="bg-dark text-lg-start fixed-bottom container-fluid" style="font-size:1vw;">
             <div class="row">
-                <div class="col-md-11 text-center p-3">
+                <div class="text-center p-3" style="max-width: 92%;">
                     @Kenyeres Zsolt
                 </div>
-                <div class="col-md-1 float-end p-3">
-                    <a class="nav-item" href="/kapcsolat" style="color:white">Kapcsolat</a>
+                <div class="float-end p-3" style="max-width: 8%;">
+                    <a class="nav-item" href="/kapcsolat" style="text-decoration: none; color:white">Kapcsolat</a>
                 </div>
             </div>
-        </div>
     </footer>
 </body>
 </html>

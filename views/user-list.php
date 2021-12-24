@@ -1,4 +1,4 @@
-<div class="card container p-5 m-5">
+<div class="card p-5 m-5">
     <?php if($params['isAdded']): ?>
         <div class="alert alert-success">
             Felhasználó sikeresen hozzáadva!

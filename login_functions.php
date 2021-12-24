@@ -1,5 +1,24 @@
 <?php
 
+function isRegistered():bool
+{
+    $pdo = getConnection();
+    $statement = $pdo->prepare(
+        'SELECT u.email
+        FROM users u'
+    );
+    $statement->execute();
+    $users = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+    foreach($users as $user){
+        if($user['email'] === $_POST['email']){
+            return true;
+            exit;
+        }
+    }
+    return false;
+}
+
 function registrationHandler()
 {
     if (empty($_POST["name"]) OR empty($_POST["email"]) OR empty($_POST["password"])) {
@@ -7,6 +26,14 @@ function registrationHandler()
 
         return ;
     }
+
+    //ellenőrzés, hogy regisztrálva van-e már
+
+    if(isRegistered()){
+    header('Location: /bejelentkezes?info=isRegistered');
+    return;
+    }
+    //ellenőrzés vége
 
     $pdo = getConnection();
     $statement = $pdo->prepare(
@@ -40,7 +67,7 @@ function registrationHandler()
         time()
     ]);
 
-    header('Location: ' . getPath($_SERVER['HTTP_REFERER']) . '?info=registrationSuccessfull');
+    header('Location: /bejelentkezes?info=registrationSuccessfull');
 
     sendMailsHandler();
 }
@@ -59,14 +86,14 @@ function loginHandler()
     $user = $statement->fetch(PDO::FETCH_ASSOC);
 
     if(!$user) {
-        header('Location: ' . getPath($_SERVER['HTTP_REFERER']) . '?info=invalidCredentials');
+        header('Location: /bejelentkezes?info=invalidCredentials');
         return;
     }
     
     $isVerified = password_verify($_POST['password'], $user['password']);
 
     if(!$isVerified) {
-        header('Location: ' . getPath($_SERVER['HTTP_REFERER']) . '?info=invalidCredentials');
+        header('Location: /bejelentkezes?info=invalidCredentials');
         return;
     }
 
