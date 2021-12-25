@@ -37,9 +37,9 @@
             </div>
             <?php if($params['isAuthorized']): ?>
                 <div class="btn-group">
-                    <form action="/profil" method="POST">    
+                    <a href="/profil">    
                         <button type="submit" class="btn btn-sm btn-light float-end <?php echo $params['activeLink'] === "/profil" ? "active" : "" ?>">Profil</button>
-                    </form>
+                    </a>
                     <a class="btn btn-sm btn-light float-end <?php echo $params['activeLink'] === "/profil" ? "active" : "" ?>" href="/chat">
                         Chat <?= "(" . $params['unreadMessages'] . ")"?>
                     </a>

@@ -91,7 +91,14 @@ function chessHandler()
 
 function notFoundHandler()
 {
-    echo "Oldal nem található";
+    echo compileTemplate('wrapper.php', [
+        'innerTemplate' => compileTemplate('not-found-page.php'),
+        'activeLink' => '/oldal-nem-talalhato',
+        "isAuthorized" => isLoggedIn(),
+        'isAdmin' => isAdmin(),
+        'title' => "Oldal nem található",
+        'unreadMessages' => countUnreadMessages()
+    ]);
 }
 
 function sendMailsHandler()

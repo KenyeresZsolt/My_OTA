@@ -1,4 +1,4 @@
-<div class="card container p-5 m-5">
+<div class="card p-5 m-5">
     <?php if($params['isAdded']): ?>
         <div class="alert alert-success">
             Csomag létrehozva!
@@ -18,21 +18,9 @@
     
     <?php endif ?>
     <?php if($params['isAuthorized'] AND $params['isAdmin'] === "1"): ?>
-        <?php if($params['newPackage']):?>
-            <form action="/csomagok" method="POST">
-                <input type="text" name="name" placeholder="Szállás" autocomplete="off"/>
-                <input type="text" name="location" placeholder="Település" autocomplete="off"/>
-                <input type="text" name="price" placeholder="Ár (/fő/éj)" autocomplete="off"/>
-                <button type="submit" class="btn btn-sm btn-success">Küldés</button>
-                <a href="/csomagok">
-                    <button type="button" class="btn btn-sm btn-outline-primary mr-2">Mégse</button>
-                </a>
-            </form> 
-        <?php else: ?>
-            <a href="/csomagok?add=1">
-                <button class="btn btn-sm btn-primary float-end">Új csomag</button>
-            </a>
-        <?php endif; ?>
+        <a href="/uj-csomag">
+            <button class="btn btn-sm btn-primary float-end">Új csomag</button>
+        </a>
     <?php endif; ?>
     <hr>
     <div class="row">
@@ -63,7 +51,7 @@
     </div>
     <?php if($params['isAuthorized'] AND $params['isAdmin'] === "1"): ?>
         <hr>
-        <a href="/csomagok?add=1">
+        <a href="/uj-csomag">
             <button class="btn btn-sm btn-primary float-end">Új csomag</button>
         </a>
     <?php endif; ?>

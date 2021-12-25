@@ -2,12 +2,15 @@
 
 function isRegistered():bool
 {
+    $userId = $_SESSION['userId'] ?? '';
+
     $pdo = getConnection();
     $statement = $pdo->prepare(
         'SELECT u.email
-        FROM users u'
+        FROM users u
+        WHERE u.id <> ?'
     );
-    $statement->execute();
+    $statement->execute([$userId]);
     $users = $statement->fetchAll(PDO::FETCH_ASSOC);
 
     foreach($users as $user){
@@ -188,7 +191,8 @@ function profilHandler()
 
     $profilTemplate = compileTemplate("profile-page.php", [
         "user" => $user,
-        'isAdmin' => isAdmin()
+        'isAdmin' => isAdmin(),
+        'info' => $_GET['info'] ?? ""
     ]);
 
     echo compileTemplate('wrapper.php', [
@@ -200,6 +204,56 @@ function profilHandler()
         'unreadMessages' => countUnreadMessages()
     ]);
     
+}
+
+function updateProfilHandler()
+{
+    redirectToLoginIfNotLoggedIn();
+
+    /*echo password_hash($_POST["password"], PASSWORD_DEFAULT);
+    exit;*/
+
+    if(isRegistered()){
+        header('Location: /profil?info=isRegistered#updtProfile');
+        return;
+        }
+    
+    $pdo = getConnection();
+    $statement = $pdo->prepare(
+        'SELECT *
+        FROM users u
+        WHERE u.id = ?');
+    $statement->execute([$_SESSION['userId']]);
+    $user = $statement->fetch(PDO::FETCH_ASSOC);
+
+    if(!empty($_POST['oldPassword']) OR !empty($_POST['newPassword']) OR !empty($_POST['newPassword2'])){
+        $isVerified = password_verify($_POST['oldPassword'], $user['password']);
+        if(!$isVerified) {
+            header('Location: /profil?info=invalidPassword#updtProfile');
+            return;
+        }
+
+        if($_POST['newPassword'] !== $_POST['newPassword2']){
+            header('Location: /profil?info=notIdenticalPassword#updtProfile');
+            return;
+        }
+    }
+
+    $statement = $pdo->prepare(
+        'UPDATE users
+        SET name = ?, phone = ?, email = ?, password = ?, lastModified = ?
+        WHERE id = ?'
+    );
+    $statement->execute([
+        $_POST['name'],
+        $_POST['phone'],
+        $_POST['email'],
+        empty($_POST['newPassword']) ? $user['password'] : password_hash($_POST["newPassword"], PASSWORD_DEFAULT),
+        time(),
+        $_SESSION['userId']
+    ]);
+    header('Location: /profil?info=updateSuccessfull#updtProfile');
+
 }
 
 ?>

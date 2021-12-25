@@ -1,4 +1,4 @@
-<div class="card container p-5 m-5">
+<div class="card p-5 m-5">
     <a href="/csomagok">
         <button class="btn btn-sm btn-outline-success">Vissza</button>
     </a>

@@ -40,19 +40,35 @@ function packageListHandler()
 
 }
 
+function newPackageHandler()
+{
+    redirectToLoginIfNotLoggedIn();
+    echo compileTemplate('wrapper.php', [
+        'innerTemplate' => compileTemplate('new-package-page.php'),
+        'activeLink' => '/csomagok',
+        'isAuthorized' => isLoggedIn(),
+        'isAdmin' => isAdmin() ?? "",
+        'title' => "Új csomag",
+        'unreadMessages' => countUnreadMessages()
+    ]);
+}
+
 function createPackageHandler()
 {
     redirectToLoginIfNotLoggedIn();
     $pdo = getConnection();
     $statement = $pdo->prepare(
-        'INSERT INTO packages (name, location, slug, price)
-        VALUES (?, ?, ?, ?)'
+        'INSERT INTO packages (name, location, slug, price, discount, disc_price, description)
+        VALUES (?, ?, ?, ?, ?, ?, ?)'
     );
     $statement->execute([
         $_POST["name"], 
         $_POST["location"], 
         strtolower(slugify($_POST["name"] . "-" . $_POST["location"])),
-        $_POST["price"]
+        $_POST["price"],
+        $_POST["discount"],
+        empty($_POST["discount"]) ? "" : ($_POST["price"]-(($_POST["price"]*$_POST["discount"])/100)),
+        $_POST['description'],
     ]);
     
     header("Location: /csomagok?added=1");
@@ -102,7 +118,15 @@ function uploadPckImageHandler($urlParams)
         $urlParams['pckId']
     ]);
 
-    $header= "Location: /csomagok?updated=1&href=#" . $_GET['id'];
+    $statement = $pdo->prepare(
+        'SELECT *
+        FROM packages p
+        WHERE p.id = ?'
+    );
+    $statement->execute([$urlParams['pckId']]);
+    $package = $statement->fetch(PDO::FETCH_ASSOC);
+
+    $header= "Location: /csomagok/" . $package['slug'] . "?info=updated";
 
     header($header);
 
