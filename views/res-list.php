@@ -10,9 +10,9 @@
     <?php endif; ?>
     <?php foreach($params['reservations'] as $reservation): ?>
         <div class="accordion" id="accordionExample">
-            <div class="card">               
+            <div class="accordion-item">               
                     <h2 class="accordion-header" id="heading<?php echo $reservation['id']?>">
-                        <button class="accordion-button" type="button" data-toggle="collapse" data-target="#collapse<?php echo $reservation['id']?>" aria-expanded="true" aria-controls="collapse<?php echo $reservation['id']?>">
+                        <button class="accordion-button collapsed" type="button" data-toggle="collapse" data-target="#collapse<?php echo $reservation['id']?>" aria-expanded="true" aria-controls="collapse<?php echo $reservation['id']?>">
                             Név: <?php echo $reservation['name']?>
                         </button>
                     </h2>

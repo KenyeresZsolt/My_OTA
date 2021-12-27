@@ -26,9 +26,9 @@
     <div class="row">
         <?php foreach($params['packages'] as $package): ?>
             <div class="card border-success ms-auto mb-5 me-auto col-auto" id="<?php echo $package['id']?>" style="width:20rem">
-                    <div class="card-header container-fluid h4">
-                        <?php echo $package['name'] . " " . $package['location'];?>
-                    </div>
+                <div class="card-header container-fluid h4">
+                    <?php echo $package['name'] . " " . $package['location'];?>
+                </div>
                 <div class="card-body container-fluid">
                     <div class="align-middle">    
                         <?php if(isset($package['image'])): ?>
@@ -37,14 +37,14 @@
                     </div>
                     <br>
                     <br>
-                        <a href="/csomagok/<?php echo $package["slug"] ?>">
-                            <button class="btn btn-sm btn-outline-success float-end">Részletek</button>
-                        </a>
-                        <?php if($params['isAuthorized'] AND $params['isAdmin'] === "1"): ?>
-                            <form action="/delete-package/<?php echo $package['id'] ?>" method="post">
-                                <button type="submit" class="btn btn-sm btn-danger float-end">Törlés</button>
-                            </form>
-                        <?php endif; ?>
+                    <a href="/csomagok/<?php echo $package["slug"] ?>">
+                        <button class="btn btn-sm btn-outline-success float-end">Részletek</button>
+                    </a>
+                    <?php if($params['isAuthorized'] AND $params['isAdmin'] === "1"): ?>
+                        <form action="/delete-package/<?php echo $package['id'] ?>" method="post">
+                            <button type="submit" class="btn btn-sm btn-danger float-end">Törlés</button>
+                        </form>
+                    <?php endif; ?>
                 </div>
             </div>
         <?php endforeach; ?>

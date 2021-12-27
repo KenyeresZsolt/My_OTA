@@ -13,6 +13,15 @@
                     <label for="location">Település</label>
                 </div>
                 <div class="form-floating mb-3">
+                    <select class="form-control" name="type">
+                        <option value="none" selected disabled hidden></option>
+                        <?php foreach($params['accmTypes'] as $accmType) : ?>
+                            <option value="<?= $accmType['typeCode']?>"><?= $accmType['name']?></option>
+                        <?php endforeach; ?>
+                    </select>
+                    <label for="type">Típus</label>
+                </div>
+                <div class="form-floating mb-3">
                     <input class="form-control" type="text" name="price" id="price" autocomplete="off">
                     <label for="price">Ár</label>
                 </div>

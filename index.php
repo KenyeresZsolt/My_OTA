@@ -103,4 +103,15 @@ $safeHandlerFunction = function_exists($handlerFunction) ? $handlerFunction : "n
 
 $safeHandlerFunction();
 */
+
+
+/*
+
+Kérdések:
+
+- http://localhost:1012/csomagok - itt az Új csomag gomb az egész sorban kattintható, míg a többi gomb nem. Ugyanolyan a formázásuk. Honnan jön a különbség?
+- updateProfilHandler() - hogyha nem akarom a jelszót megváltoztatni (tehát üresen hagyom a mezőt), akkor felülírja a jelszót az üres mezővel. Jól oldottam meg, hogy ne írja felül?
+- hogyan működik a router.php?
+
+*/
 ?>
