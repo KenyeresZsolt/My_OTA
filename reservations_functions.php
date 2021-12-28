@@ -80,7 +80,7 @@ function reservePackageHandler($urlParams)
         time()
     ]);
 
-    header("Location: /csomagok?reserved=1");
+    header("Location: /csomagok/" . $package['slug'] ."?info=reserved");
 
     sendMailsHandler();
 }

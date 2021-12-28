@@ -29,6 +29,7 @@ function packageListHandler()
 
     $packagesListTemplate = compileTemplate("pck-list.php", [
         "packages" => $packages,
+        "accmTypes" => getAccmTypes(),
         "isAdded" => $isAdded,
         "isUpdated" => $isUpdated,
         "isDeleted" => $isDeleted,
