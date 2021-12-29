@@ -13,6 +13,8 @@ function getAccmTypes()
 
 function packageListHandler()
 {
+    //szűrő forrása: https://phpdelusions.net/pdo_examples/dynamical_where
+
     $typeFilter = $_GET['t'] ?? "";
     $minPriceFilter = $_GET['minPrice'] ?? "";
     $maxPriceFilter = $_GET['maxPrice'] ?? "";
