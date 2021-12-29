@@ -1,9 +1,9 @@
 <div class="card p-5 m-5">
-    <?php if($params['isAdded']): ?>
+    <?php if($params['info'] === "added"): ?>
         <div class="alert alert-success">
             Csomag létrehozva!
         </div>
-    <?php elseif($params['isDeleted']): ?>
+    <?php elseif($params['info'] === "deleted"): ?>
         <div class="alert alert-danger">
             Csomag sikeresen törölve!
         </div>
@@ -16,17 +16,17 @@
     <hr>
     <div class="row">
     <div class="col-md-2">
-        <div class="card border-primary" id="filters" style="width:10rem">
+        <div class="card border-primary sticky-top" id="filters" style="width:10rem">
             <div class="card-header container-fluid h4">
                 Szűrők
             </div>
             <div class="card-body container-fluid">
-                <form action="">
+                <form action="/csomagok" method="POST">
                     Típus
                     <?php foreach($params['accmTypes'] as $accmType) : ?>
                         <div class="form-check">
                             <label class="form-check-label" for="type">
-                            <input class="form-check-input" type="checkbox"  name="type" value="<?= $accmType['typeCode']?>">
+                            <input class="form-check-input" type="checkbox"  name="type[]" value="<?= $accmType['typeCode']?>" <?= strpos(" " /*meghekkelt megoldás :) */ . $params['typeFilter'], $accmType['typeCode']) ? "checked" : "" ?>>
                                 <?= $accmType['name']?>
                             </label>
                         </div>
@@ -34,13 +34,13 @@
                     <hr>
                     <div>
                         <label for="price" class="form-label">Ár</label><br>
-                        <input class="form-control-sm" style="max-width: 3.5rem" type="text" name="minPrice" placeholder="min" autocomplete="off">
+                        <input class="form-control-sm" style="max-width: 3.5rem" type="text" name="minPrice" placeholder="min" value="<?= $params['minPriceFilter']?>" autocomplete="off">
                         -
-                        <input class="form-control-sm" style="max-width: 3.5rem" type="text" name="maxPrice" placeholder="max" autocomplete="off">
+                        <input class="form-control-sm" style="max-width: 3.5rem" type="text" name="maxPrice" placeholder="max" value="<?= $params['maxPriceFilter']?>" autocomplete="off">
                     </div>
                     <hr>
                     <label class="form-check-label" for="discount">
-                        <input class="form-check-input" type="checkbox"  name="discount" value="YES">
+                        <input class="form-check-input" type="checkbox"  name="discount" value="YES" <?= !empty($params['discountFilter']) ? "checked" : "" ?>>
                         Kedvezmény biztosított
                     </label>
                     <hr>
@@ -55,8 +55,9 @@
         </div>
     </div> 
     <div class="row col-md-10">
+        <p><?= count($params['packages']) . " találat"?></p>
         <?php foreach($params['packages'] as $package): ?>
-            <div class="card border-success ms-auto mb-5 me-auto col-auto" id="<?php echo $package['id']?>" style="width:20rem">
+            <div class="card border-success mb-5 me-auto col-auto" id="<?php echo $package['id']?>" style="width:20rem">
                 <div class="card-header container-fluid h4">
                     <?php echo $package['name'] . " " . $package['location'];?>
                 </div>

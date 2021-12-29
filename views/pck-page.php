@@ -99,7 +99,7 @@
                                             <button type="button" class="btn btn-sm btn-outline-primary mr-2">Vissza</button>
                                         </a>
 
-                                        <button type="submit" class="btn btn-sm btn-success">Küldés</button>
+                                        <button type="submit" class="btn btn-sm btn-success">Mentés</button>
                                     </div> 
                                 </form>
                             </div>

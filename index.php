@@ -28,6 +28,7 @@ $routes = [
     ['POST', '/hero' , 'createHeroHandler'],
     ['POST', '/delete-hero' , 'deleteHeroHandler'],
     ['POST', '/update-hero' , 'updateHeroHandler'],
+    ['POST', '/csomagok' , 'packageFilterHandler'],
     ['POST', '/add-package' , 'createpackageHandler'],
     ['POST', '/delete-package/{pckId}' , 'deletePackageHandler'],
     ['POST', '/update-package/{pckId}' , 'updatePackageHandler'],
@@ -112,6 +113,7 @@ Kérdések:
 - http://localhost:1012/csomagok - itt az Új csomag gomb az egész sorban kattintható, míg a többi gomb nem. Ugyanolyan a formázásuk. Honnan jön a különbség?
 - updateProfilHandler() - hogyha nem akarom a jelszót megváltoztatni (tehát üresen hagyom a mezőt), akkor felülírja a jelszót az üres mezővel. Jól oldottam meg, hogy ne írja felül?
 - hogyan működik a router.php?
+- pck-lis.php-ban strpos függvény használata a checkboxoknál. Így biztos nem jó, hogy lehetne egyszerűbben?
 
 */
 ?>

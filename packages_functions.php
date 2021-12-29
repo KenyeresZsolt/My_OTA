@@ -13,31 +13,60 @@ function getAccmTypes()
 
 function packageListHandler()
 {
+    $typeFilter = $_GET['t'] ?? "";
+    $minPriceFilter = $_GET['minPrice'] ?? "";
+    $maxPriceFilter = $_GET['maxPrice'] ?? "";
+    $discountFilter = $_GET['disc'] ?? "";
+
+    $types = explode(" ", $typeFilter);
+    $cntTypes = count($types); 
+
+    $cond = [];
+    $param = [];
+
+    if(!empty($typeFilter)){
+        for($i=0; $i<$cntTypes; $i++){
+            $tcond[] = 'p.accm_type = ?';
+            $param[] = $types[$i];
+        }
+        $cond[] = implode(" OR ", $tcond);
+    }
+
+    if(!empty($minPriceFilter)){
+        $cond[] = 'p.price > ?';
+        $param[] = $minPriceFilter;
+    }
+
+    if(!empty($maxPriceFilter)){
+        $cond[] = 'p.price < ?';
+        $param[] = $maxPriceFilter;
+    }
+
+    if(!empty($discountFilter)){
+        $cond[] = 'p.discount > ?';
+        $param[] = "0";
+    }
+
+    $sql = "SELECT * from packages p";
+
+    if($cond)
+    {
+        $sql .= " WHERE " . implode(" AND ", $cond);
+    }
 
     $pdo = getConnection();
-    $statement = $pdo->prepare(
-        'SELECT *
-        from packages');
-    $statement->execute();
+    $statement = $pdo->prepare($sql);
+    $statement->execute($param);
     $packages = $statement->fetchAll(PDO::FETCH_ASSOC);
-
-    $newPackage = isset($_GET["add"]);
-    $isAdded = isset($_GET["added"]);
-    $isUpdated = isset($_GET["updated"]);
-    $isDeleted = isset($_GET["deleted"]);
-    $isReserved = isset($_GET["reserved"]);
 
     $packagesListTemplate = compileTemplate("pck-list.php", [
         "packages" => $packages,
         "accmTypes" => getAccmTypes(),
-        "isAdded" => $isAdded,
-        "isUpdated" => $isUpdated,
-        "isDeleted" => $isDeleted,
-        "isReserved" => $isReserved,
-        "newPackage" => $newPackage,
-        "updatePackageId" => $_GET["edit"] ?? "",
-        "resPackageId" => $_GET["res"] ?? "",
-        "addImgToPckId" => $_GET["addimage"] ?? "",
+        'typeFilter' => $typeFilter,
+        'minPriceFilter' => $minPriceFilter,
+        'maxPriceFilter' => $maxPriceFilter,
+        'discountFilter' => $discountFilter,
+        "info" => $_GET['info'] ?? "",
         'isAuthorized' => isLoggedIn(),
         'isAdmin' => isAdmin() ?? "",
     ]);
@@ -50,6 +79,38 @@ function packageListHandler()
         'unreadMessages' => countUnreadMessages()
     ]);
 
+}
+
+function packageFilterHandler()
+{
+    $types = $_POST['type'] ?? "";
+
+    if(!empty($types)){
+    $typesCount = count($types);
+    $typeUrl = "t=";
+
+    for($i=0; $i < $typesCount; $i++){
+        $typeUrl = $typeUrl . $types[$i] . "+";
+    }
+    $typeUrl = substr_replace($typeUrl,"",-1) . "&";
+    }
+    
+    if(!empty($_POST['minPrice'])){
+        $minPirceUrl = "minPrice=" . $_POST['minPrice'] . "&";
+    }
+
+    if(!empty($_POST['maxPrice'])){
+        $maxPirceUrl = "maxPrice=" . $_POST['maxPrice'] . "&";
+    }
+
+    if(!empty($_POST['discount'])){
+        $discountUrl = "disc=" . $_POST['discount'] . "&";
+    }
+
+    $finalUrl = ($typeUrl ?? "") . ($minPirceUrl ?? "") . ($maxPirceUrl ?? "") . ($discountUrl ?? "");
+    $finalUrl = substr_replace($finalUrl,"",-1);
+
+    header('Location: /csomagok?' . $finalUrl);
 }
 
 function newPackageHandler()
@@ -86,7 +147,7 @@ function createPackageHandler()
         $_POST['description'],
     ]);
     
-    header("Location: /csomagok?added=1");
+    header("Location: /csomagok?info=added");
 }
 
 function updatePackageHandler($urlParams)
@@ -165,7 +226,7 @@ function deletePackageHandler($urlParams)
         WHERE id = ?');
     $statement->execute([$urlParams['pckId']]);
 
-    header("Location: /csomagok?deleted=1");
+    header("Location: /csomagok?info=deleted");
 }
 
 function packagePageHandler($slug)

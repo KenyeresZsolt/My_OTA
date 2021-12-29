@@ -64,7 +64,7 @@
                         <br>
                         <br>
                         <div class="btn-group float-end">
-                            <button type="submit" class="btn btn-sm btn-success">Küldés</button>
+                            <button type="submit" class="btn btn-sm btn-success">Mentés</button>
                         </div>
                     </div>
                 </form>
