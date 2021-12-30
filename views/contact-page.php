@@ -5,7 +5,7 @@
         <h3 class="section-subheading text-muted">Írd meg észrevételedet.</h3>
       </div>
 
-      <?php if ($params['isSuccess']) : ?>
+      <?php if ($params['info'] === "kuldesSikeres") : ?>
         <div class="alert alert-success" role="alert">
           Küldés sikeres!
         </div>

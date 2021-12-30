@@ -18,7 +18,7 @@ function getConnection()
     );
 }
 
-function compileTemplate($filePath, $params = []): string
+function render($filePath, $params = []): string
 {
     ob_start();
     require __DIR__ . "/views/" . $filePath;
@@ -63,13 +63,14 @@ function countUnreadMessages()
 
 function homeHandler()
 {
-    echo compileTemplate('wrapper.php', [
-        'innerTemplate' => compileTemplate('home.php'),
+    echo render('wrapper.php', [
+        'content' => render('home.php'),
         'activeLink' => '/',
         'isAuthorized' => isLoggedIn(),
         'isAdmin' => isAdmin() ?? "",
         'title' => "Főoldal",
-        'unreadMessages' => countUnreadMessages()
+        'unreadMessages' => countUnreadMessages(),
+        'playChatSound' => playChatSound()
     ]);
 }
 
@@ -78,27 +79,38 @@ function chessHandler()
 {
     redirectToLoginIfNotLoggedIn();
 
-    $chessTemplate = compileTemplate('sakktabla.php');
-    echo compileTemplate('wrapper.php', [
-        'innerTemplate' => $chessTemplate,
+    $chessTemplate = render('sakktabla.php');
+    echo render('wrapper.php', [
+        'content' => $chessTemplate,
         'activeLink' => '/sakktabla',
         "isAuthorized" => true,
         'isAdmin' => isAdmin(),
         'title' => "Sakktábla",
-        'unreadMessages' => countUnreadMessages()
+        'unreadMessages' => countUnreadMessages(),
+        'playChatSound' => playChatSound()
     ]);
 }
 
 function notFoundHandler()
 {
-    echo compileTemplate('wrapper.php', [
-        'innerTemplate' => compileTemplate('not-found-page.php'),
+    echo render('wrapper.php', [
+        'content' => render('not-found-page.php'),
         'activeLink' => '/oldal-nem-talalhato',
         "isAuthorized" => isLoggedIn(),
         'isAdmin' => isAdmin(),
         'title' => "Oldal nem található",
-        'unreadMessages' => countUnreadMessages()
+        'unreadMessages' => countUnreadMessages(),
+        'playChatSound' => playChatSound()
     ]);
+}
+
+function insertMailSql()
+{
+    $pdo = getConnection();
+    return $statement = $pdo->prepare("INSERT INTO `email_messages` 
+    (`email`, `subject`, `body`, `status`, `numberOfAttempts`, `createdAt`) 
+    VALUES 
+    (?, ?, ?, ?, ?, ?);");
 }
 
 function sendMailsHandler()
@@ -149,6 +161,16 @@ function sendMailsHandler()
                 $message['id']
             ]);
         }
+    }
+}
+
+function playChatSound()
+{
+    if(countUnreadMessages()>0){
+        return true;
+    }
+    else {
+        return false;
     }
 }
 ?>

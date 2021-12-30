@@ -2,14 +2,14 @@
 
 function contactPageHandler()
 {
-    echo compileTemplate("wrapper.php", [
-        'innerTemplate' => compileTemplate("contact-page.php", [
-            'isSuccess' => isset($_GET['kuldesSikeres']),
+    echo render("wrapper.php", [
+        'content' => render("contact-page.php", [
             'info' => $_GET['info'] ?? ''
         ]),
         'isAuthorized' => isLoggedIn(),
         'isAdmin' => isAdmin(),
         'unreadMessages' => countUnreadMessages(),
+        'playChatSound' => playChatSound(),
         'title' => "Kapcsolat",
         'activeLink' => '/kapcsolat'
     ]);
@@ -25,12 +25,9 @@ function submitMailHandler()
 
     //értesítő email
     $pdo = getConnection();
-    $statement = $pdo->prepare("INSERT INTO `email_messages` 
-    (`email`, `subject`, `body`, `status`, `numberOfAttempts`, `createdAt`) 
-    VALUES 
-    (?, ?, ?, ?, ?, ?);");
+    $statement = insertMailSql();
 
-    $body = compileTemplate("email-template.php", [
+    $body = render("email-template.php", [
         'name' =>  $_POST['name'] ?? '',
         'email' =>  $_POST['email'] ?? '',
         'content' =>  $_POST['content'],
@@ -46,12 +43,9 @@ function submitMailHandler()
     ]);
 
     //megerősítő email
-    $statement = $pdo->prepare("INSERT INTO `email_messages` 
-    (`email`, `subject`, `body`, `status`, `numberOfAttempts`, `createdAt`) 
-    VALUES 
-    (?, ?, ?, ?, ?, ?);");
+    $statement = insertMailSql();
 
-    $body = compileTemplate("confirmation-email-template.php", [
+    $body = render("confirmation-email-template.php", [
         'name' =>  $_POST['name'] ?? '',
         'email' =>  $_POST['email'] ?? '',
         'content' =>  $_POST['content'],
@@ -66,7 +60,7 @@ function submitMailHandler()
         time()
     ]);
 
-    header('Location: /kapcsolat?kuldesSikeres=1#contactForm');
+    header('Location: /kapcsolat?info=kuldesSikeres#contactForm');
 
     sendMailsHandler();
 }

@@ -4,6 +4,8 @@ function chatPageHandler()
 {
     redirectToLoginIfNotLoggedIn();
 
+    $playChatSound = playChatSound();
+
     //lekérem az összes beszélgetést
     $pdo = getConnection();
     $statement = $pdo->prepare(
@@ -58,28 +60,24 @@ function chatPageHandler()
         $_SESSION["userId"]
     ]);
 
-
-    $newMessage = isset($_GET["new"]);
-    $isDeleted = isset($_GET["deleted"]);
-
-    $chatPageTemplate = compileTemplate("chat-page.php", [
-        "conversationsWithMessages" => $conversations,
-        "userId" => $_SESSION["userId"],
-        "newMessage" => $newMessage,
-        "isDeleted" =>$isDeleted,
-        "manageMembers" => $_GET['manage-members'] ?? "",
-        "allUsers" => $allUsers,
-        "convMembers" => $convMembers
-    ]);
-    echo compileTemplate('wrapper.php', [
-        'innerTemplate' => $chatPageTemplate,
+    echo render('wrapper.php', [
+        'content' => render("chat-page.php", [
+            "conversationsWithMessages" => $conversations,
+            "userId" => $_SESSION["userId"],
+            "info" => $_GET['info'] ?? "",
+            "manageMembers" => $_GET['manage-members'] ?? "",
+            "allUsers" => $allUsers,
+            "convMembers" => $convMembers
+        ]),
         'activeLink' => '/chat',
         "isAuthorized" => true,
         'isAdmin' => isAdmin(),
         'title' => "Chat",
-        'unreadMessages' => countUnreadMessages()
+        'unreadMessages' => countUnreadMessages(),
+        'playChatSound' => $playChatSound
     ]);
-
+    
+    //hiba: ha több felhasználó van egy beszélgetésben, akkor ha az egyik elolvassa az üzenetet, akkor a többinél is olvasottként jelenik meg.
 }
 
 function newConversationHandler()
@@ -122,7 +120,7 @@ function newConversationHandler()
         $startUser
     ]);
 
-    header('Location: /chat?conversation-started');
+    header('Location: /chat?info=started#' . $newConvId);
 
 }
 
@@ -131,7 +129,6 @@ function sendMessageHandler()
     redirectToLoginIfNotLoggedIn();
 
     $convId = $_GET['convId'];
-    $message = $_POST['message'];
 
     $pdo = getConnection();
     $statement = $pdo->prepare(
@@ -141,7 +138,7 @@ function sendMessageHandler()
         $convId,
         $_SESSION['userId'],
         time(),
-        $message
+        $_POST['message']
     ]);
 
     header('Location: /chat?href=#' . $convId);
@@ -152,7 +149,6 @@ function addMemberHandler()
     redirectToLoginIfNotLoggedIn();
 
     $convId = $_GET['convId'];
-    $member = $_POST['member'];
 
     $pdo = getConnection();
     $statement = $pdo->prepare(
@@ -160,10 +156,10 @@ function addMemberHandler()
             VALUES (?, ?)');
     $statement->execute([
         $convId,
-        $member
+        $_POST['member']
     ]);
 
-    header ('Location: /chat?manage-members=' . $convId);
+    header ('Location: /chat?manage-members=' . $convId . '#' . $convId);
 }
 
 function deleteMemberHandler()
@@ -171,7 +167,6 @@ function deleteMemberHandler()
     redirectToLoginIfNotLoggedIn();
 
     $convId = $_GET['convId'];
-    $convMember = $_GET['convMember'];
 
     $pdo = getConnection();
     $statement = $pdo->prepare(
@@ -180,10 +175,10 @@ function deleteMemberHandler()
     );
     $statement->execute([
         $convId,
-        $convMember
+        $_GET['convMember']
     ]);
 
-    header('Location: /chat?manage-members=' . $convId);
+    header('Location: /chat?manage-members=' . $convId . '#' . $convId);
 }
 
 function deleteConversationHandler()
@@ -208,7 +203,7 @@ function deleteConversationHandler()
         WHERE id = ?');
     $statement->execute([$deleteConvId]);
 
-    header('Location: /chat?deleted=1');
+    header('Location: /chat?info=deleted');
     
 }
 

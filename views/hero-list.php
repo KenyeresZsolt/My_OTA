@@ -1,13 +1,13 @@
 <div class="card container p-5 m-5">
-    <?php if($params['isAdded']): ?>
+    <?php if($params['info'] === "added"): ?>
         <div class="alert alert-success">
             Hero sikeresen hozzáadva!
         </div>
-    <?php elseif($params['isUpdated']): ?>
+    <?php elseif($params['info'] === "updated"): ?>
         <div class="alert alert-success">
             Hero sikeresen frissítve!
         </div>
-    <?php elseif($params['isDeleted']): ?>
+    <?php elseif($params['info'] === "deleted"): ?>
         <div class="alert alert-danger">
             Hero sikeresen törölve!
         </div>
@@ -40,7 +40,7 @@
         </thead>
         <tbody>
             <?php foreach ($params['heroes'] as $hero) : ?>
-                <tr>
+                <tr id="<?php echo $hero["id"]?>">
                 <td><?php echo $hero["name"]?></td>
                 <td><?php echo $hero["email"]?></td>
                 <td><?php echo $hero["department"]?></td>
@@ -68,7 +68,7 @@
                 <?php else: ?>
                 <td>
                     <div class="btn-group">
-                        <a href="/hero?edit=<?php echo $hero["id"] ?>">
+                        <a href="/hero?edit=<?php echo $hero["id"] ?>#<?php echo $hero["id"] ?>">
                             <button class="btn btn-sm btn-warning">Szerkesztés</button>
                         </a>
                     

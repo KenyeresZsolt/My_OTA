@@ -51,12 +51,9 @@ function registrationHandler()
     ]);
 
     //email
-    $statement = $pdo->prepare("INSERT INTO `email_messages` 
-    (`email`, `subject`, `body`, `status`, `numberOfAttempts`, `createdAt`) 
-    VALUES 
-    (?, ?, ?, ?, ?, ?);");
+    $statement = insertMailSql();
 
-    $body = compileTemplate("registration-email-template.php", [
+    $body = render("registration-email-template.php", [
         'name' =>  $_POST['name'] ?? '',
         'email' =>  $_POST['email'] ?? ''
     ]);
@@ -163,23 +160,8 @@ function logoutHandler()
     header('Location: ' . getPath($_SERVER['HTTP_REFERER']));
 }
 
-function subsFormHandler()
+function getUserById()
 {
-    echo compileTemplate("wrapper.php",[
-        'innerTemplate' => compileTemplate('subscriptionForm.php',[
-            'info' => $_GET['info'] ?? '',
-            'isRegistration' => isset($_GET['isRegistration'])
-        ]),
-        'isAuthorized' => false,
-        'title' => "Bejelentkezés",
-        'activeLink' => '/bejelentkezes'
-    ]);
-}
-
-function profilHandler()
-{
-    redirectToLoginIfNotLoggedIn();
-    
     $pdo = getConnection();
     $statement = $pdo->prepare(
         'SELECT *
@@ -187,44 +169,57 @@ function profilHandler()
         WHERE u.id = ?'
     );
     $statement->execute([$_SESSION['userId']]);
-    $user = $statement->fetch(PDO::FETCH_ASSOC);
+    return $user = $statement->fetch(PDO::FETCH_ASSOC);
+}
 
-    $profilTemplate = compileTemplate("profile-page.php", [
-        "user" => $user,
-        'isAdmin' => isAdmin(),
-        'info' => $_GET['info'] ?? ""
+function subsFormHandler()
+{
+    if(isLoggedIn()){
+        header('Location: /');
+        return;
+    }
+
+    echo render("wrapper.php",[
+        'content' => render('subscriptionForm.php',[
+            'info' => $_GET['info'] ?? '',
+            'isRegistration' => isset($_GET['isRegistration'])
+        ]),
+        'isAuthorized' => false,
+        'title' => "Bejelentkezés",
+        'activeLink' => '/bejelentkezes',
+        'playChatSound' => false
     ]);
+}
 
-    echo compileTemplate('wrapper.php', [
-        'innerTemplate' => $profilTemplate,
+function profilHandler()
+{
+    redirectToLoginIfNotLoggedIn();
+    
+    echo render('wrapper.php', [
+        'content' => render("profile-page.php", [
+            "user" => getUserById(),
+            'isAdmin' => isAdmin(),
+            'info' => $_GET['info'] ?? ""
+        ]),
         'activeLink' => '/profil',
         "isAuthorized" => true,
         'isAdmin' => isAdmin(),
         'title' => "Profil",
-        'unreadMessages' => countUnreadMessages()
-    ]);
-    
+        'unreadMessages' => countUnreadMessages(),
+        'playChatSound' => playChatSound()
+    ]);    
 }
 
 function updateProfilHandler()
 {
     redirectToLoginIfNotLoggedIn();
 
-    /*echo password_hash($_POST["password"], PASSWORD_DEFAULT);
-    exit;*/
-
     if(isRegistered()){
         header('Location: /profil?info=isRegistered#updtProfile');
         return;
         }
     
-    $pdo = getConnection();
-    $statement = $pdo->prepare(
-        'SELECT *
-        FROM users u
-        WHERE u.id = ?');
-    $statement->execute([$_SESSION['userId']]);
-    $user = $statement->fetch(PDO::FETCH_ASSOC);
+    $user = getUserById();
 
     if(!empty($_POST['oldPassword']) OR !empty($_POST['newPassword']) OR !empty($_POST['newPassword2'])){
         $isVerified = password_verify($_POST['oldPassword'], $user['password']);
@@ -239,6 +234,7 @@ function updateProfilHandler()
         }
     }
 
+    $pdo = getConnection();
     $statement = $pdo->prepare(
         'UPDATE users
         SET name = ?, phone = ?, email = ?, password = ?, lastModified = ?

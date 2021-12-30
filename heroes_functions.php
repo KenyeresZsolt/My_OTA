@@ -23,42 +23,41 @@ function heroListHandler()
     $statement->execute();
     $departments = $statement->fetchAll(PDO::FETCH_ASSOC);
 
-    $isAdded = isset($_GET["added"]);
-    $isUpdated =isset($_GET["updated"]);
-    $isDeleted = isset($_GET["deleted"]);
-
-    $heroListTemplate = compileTemplate("hero-list.php", [
-        "heroes" => $heroes,
-        "departments" => $departments,
-        "isAdded" => $isAdded,
-        "isUpdated" => $isUpdated,
-        "isDeleted" => $isDeleted,
-        "editedHeroId" => $_GET["edit"] ?? ""
-    ]);
-    echo compileTemplate('wrapper.php', [
-        'innerTemplate' => $heroListTemplate,
+    echo render('wrapper.php', [
+        'content' => render("hero-list.php", [
+            "heroes" => $heroes,
+            "departments" => $departments,
+            "info" => $_GET["info"] ?? "",
+            "editedHeroId" => $_GET["edit"] ?? ""
+        ]),
         'activeLink' => '/hero',
-        "isAuthorized" => true,
+        "isAuthorized" => isLoggedIn(),
         'isAdmin' => isAdmin(),
         'title' => "Kollégák",
-        'unreadMessages' => countUnreadMessages()
+        'unreadMessages' => countUnreadMessages(),
+        'playChatSound' => playChatSound()
     ]);
 
 }
 
-function createHeroHandler()
+function getDepartmentByName()
 {
-    redirectToLoginIfNotLoggedIn();
     $pdo = getConnection();
-    
     $statement = $pdo->prepare(
         'SELECT *
         FROM departments d
         WHERE d.name = ?'
     );
     $statement->execute([$_POST["department"]]);
-    $department = $statement->fetch(PDO::FETCH_ASSOC);
- 
+    return $department = $statement->fetch(PDO::FETCH_ASSOC);
+}
+
+function createHeroHandler()
+{
+    redirectToLoginIfNotLoggedIn();
+        
+    $department = getDepartmentByName();
+    $pdo = getConnection();
     $statement = $pdo->prepare(
         'INSERT INTO heroes (name, email, departmentId)
         VALUES (?, ?, ?)'
@@ -69,7 +68,7 @@ function createHeroHandler()
         $department["id"]
     ]);
 
-    header("Location: /hero?added=1");
+    header("Location: /hero?info=added");
 }
 
 function updateHeroHandler()
@@ -77,16 +76,9 @@ function updateHeroHandler()
     redirectToLoginIfNotLoggedIn();
     $updateHeroId = $_GET['id'] ?? "";
 
+    $department = getDepartmentByName();
+
     $pdo = getConnection();
-
-    $statement = $pdo->prepare(
-        'SELECT *
-        FROM departments d
-        WHERE d.name = ?'
-    );
-    $statement->execute([$_POST["department"]]);
-    $department = $statement->fetch(PDO::FETCH_ASSOC);
-
     $statement = $pdo->prepare(
         'UPDATE heroes h
         SET h.name = ? , h.email = ?, h.departmentId = ?
@@ -99,7 +91,7 @@ function updateHeroHandler()
         $updateHeroId
     ]);
 
-    header("Location: /hero?updated=1");
+    header("Location: /hero?info=updated");
 }
 
 function deleteHeroHandler()
@@ -110,10 +102,10 @@ function deleteHeroHandler()
     $statement = $pdo->prepare(
         'DELETE FROM heroes     
         WHERE id = ?'
-    ); // itt miért nem lehet a táblának aliast adni? Azzal nem fut le.
+    );
     $statement->execute([$_GET['id']]);
     
-    header("Location: /hero?deleted=1");
+    header("Location: /hero?info=deleted");
 }
 
 ?>

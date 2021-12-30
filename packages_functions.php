@@ -61,24 +61,24 @@ function packageListHandler()
     $statement->execute($param);
     $packages = $statement->fetchAll(PDO::FETCH_ASSOC);
 
-    $packagesListTemplate = compileTemplate("pck-list.php", [
-        "packages" => $packages,
-        "accmTypes" => getAccmTypes(),
-        'typeFilter' => $typeFilter,
-        'minPriceFilter' => $minPriceFilter,
-        'maxPriceFilter' => $maxPriceFilter,
-        'discountFilter' => $discountFilter,
-        "info" => $_GET['info'] ?? "",
-        'isAuthorized' => isLoggedIn(),
-        'isAdmin' => isAdmin() ?? "",
-    ]);
-    echo compileTemplate('wrapper.php', [
-        'innerTemplate' => $packagesListTemplate,
+    echo render('wrapper.php', [
+        'content' => render("pck-list.php", [
+            "packages" => $packages,
+            "accmTypes" => getAccmTypes(),
+            'typeFilter' => $typeFilter,
+            'minPriceFilter' => $minPriceFilter,
+            'maxPriceFilter' => $maxPriceFilter,
+            'discountFilter' => $discountFilter,
+            "info" => $_GET['info'] ?? "",
+            'isAuthorized' => isLoggedIn(),
+            'isAdmin' => isAdmin() ?? "",
+        ]),
         'activeLink' => '/csomagok',
         'isAuthorized' => isLoggedIn(),
         'isAdmin' => isAdmin() ?? "",
         'title' => "Csomagok",
-        'unreadMessages' => countUnreadMessages()
+        'unreadMessages' => countUnreadMessages(),
+        'playChatSound' => playChatSound()
     ]);
 
 }
@@ -118,15 +118,16 @@ function packageFilterHandler()
 function newPackageHandler()
 {
     redirectToLoginIfNotLoggedIn();
-    echo compileTemplate('wrapper.php', [
-        'innerTemplate' => compileTemplate('new-package-page.php', [
+    echo render('wrapper.php', [
+        'content' => render('new-package-page.php', [
             "accmTypes" => getAccmTypes(),
         ]),
         'activeLink' => '/csomagok',
         'isAuthorized' => isLoggedIn(),
         'isAdmin' => isAdmin() ?? "",
         'title' => "Új csomag",
-        'unreadMessages' => countUnreadMessages()
+        'unreadMessages' => countUnreadMessages(),
+        'playChatSound' => playChatSound()
     ]);
 }
 
@@ -213,9 +214,7 @@ function uploadPckImageHandler($urlParams)
     $statement->execute([$urlParams['pckId']]);
     $package = $statement->fetch(PDO::FETCH_ASSOC);
 
-    $header= "Location: /csomagok/" . $package['slug'] . "?info=updated";
-
-    header($header);
+    header("Location: /csomagok/" . $package['slug'] . "?info=updated");
 
 }
 
@@ -243,8 +242,8 @@ function packagePageHandler($slug)
     $statement->execute([$slug['pckSlug']]);
     $package = $statement->fetch(PDO::FETCH_ASSOC);
 
-    echo compileTemplate("wrapper.php", [
-        "innerTemplate" => compileTemplate("pck-page.php", [
+    echo render("wrapper.php", [
+        "content" => render("pck-page.php", [
             "package" => $package,
             "accmTypes" => getAccmTypes(),
             "updatePackageId" => isset($_GET["edit"]),
@@ -259,7 +258,8 @@ function packagePageHandler($slug)
         "isAdmin" => isAdmin(),
         'activeLink' => '/csomagok',
         'title' => $package['name'] . " " . $package['location'],
-        'unreadMessages' => countUnreadMessages()
+        'unreadMessages' => countUnreadMessages(),
+        'playChatSound' => playChatSound()
     ]);
 
 }

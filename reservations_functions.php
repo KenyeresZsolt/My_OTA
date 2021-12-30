@@ -55,12 +55,9 @@ function reservePackageHandler($urlParams)
     ]);
 
     //email
-    $statement = $pdo->prepare("INSERT INTO `email_messages` 
-    (`email`, `subject`, `body`, `status`, `numberOfAttempts`, `createdAt`) 
-    VALUES 
-    (?, ?, ?, ?, ?, ?)");
+    $statement = insertMailSql();
 
-    $body = compileTemplate("res-confirm-email-template.php", [
+    $body = render("res-confirm-email-template.php", [
         'name' =>  $_POST['name'] ?? '',
         'email' =>  $_POST['email'] ?? '',
         'guests' => $_POST['guests'],
@@ -89,9 +86,6 @@ function reservationListHandler()
 {
     redirectToLoginIfNotLoggedIn();
 
-    $isUpdated = isset($_GET["updated"]);
-    $isDeleted = isset($_GET["deleted"]);
-
     $pdo = getConnection();
     $statement = $pdo->prepare(
         'SELECT *
@@ -107,27 +101,26 @@ function reservationListHandler()
     $statement->execute();
     $packages = $statement->fetchAll(PDO::FETCH_ASSOC);
 
-    $heroListTemplate = compileTemplate("res-list.php", [
+    $heroListTemplate = render("res-list.php", [
         "reservations" => $reservations,
         "packages" => $packages,
         "updateReservationId" => $_GET["edit"] ?? "",
-        "isUpdated" => $isUpdated,
-        "isDeleted" => $isDeleted,
+        "info" => $_GET['info'] ?? "",
     ]);
-    echo compileTemplate('wrapper.php', [
-        'innerTemplate' => $heroListTemplate,
+    echo render('wrapper.php', [
+        'content' => $heroListTemplate,
         'activeLink' => '/foglalasok',
         'isAuthorized' => true,
         'isAdmin' => isAdmin(),
         'title' => "Foglalások",
-        'unreadMessages' => countUnreadMessages()
+        'unreadMessages' => countUnreadMessages(),
+        'playChatSound' => playChatSound()
     ]);
 }
 
 function updateReservationHandler()
 {
     redirectToLoginIfNotLoggedIn();
-    $updateReservationId = $_GET['id'];
 
     $pdo = getConnection();
     $statement = $pdo->prepare(
@@ -144,17 +137,16 @@ function updateReservationHandler()
         $_POST["checkout"],
         dateDifference($_POST["checkout"], $_POST["checkin"]),
         $_POST["price"],
-        $updateReservationId
+        $_GET['id']
     ]);
 
-    header("Location: /foglalasok?updated=1");
+    header("Location: /foglalasok?info=updated");
 
 }
 
 function cancelReservationHandler()
 {
     redirectToLoginIfNotLoggedIn();
-    $canceledReservationId= $_GET['id'];
     
     $pdo = getConnection();
     $statement = $pdo->prepare(
@@ -162,28 +154,23 @@ function cancelReservationHandler()
         SET status = "CANCELED"
         WHERE id= ?'
     );
-    $statement->execute([
-        $canceledReservationId
-    ]);
+    $statement->execute([$_GET['id']]);
 
-    header("Location: /foglalasok?canceled=1");
+    header("Location: /foglalasok?info=canceled");
 }
 
 function deleteReservationHandler()
 {
     redirectToLoginIfNotLoggedIn();
-    $deletedReservationId= $_GET['id'];
 
     $pdo = getConnection();
     $statement = $pdo->prepare(
         'DELETE FROM reservations
         WHERE id = ?'
     );
-    $statement->execute([
-        $deletedReservationId
-    ]);
+    $statement->execute([$_GET['id']]);
 
-    header("Location: /foglalasok?deleted=1");
+    header("Location: /foglalasok?info=deleted");
 }
 
 ?>

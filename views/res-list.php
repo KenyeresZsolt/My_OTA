@@ -1,9 +1,9 @@
 <div class="card container p-5 m-5">
-    <?php if($params['isDeleted']): ?>
+    <?php if($params['info'] === "deleted"): ?>
         <div class="alert alert-success">
             Foglalás törölve!
         </div>
-    <?php elseif($params['isUpdated']): ?>
+    <?php elseif($params['info'] === "updated"): ?>
         <div class="alert alert-success">
             Foglalás frissítve!
         </div>

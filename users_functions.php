@@ -16,20 +16,21 @@ function userListHandler()
     $isUpdated =isset($_GET["updated"]);
     $isDeleted = isset($_GET["deleted"]);
 
-    $userListTemplate = compileTemplate("user-list.php", [
+    $userListTemplate = render("user-list.php", [
         "users" => $users,
         "isAdded" => $isAdded,
         "isUpdated" => $isUpdated,
         "isDeleted" => $isDeleted,
         "editedUserId" => $_GET["edit"] ?? ""
     ]);
-    echo compileTemplate('wrapper.php', [
-        'innerTemplate' => $userListTemplate,
+    echo render('wrapper.php', [
+        'content' => $userListTemplate,
         'activeLink' => '/user',
         "isAuthorized" => true,
         'isAdmin' => isAdmin(),
         'title' => "Felhasználók",
-        'unreadMessages' => countUnreadMessages()
+        'unreadMessages' => countUnreadMessages(),
+        'playChatSound' => playChatSound()
     ]);
 
 }

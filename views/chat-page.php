@@ -1,10 +1,10 @@
 <div class="card container p-5 m-5">
-    <?php if($params['isDeleted']): ?>
+    <?php if($params['info'] === "deleted"): ?>
         <div class="alert alert-danger">
             Beszélgetés törölve!
         </div>
     <?php endif ?>
-    <?php if($params["newMessage"]): ?>
+    <?php if($params['info'] === "new"): ?>
         <div class="card border-primary mb-3" style="max-width: 20rem;">
             <div class="card-header">Indíts új csevegést</div>
                 <div class="card-body">
@@ -19,7 +19,7 @@
                 </div>
         </div>
     <?php else: ?>
-        <a href="/chat?new=1">
+        <a href="/chat?info=new">
             <button class="btn btn-sm btn-primary float-end">Új üzenet</button>
         </a>
     <?php endif; ?>

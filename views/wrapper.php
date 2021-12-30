@@ -12,6 +12,11 @@
     <?php endif; ?>
 </head>
 <body class="TM_body">
+    <?php if($params['playChatSound']): ?>
+    <audio controls autoplay style="display:none;">
+        <source src="public/audio/chat.wav" type="audio/wav">
+    </audio>
+    <?php endif ?>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-navbar">
         <div class="container">
             <div class="navbar-nav">
@@ -57,7 +62,7 @@
         </div>
     </nav>
 
-        <?php echo $params['innerTemplate'] ?>
+        <?php echo $params['content'] ?>
     <footer class="bg-dark text-lg-start fixed-bottom container-fluid" style="font-size:1vw;">
             <div class="row">
                 <div class="text-center p-3" style="max-width: 92%;">
