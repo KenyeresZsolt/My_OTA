@@ -49,10 +49,10 @@
                             <div class="card-body" style="overflow: auto; height:200px; display: flex; flex-direction: column-reverse;">
                                 <?php foreach($conversation['messages'] as $message): ?>
                                     <div>
-                                        <small style="font-size:0.8rem" <?= $message['fromUserId'] === $params["userId"] ? "class=" . "float-end" : ""?>><?=$message['sender'] . " (" . date("Y.m.d H:i", $message['sentAt']) . "):" ?></small><br>
-                                        <span class="badge rounded-pill bg-<?= $message['fromUserId'] === $params["userId"] ? "info float-end" : "secondary" ?>"><?= $message['message'] ?></span><br>
-                                        <?php if($message['fromUserId'] === $params["userId"] AND $message['seen'] === "1"):?>
-                                            <i><small class="float-end" style="font-size:0.6rem">Látta: <?= date("Y.m.d H:i", $message['seenAt']) ?></small></i>
+                                        <small style="font-size:0.8rem" <?= $message['from_user_id'] === $params["userId"] ? "class=" . "float-end" : ""?>><?=$message['sender'] . " (" . date("Y.m.d H:i", $message['sent_at']) . "):" ?></small><br>
+                                        <span class="badge rounded-pill bg-<?= $message['from_user_id'] === $params["userId"] ? "info float-end" : "secondary" ?>"><?= $message['message'] ?></span><br>
+                                        <?php if($message['from_user_id'] === $params["userId"] AND $message['seen'] === "1"):?>
+                                            <i><small class="float-end" style="font-size:0.6rem">Látta: <?= date("Y.m.d H:i", $message['seen_at']) ?></small></i>
                                         <?php endif;?>
                                     </div>
                                     <br>
@@ -96,9 +96,9 @@
                             </form>
                             <hr>
                             <?php foreach($params['convMembers'] as $convMember): ?>
-                                <?php if($convMember['conversationID'] === $conversation['id']): ?>
+                                <?php if($convMember['conversation_id'] === $conversation['id']): ?>
                                     <?= $convMember['name']?>
-                                    <form action="/delete-member?convId=<?= $conversation['id'] . "&convMember=" . $convMember['member_userID'] ?>" method="POST">
+                                    <form action="/delete-member?convId=<?= $conversation['id'] . "&convMember=" . $convMember['member_user_id'] ?>" method="POST">
                                         <button type="submit" class="btn btn-danger rounded-pill btn-sm">Eltávolítás</button>
                                     </form>
                                     <br>

@@ -72,7 +72,7 @@
                                                 <?php foreach($params['accmTypes'] as $accmType) : ?>
                                                     <div class="form-check">
                                                     <label class="form-check-label" for="type">
-                                                        <input class="form-check-input" type="radio"  name="type" value="<?= $accmType['typeCode']?>" <?= $accmType['typeCode'] === $params['package']["accm_type"] ? "checked" : "" ?>>
+                                                        <input class="form-check-input" type="radio"  name="type" value="<?= $accmType['type_code']?>" <?= $accmType['type_code'] === $params['package']["accm_type"] ? "checked" : "" ?>>
                                                         <?= $accmType['name']?>
                                                     </label>
                                                 </div>

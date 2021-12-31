@@ -9,7 +9,7 @@ function heroListHandler()
     $statement = $pdo->prepare(
         'SELECT h.*, d.name department
         FROM heroes h
-        left join departments d on h.departmentId = d.id');
+        left join departments d on h.department_id = d.id');
     $statement->execute();
     $heroes = $statement->fetchAll(PDO::FETCH_ASSOC);
 
@@ -59,7 +59,7 @@ function createHeroHandler()
     $department = getDepartmentByName();
     $pdo = getConnection();
     $statement = $pdo->prepare(
-        'INSERT INTO heroes (name, email, departmentId)
+        'INSERT INTO heroes (name, email, department_id)
         VALUES (?, ?, ?)'
     );
     $statement->execute([
@@ -81,7 +81,7 @@ function updateHeroHandler()
     $pdo = getConnection();
     $statement = $pdo->prepare(
         'UPDATE heroes h
-        SET h.name = ? , h.email = ?, h.departmentId = ?
+        SET h.name = ? , h.email = ?, h.department_id = ?
         WHERE h.id = ?'
     );
     $statement->execute([

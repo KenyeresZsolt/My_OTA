@@ -9,10 +9,10 @@ function chatPageHandler()
     //lekérem az összes beszélgetést
     $pdo = getConnection();
     $statement = $pdo->prepare(
-        'SELECT c.*, cu.member_userID 
+        'SELECT c.*, cu.member_user_id 
         FROM conversations c
-        LEFT JOIN conversation_users cu ON c.id = cu.conversationID
-        WHERE cu.member_userID = ?');
+        LEFT JOIN conversation_users cu ON c.id = cu.conversation_id
+        WHERE cu.member_user_id = ?');
     $statement->execute([$_SESSION["userId"]]);
     $conversations = $statement->fetchAll(PDO::FETCH_ASSOC);
     
@@ -21,9 +21,9 @@ function chatPageHandler()
         $statement = $pdo->prepare(
             'SELECT cm.*, u.name sender
             FROM chat_messages cm
-            LEFT JOIN users u ON cm.fromUserId = u.id 
-            WHERE cm.conversationId = ?
-            ORDER BY cm.sentAt DESC');
+            LEFT JOIN users u ON cm.from_user_id = u.id 
+            WHERE cm.conversation_id = ?
+            ORDER BY cm.sent_at DESC');
         $statement->execute([$conversation['id']]);
         $messages = $statement->fetchAll(PDO::FETCH_ASSOC);
         $conversations[$index]['messages'] = $messages;
@@ -42,7 +42,7 @@ function chatPageHandler()
     $statement = $pdo->prepare(
         'SELECT cu.*, u.name
         FROM `conversation_users` cu
-        LEFT JOIN users u on cu.member_userID = u.id'
+        LEFT JOIN users u on cu.member_user_id = u.id'
     );
     $statement->execute();
     $convMembers = $statement->fetchAll(PDO::FETCH_ASSOC);
@@ -50,9 +50,9 @@ function chatPageHandler()
     //látta beállítása
     $statement = $pdo->prepare(
         'UPDATE chat_messages cm
-        LEFT JOIN conversation_users cu on cm.conversationId = cu.conversationID
-        SET cm.seen = "1", cm.seenAt = ?
-        WHERE cm.seen = "0" AND cu.member_userID = ? AND cm.fromUserId <> ?'
+        LEFT JOIN conversation_users cu on cm.conversation_id = cu.conversation_id
+        SET cm.seen = "1", cm.seen_at = ?
+        WHERE cm.seen = "0" AND cu.member_user_id = ? AND cm.from_user_id <> ?'
     );
     $statement->execute([
         time(),
@@ -89,7 +89,7 @@ function newConversationHandler()
 
     $pdo = getConnection();
     $statement = $pdo->prepare(
-        'INSERT INTO conversations (name, started_by_userID, startedAt)
+        'INSERT INTO conversations (name, started_by_user_id, started_at)
         VALUES (?, ?, ?)'
     );
     $statement->execute([
@@ -101,7 +101,7 @@ function newConversationHandler()
     $statement = $pdo->prepare(
         'SELECT *
         FROM conversations c
-        WHERE c.started_by_userID = ? AND c.startedAt = ?'
+        WHERE c.started_by_user_id = ? AND c.started_at = ?'
     );
     $statement->execute([
         $startUser,
@@ -112,7 +112,7 @@ function newConversationHandler()
     $newConvId = $startedConv[0]['id'];
 
     $statement = $pdo->prepare(
-        'INSERT INTO conversation_users (conversationID, member_userID)
+        'INSERT INTO conversation_users (conversation_id, member_user_id)
         VALUES (?, ?)'
     );
     $statement->execute([
@@ -132,7 +132,7 @@ function sendMessageHandler()
 
     $pdo = getConnection();
     $statement = $pdo->prepare(
-        'INSERT INTO chat_messages (conversationId, fromUserId, sentAt, message)
+        'INSERT INTO chat_messages (conversation_id, from_user_id, sent_at, message)
         VALUES (?, ?, ?, ?)');
     $statement->execute([
         $convId,
@@ -152,7 +152,7 @@ function addMemberHandler()
 
     $pdo = getConnection();
     $statement = $pdo->prepare(
-        'INSERT INTO conversation_users (conversationID, member_userID)
+        'INSERT INTO conversation_users (conversation_id, member_user_id)
             VALUES (?, ?)');
     $statement->execute([
         $convId,
@@ -171,7 +171,7 @@ function deleteMemberHandler()
     $pdo = getConnection();
     $statement = $pdo->prepare(
         'DELETE FROM conversation_users
-        WHERE (conversationID = ? AND member_userID = ?)'
+        WHERE (conversation_id = ? AND member_user_id = ?)'
     );
     $statement->execute([
         $convId,
@@ -190,12 +190,12 @@ function deleteConversationHandler()
     $pdo = getConnection();
     $statement = $pdo->prepare(
         'DELETE FROM conversation_users
-        WHERE conversationID = ?');
+        WHERE conversation_id = ?');
     $statement->execute([$deleteConvId]);
 
     $statement = $pdo->prepare(
         'DELETE FROM chat_messages
-        WHERE conversationId = ?');
+        WHERE conversation_id = ?');
     $statement->execute([$deleteConvId]);
 
     $statement = $pdo->prepare(
@@ -206,5 +206,42 @@ function deleteConversationHandler()
     header('Location: /chat?info=deleted');
     
 }
+
+function countUnreadMessages()
+{
+    if(!isLoggedin()){
+        return;
+    }
+    
+    if(!isset($_SESSION)){
+        session_start();
+    }
+
+    $pdo = getConnection();
+    $stmt = $pdo->prepare(
+        'SELECT COUNT(cm.id) unread_messages
+        FROM `chat_messages` cm
+        LEFT JOIN conversation_users cu on cm.conversation_id = cu.conversation_id
+        WHERE cm.seen = "0" AND cu.member_user_id = ? and cm.from_user_id <> ?'
+        );
+    $stmt->execute([
+        $_SESSION["userId"],
+        $_SESSION["userId"]
+    ]);
+    $unreadMessages = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    return $unreadMessages['unread_messages'];
+}
+
+function playChatSound()
+{
+    if(countUnreadMessages()>0){
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+
 
 ?>

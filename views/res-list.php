@@ -21,7 +21,7 @@
                             <h4 class="card-text">Lefoglalt szállás:
                                 <?php
                                     foreach($params['packages'] as $package)
-                                        if($package['id'] === $reservation['reservedPackageId']){
+                                        if($package['id'] === $reservation['reserved_package_id']){
                                             echo $package['name'] . " " . $package['location'];
                                         }
                                 ?>
@@ -33,7 +33,7 @@
                                     <span class="card-text badge rounded-pill bg-danger"><?= "Lemondva" ?></span>
                                 <?php endif; ?>                            
                             </h4>
-                            <h4><span class="card-text badge rounded-pill bg-light">Ár: <?php echo $reservation['totalPrice'] . " lej" ?></span></h4>
+                            <h4><span class="card-text badge rounded-pill bg-light">Ár: <?php echo $reservation['total_price'] . " lej" ?></span></h4>
                             <p><span class="card-text badge rounded-pill bg-light">Email: <?php echo $reservation['email']?></span></p>
                             <p><span class="card-text badge rounded-pill bg-light">Telefonszám: <?php echo $reservation['phone']?></span></p>
                             <p><span class="card-text badge rounded-pill bg-light">Foglalás időpontja: <?php echo date("Y.m.d H:i", $reservation['reserved'])?></span></p>
@@ -46,7 +46,7 @@
                             <?php if($params["updateReservationId"] === $reservation["id"]) : ?>
                                 <form class="form-inline form-group" action="/update-reservation?id=<?php echo $reservation["id"] ?>" method="POST" >
                                     <input type="text" name="name" placeholder="Név" value="<?php echo $reservation["name"] ?>" autocomplete="off"/>
-                                    <input type="number" name="price" placeholder="Ár" value="<?php echo $reservation["totalPrice"] ?>" autocomplete="off"/>
+                                    <input type="number" name="price" placeholder="Ár" value="<?php echo $reservation["total_price"] ?>" autocomplete="off"/>
                                     <input type="text" name="email" placeholder="Email" value="<?php echo $reservation["email"] ?>" autocomplete="off"/>
                                     <input type="text" name="phone" placeholder="Telefonszám" value="<?php echo $reservation["phone"] ?>" autocomplete="off"/>
                                     <input type="date" name="checkin" placeholder="Érkezés" value="<?php echo $reservation["checkin"] ?>" autocomplete="off"/>

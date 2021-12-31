@@ -40,7 +40,7 @@ function registrationHandler()
 
     $pdo = getConnection();
     $statement = $pdo->prepare(
-        'INSERT INTO users (name, email, password, createdAt)
+        'INSERT INTO users (name, email, password, registered)
         VALUES (?, ?, ?, ?)'
     );
     $statement->execute([
@@ -139,13 +139,13 @@ function isAdmin()
 
     $pdo = getConnection();
     $statement = $pdo->prepare(
-        'SELECT u.id, u.isAdmin
+        'SELECT u.id, u.is_admin
         FROM users u
         WHERE u.id = ?');
     $statement->execute([$userId]);
     $user = $statement->fetch(PDO::FETCH_ASSOC);
 
-    return $user['isAdmin'] ?? "";
+    return $user['is_admin'] ?? "";
         
 }
 
@@ -237,7 +237,7 @@ function updateProfilHandler()
     $pdo = getConnection();
     $statement = $pdo->prepare(
         'UPDATE users
-        SET name = ?, phone = ?, email = ?, password = ?, lastModified = ?
+        SET name = ?, phone = ?, email = ?, password = ?, last_modified = ?
         WHERE id = ?'
     );
     $statement->execute([

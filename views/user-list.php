@@ -37,8 +37,8 @@
                 <tr>
                 <td><?php echo $user["name"]?></td>
                 <td><?php echo $user["email"]?></td>
-                <td><?php echo date('Y.m.d H:i' , $user["createdAt"])?></td>
-                <td><?php echo $user["isAdmin"] === "1" ? "Igen": "Nem"?></td>
+                <td><?php echo date('Y.m.d H:i' , $user["registered"])?></td>
+                <td><?php echo $user["is_admin"] === "1" ? "Igen": "Nem"?></td>
                 
                 <?php if($params["editedUserId"] === $user["id"]) : ?>
                     <td>
@@ -47,8 +47,8 @@
                             <input class="form-control form-control-sm mr-2" type="text" name="email" placeholder="Email" value="<?php echo $user["email"] ?>" autocomplete="off"/>
                             <label for="isAdmin" class="form-label mt-4">Admin:</label>
                             <select class="" name="isAdmin" id="isAdmin">
-                                <option value="1" <?php echo $user['isAdmin'] === "1" ? "selected" : ""?>>Igen</option>
-                                <option value="0" <?php echo $user['isAdmin'] === "0" ? "selected" : ""?>>Nem</option>
+                                <option value="1" <?php echo $user['is_admin'] === "1" ? "selected" : ""?>>Igen</option>
+                                <option value="0" <?php echo $user['is_admin'] === "0" ? "selected" : ""?>>Nem</option>
                             </select>
 
                             <a href="/felhasznalok">

@@ -19,7 +19,6 @@ function reservePackageHandler($urlParams)
         WHERE p.id = ?'
     );
     $statement->execute([$reservedPackageId]);
-
     $package = $statement->fetch(PDO::FETCH_ASSOC);
 
     $totalPrice = ($_POST["guests"]*$nights* ($package['disc_price'] === "0" ? $package['price'] : $package['disc_price']));
@@ -37,8 +36,8 @@ function reservePackageHandler($urlParams)
     }
 
     $statement = $pdo->prepare(
-        'INSERT INTO reservations (name, email, phone, status, reserved, guests, checkin, checkout, nights, totalPrice, reservedPackageId)
-        VALUES (:name, :email, :phone, :status, :reserved, :guests, :checkin, :checkout, :nights, :totalPrice, :reservedPackageId)'
+        'INSERT INTO reservations (name, email, phone, status, reserved, guests, checkin, checkout, nights, total_price, reserved_package_id)
+        VALUES (:name, :email, :phone, :status, :reserved, :guests, :checkin, :checkout, :nights, :total_price, :reserved_package_id)'
     );
     $statement->execute([
         'name' => $_POST['name'],
@@ -50,8 +49,8 @@ function reservePackageHandler($urlParams)
         'checkin' => $_POST['checkin'],
         'checkout' => $_POST['checkout'],
         'nights' => $nights,
-        'totalPrice' => $totalPrice,
-        'reservedPackageId' => $reservedPackageId
+        'total_price' => $totalPrice,
+        'reserved_package_id' => $reservedPackageId
     ]);
 
     //email
@@ -64,7 +63,7 @@ function reservePackageHandler($urlParams)
         'checkin' => $_POST['checkin'],
         'checkout' => $_POST['checkout'],
         'nights' => $nights,
-        'totalPrice' => $totalPrice,
+        'total_price' => $totalPrice,
         'package' => $package
     ]);
 
@@ -125,7 +124,7 @@ function updateReservationHandler()
     $pdo = getConnection();
     $statement = $pdo->prepare(
         'UPDATE reservations
-        SET name = ?, email = ?, phone = ?, guests = ?, checkin = ?, checkout = ?, nights = ?, totalPrice = ?
+        SET name = ?, email = ?, phone = ?, guests = ?, checkin = ?, checkout = ?, nights = ?, total_price = ?
         WHERE id = ?'
     );
     $statement->execute([

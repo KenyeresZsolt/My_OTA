@@ -6,7 +6,7 @@
     <li>Távozás dátuma: <?= $params['checkout'] ?></li>
     <li>Személyek száma: <?= $params['guests'] ?></li>
     <li>Éjszakák száma: <?= $params['nights'] ?></li>
-    <li>Ár: <?= $params['totalPrice'] ?> lej</li>
+    <li>Ár: <?= $params['total_price'] ?> lej</li>
 </ul>
 <br>
 <p>Üdv,<br>Kenyeres Zsolt</p>

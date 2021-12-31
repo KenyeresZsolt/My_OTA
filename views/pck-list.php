@@ -26,7 +26,7 @@
                     <?php foreach($params['accmTypes'] as $accmType) : ?>
                         <div class="form-check">
                             <label class="form-check-label" for="type">
-                            <input class="form-check-input" type="checkbox"  name="type[]" value="<?= $accmType['typeCode']?>" <?= strpos(" " /*meghekkelt megoldás :) */ . $params['typeFilter'], $accmType['typeCode']) ? "checked" : "" ?>>
+                            <input class="form-check-input" type="checkbox"  name="type[]" value="<?= $accmType['type_code']?>" <?= strpos(" " /*meghekkelt megoldás :) */ . $params['typeFilter'], $accmType['type_code']) ? "checked" : "" ?>>
                                 <?= $accmType['name']?>
                             </label>
                         </div>

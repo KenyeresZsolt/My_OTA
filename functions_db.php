@@ -35,32 +35,6 @@ function getPath($url)
     return $parsed['path'];
 }
 
-function countUnreadMessages()
-{
-    if(!isLoggedin()){
-        return;
-    }
-    
-    if(!isset($_SESSION)){
-        session_start();
-    }
-
-    $pdo = getConnection();
-    $stmt = $pdo->prepare(
-        'SELECT COUNT(cm.id) unread_messages
-        FROM `chat_messages` cm
-        LEFT JOIN conversation_users cu on cm.conversationId = cu.conversationID
-        WHERE cm.seen = "0" AND cu.member_userID = ? and cm.fromUserId <> ?'
-        );
-    $stmt->execute([
-        $_SESSION["userId"],
-        $_SESSION["userId"]
-    ]);
-    $unreadMessages = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    return $unreadMessages['unread_messages'];
-}
-
 function homeHandler()
 {
     echo render('wrapper.php', [
@@ -108,7 +82,7 @@ function insertMailSql()
 {
     $pdo = getConnection();
     return $statement = $pdo->prepare("INSERT INTO `email_messages` 
-    (`email`, `subject`, `body`, `status`, `numberOfAttempts`, `createdAt`) 
+    (`email`, `subject`, `body`, `status`, `number_of_attempts`, `created_at`) 
     VALUES 
     (?, ?, ?, ?, ?, ?);");
 }
@@ -120,8 +94,8 @@ function sendMailsHandler()
         "SELECT * FROM email_messages 
         WHERE 
         status = 'notSent' AND 
-        numberOfAttempts < 10 
-        ORDER BY createdAt ASC"
+        number_of_attempts < 10 
+        ORDER BY created_at ASC"
     );
 
     $statement->execute();
@@ -132,12 +106,12 @@ function sendMailsHandler()
         $statement = $pdo->prepare(
             "UPDATE `email_messages` SET 
                 status = 'sending', 
-                numberOfAttempts = ? 
+                number_of_attempts = ? 
             WHERE id = ?;"
         );
 
         $statement->execute([
-            (int)$message['numberOfAttempts'] + 1,
+            (int)$message['number_of_attempts'] + 1,
             $message['id']
         ]);
 
@@ -149,7 +123,7 @@ function sendMailsHandler()
 
         if ($isSent) {
             $statement = $pdo->prepare(
-                "UPDATE `email_messages` SET status = 'sent', sentAt = ? WHERE id = ?;"
+                "UPDATE `email_messages` SET status = 'sent', sent_at = ? WHERE id = ?;"
             );
             $statement->execute([
                 time(),
@@ -161,16 +135,6 @@ function sendMailsHandler()
                 $message['id']
             ]);
         }
-    }
-}
-
-function playChatSound()
-{
-    if(countUnreadMessages()>0){
-        return true;
-    }
-    else {
-        return false;
     }
 }
 ?>

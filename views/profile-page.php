@@ -1,8 +1,8 @@
 <div class="card p-5 m-5">
     <p><b>Név:</b> <?= $params["user"]["name"] ?></p>
     <p><b>email:</b> <?= $params["user"]["email"] ?></p>
-    <p><b>Regisztráció dátuma:</b> <?= date("Y.m.d H:i:s",$params["user"]["createdAt"]) ?></p>
-    <p><b>Utolsó módosítás:</b> <?= $params["user"]["lastModified"] === "0" ? "soha" : date("Y.m.d H:i:s",$params["user"]["lastModified"]) ?></p>
+    <p><b>Regisztráció dátuma:</b> <?= date("Y.m.d H:i:s",$params["user"]["registered"]) ?></p>
+    <p><b>Utolsó módosítás:</b> <?= $params["user"]["last_modified"] === "0" ? "soha" : date("Y.m.d H:i:s",$params["user"]["last_modified"]) ?></p>
     <?php if($params['isAdmin'] === "1"): ?>
         <a href="/felhasznalok">
             <button class="btn btn-sm btn-primary float-end">Felhasználók</button>

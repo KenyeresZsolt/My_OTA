@@ -236,7 +236,7 @@ function packagePageHandler($slug)
     $statement = $pdo->prepare(
         'SELECT p.*, at.name type
         FROM packages p
-        LEFT JOIN accm_types at ON at.typeCode = p.accm_type
+        LEFT JOIN accm_types at ON at.type_code = p.accm_type
         WHERE p.slug = ?'
     );
     $statement->execute([$slug['pckSlug']]);
