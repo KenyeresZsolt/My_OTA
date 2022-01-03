@@ -1,44 +1,54 @@
 <div class="card p-3 m-5">
-    <div class="row">
-        <div class="card p-3 border-success ms-auto me-auto" style="max-width: 25rem;">
-            <form action="/add-package" method="POST" id="newPck">
-                <h2 class="text-center">Új csomag létrehozása</h2>
-                <br>
-                <div class="form-floating mb-3">
-                    <input class="form-control" type="text" name="name" id="name" autocomplete="off">
-                    <label for="name">Név</label>
-                </div>
-                <div class="form-floating mb-3">
-                    <input class="form-control" type="text" name="location" id="location" autocomplete="off">
-                    <label for="location">Település</label>
-                </div>
-                <div class="form-floating mb-3">
-                    <select class="form-control" name="type">
-                        <option value="none" selected disabled hidden></option>
-                        <?php foreach($params['accmTypes'] as $accmType) : ?>
-                            <option value="<?= $accmType['typeCode']?>"><?= $accmType['name']?></option>
-                        <?php endforeach; ?>
-                    </select>
-                    <label for="type">Típus</label>
-                </div>
-                <div class="form-floating mb-3">
-                    <input class="form-control" type="text" name="price" id="price" autocomplete="off">
-                    <label for="price">Ár</label>
-                </div>
-                <div class="form-floating mb-3">
-                    <input class="form-control" type="text" name="discount" id="discount" autocomplete="off">
-                    <label for="discount">Kedvezmény</label>
-                </div>
-                <div class="form-floating mb-3">
-                    <textarea class="form-control" type="text" name="description" id="description" autocomplete="off" form="newPck" rows="5"></textarea>
-                    <label for="description">Leírás</label>
-                </div>
-                <br>
-                <button type="submit" class="btn btn-sm btn-primary mr-2 float-end">Létrehozás</button>
-                <a href="/csomagok">
-                    <button type="button" class="btn btn-sm btn-outline-primary mr-2 float-end">Mégse</button>
-                </a>
-            </form>
-        </div>
+    <div class="card border-success mb-3">
+        <div class="card-header">Új szállás</div>
+            <div class="card-body">
+                <form class="form-inline" action="/add-package" method="POST" id="newPck">
+                    <div class="form-group">
+                        <div class="row">
+                            <div style="max-width: 15rem;">
+                                <label for="name" class="form-label mt-4">Szállás neve</label>
+                                <input class="form-control" type="text" name="name" autocomplete="off"/>                                        
+                            </div>                
+                            <div style="max-width: 15rem;">
+                                <label for="location" class="form-label mt-4">Település</label>
+                                <input class="form-control" type="text" name="location" autocomplete="off"/>                                        
+                            </div>
+                        </div>
+                        <div class="row container">
+                            <label for="type" class="form-label mt-4">Szálláshely típusa</label>
+                                <?php foreach($params['accmTypes'] as $accmType) : ?>
+                                    <div class="form-check">
+                                        <label class="form-check-label" for="type">
+                                        <input class="form-check-input" type="radio"  name="type" value="<?= $accmType['type_code']?>">
+                                            <?= $accmType['name']?>
+                                        </label>
+                                    </div>
+                                <?php endforeach; ?>                                          
+                        </div>
+                        <div class="row">
+                            <div style="max-width: 15rem;">
+                                <label for="price" class="form-label mt-4">Ár (/fő/éj)</label>
+                                <input class="form-control" type="text" name="price" autocomplete="off"/>                                        
+                            </div>
+                            <div style="max-width: 15rem;">
+                                <label for="breakfast" class="form-label mt-4">Reggeli ára (/fő/alkalom)</label>
+                                <input class="form-control" type="text" name="breakfast" autocomplete="off"/>                                        
+                            </div>
+                        </div>
+                        <div class="row">
+                            <label for="description" class="form-label mt-4">Leírás</label>
+                            <textarea class="form-control" id="description" name="description" form="pckUpdate" rows="3"></textarea>
+                        </div>
+                        <br>
+                        <br>
+                        <div class="btn-group float-end">
+                            <a href="/csomagok">
+                                <button type="button" class="btn btn-sm btn-outline-primary mr-2">Vissza</button>
+                            </a>
+                            <button type="submit" class="btn btn-sm btn-success">Létrehoz</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
     </div>
 </div>
