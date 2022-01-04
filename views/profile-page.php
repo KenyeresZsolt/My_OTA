@@ -4,9 +4,10 @@
     <p><b>Regisztráció dátuma:</b> <?= date("Y.m.d H:i:s",$params["user"]["registered"]) ?></p>
     <p><b>Utolsó módosítás:</b> <?= $params["user"]["last_modified"] === "0" ? "soha" : date("Y.m.d H:i:s",$params["user"]["last_modified"]) ?></p>
     <?php if($params['isAdmin'] === "1"): ?>
-        <a href="/felhasznalok">
-            <button class="btn btn-sm btn-primary float-end">Felhasználók</button>
-        </a>
+        <div>
+                <a href="/hero" class="btn btn-sm btn-primary float-end">Kollégák</a>
+                <a href="/felhasznalok" class="btn btn-sm btn-primary float-end">Felhasználók</a>
+        </div>
         <br>
     <?php endif; ?>
     <?php if($params['info'] === "updateSuccessfull"): ?>

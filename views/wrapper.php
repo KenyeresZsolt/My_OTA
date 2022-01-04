@@ -23,11 +23,6 @@
                 <a class="nav-item nav-link <?php echo $params['activeLink'] === "/" ? "active" : "" ?>" href="/">
                     Főoldal
                 </a>
-                <?php if($params['isAuthorized']  AND $params['isAdmin'] === "1"): ?>
-                    <a class="nav-item nav-link <?php echo $params['activeLink'] === "/hero" ? "active" : "" ?>" href="/hero">
-                        Kollégák
-                    </a>
-                <?php endif;?>
                 <a class="nav-item nav-link <?php echo $params['activeLink'] === "/csomagok" ? "active" : "" ?>" href="/csomagok">
                     Csomagok
                 </a>
@@ -47,7 +42,7 @@
                     <a href="/profil">    
                         <button type="submit" class="btn btn-sm btn-light float-end <?php echo $params['activeLink'] === "/profil" ? "active" : "" ?>">Profil</button>
                     </a>
-                    <a class="btn btn-sm btn-light float-end <?php echo $params['activeLink'] === "/profil" ? "active" : "" ?>" href="/chat">
+                    <a class="btn btn-sm btn-light float-end" href="/chat">
                         Chat <?= "(" . $params['unreadMessages'] . ")"?>
                     </a>
                     <form action="/kijelentkezes" method="POST">
