@@ -15,6 +15,7 @@ $routes = [
     ['GET', '/csomagok' , 'packageListHandler'],
     ['GET', '/uj-csomag' , 'newPackageHandler'],
     ['GET', '/csomagok/{pckSlug}' , 'packagePageHandler'],
+    ['GET', '/{pckSlug}/szerkesztes' , 'editPackageHandler'],
     ['GET', '/foglalasok' , 'reservationListHandler'],
     ['GET', '/sakktabla' , 'chessHandler'],
     ['GET', '/chat' , 'chatPageHandler'],

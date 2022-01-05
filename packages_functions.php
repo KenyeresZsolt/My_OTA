@@ -11,6 +11,28 @@ function getAccmTypes()
     return $accmTypes = $statement->fetchAll(PDO::FETCH_ASSOC);
 }
 
+function getAccmLangs()
+{
+    $pdo = getConnection();
+    $statement = $pdo->prepare(
+        'SELECT *
+        FROM accm_languages'
+    );
+    $statement->execute();
+    return $accmLangs = $statement->fetchAll(PDO::FETCH_ASSOC);
+}
+
+function getAccmFacilities()
+{
+    $pdo = getConnection();
+    $statement = $pdo->prepare(
+        'SELECT *
+        FROM accm_facilities'
+    );
+    $statement->execute();
+    return $accmFacilities = $statement->fetchAll(PDO::FETCH_ASSOC);
+}
+
 function packageListHandler()
 {
     //szűrő forrása: https://phpdelusions.net/pdo_examples/dynamical_where
@@ -120,7 +142,9 @@ function newPackageHandler()
     redirectToLoginIfNotLoggedIn();
     echo render('wrapper.php', [
         'content' => render('new-package-page.php', [
-            "accmTypes" => getAccmTypes(),
+            'accmTypes' => getAccmTypes(),
+            'accmLangs' => getAccmLangs(),
+            'accmFacilities' => getAccmFacilities(),
         ]),
         'activeLink' => '/csomagok',
         'isAuthorized' => isLoggedIn(),
@@ -131,26 +155,85 @@ function newPackageHandler()
     ]);
 }
 
+function createAddressJson()
+{
+    return $address = json_encode(array(
+        'postalCode' => $_POST['postalCode'],
+        'street' => $_POST['street'],
+        'number' => $_POST['number'],
+        'building' => $_POST['building'],
+        'floor' => $_POST['floor'],
+        'door' => $_POST['door'],
+    ), true);
+}
+
 function createPackageHandler()
 {
     redirectToLoginIfNotLoggedIn();
+
     $pdo = getConnection();
     $statement = $pdo->prepare(
-        'INSERT INTO packages (name, location, slug, accm_type, price, discount, disc_price, description)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)'
+        'INSERT INTO packages (name, location, slug, address, accm_type, price, breakfast_price, discount, capacity, rooms, facilities, description, languages, contact_name, email, phone, webpage)
+        VALUES (:name, :location, :slug, :address, :accm_type, :price, :breakfast_price, :discount, :capacity, :rooms, :facilities, :description, :languages, :contact_name, :email, :phone, :webpage)'
     );
     $statement->execute([
-        $_POST["name"], 
-        $_POST["location"], 
-        strtolower(slugify($_POST["name"] . "-" . $_POST["location"])),
-        $_POST["type"],
-        $_POST["price"],
-        $_POST["discount"],
-        empty($_POST["discount"]) ? "" : ($_POST["price"]-(($_POST["price"]*$_POST["discount"])/100)),
-        $_POST['description'],
+        'name' => $_POST["name"] ?? "", 
+        'location' => $_POST["location"] ?? "", 
+        'slug' => strtolower(slugify($_POST["name"] . "-" . $_POST["location"])) ?? "",
+        'address' => createAddressJson() ?? "",
+        'accm_type' => $_POST["type"] ?? "",
+        'price' => $_POST["price"] ?? "",
+        'breakfast_price' => $_POST["breakfastPrice"] ?? "",
+        'discount' => $_POST["discount"] ?? "",
+        'capacity' => $_POST["capacity"] ?? "",
+        'rooms' => $_POST["rooms"] ?? "",
+        'facilities' => json_encode($_POST['facilities'], true) ?? "",
+        'description' => $_POST['description'] ?? "",
+        'languages' => json_encode($_POST['languages'], true) ?? "",
+        'contact_name' => $_POST["contactName"] ?? "",
+        'email' => $_POST["contactEmail"] ?? "",
+        'phone' => $_POST["contactPhone"] ?? "",
+        'webpage' => $_POST["webpage"] ?? "",
     ]);
     
     header("Location: /csomagok?info=added");
+}
+
+function editPackageHandler($urlParams)
+{
+    redirectToLoginIfNotLoggedIn();
+
+    $pdo = getConnection();
+    $statement = $pdo->prepare(
+        'SELECT p.*, at.name type
+        FROM packages p
+        LEFT JOIN accm_types at ON at.type_code = p.accm_type
+        WHERE p.slug = ?'
+    );
+    $statement->execute([$urlParams['pckSlug']]);
+    $package = $statement->fetch(PDO::FETCH_ASSOC);
+    $address = json_decode($package['address'], true);
+    $languages = json_decode($package['languages'], true);
+    $facilities = json_decode($package['facilities'], true);
+    
+    echo render("wrapper.php", [
+        'content' => render('edit-package-page.php', [
+            'package' => $package,
+            'address' => $address,
+            'languages' => $languages,
+            'facilities' => $facilities,
+            'accmTypes' => getAccmTypes(),
+            'accmLangs' => getAccmLangs(),
+            'accmFacilities' => getAccmFacilities(),
+        ]),
+        'activeLink' => '/csomagok',
+        'isAuthorized' => isLoggedIn(),
+        'isAdmin' => isAdmin() ?? "",
+        'title' => "Szerkesztés",
+        'unreadMessages' => countUnreadMessages(),
+        'playChatSound' => playChatSound()
+    ]);
+
 }
 
 function updatePackageHandler($urlParams)
@@ -159,19 +242,30 @@ function updatePackageHandler($urlParams)
     $pdo = getConnection();
     $statement = $pdo->prepare(
         'UPDATE packages
-        SET name = ?, location = ?, slug = ?, accm_type = ?, price = ?, discount = ?, disc_price = ?, description = ?
-        WHERE id = ?'
+        SET name = :name, location = :location, slug = :slug, address = :address, accm_type = :accm_type, price = :price, breakfast_price = :breakfast_price, discount = :discount, capacity = :capacity, rooms = :rooms, facilities = :facilities, description = :description, languages = :languages, contact_name = :contact_name, email = :email, phone = :phone, webpage = :webpage, last_modified = :last_modified, last_modified_by_user_id = :last_modified_by_user_id
+        WHERE id = :id'
     );
     $statement->execute([
-        $_POST['name'],
-        $_POST['location'],
-        strtolower(slugify($_POST["name"] . "-" . $_POST["location"])),
-        $_POST['type'],
-        $_POST['price'],
-        $_POST['discount'],
-        empty($_POST["discount"]) ? "" : ($_POST["price"]-(($_POST["price"]*$_POST["discount"])/100)),
-        $_POST['description'],
-        $urlParams['pckId']
+        'name' => $_POST["name"] ?? "", 
+        'location' => $_POST["location"] ?? "", 
+        'slug' => strtolower(slugify($_POST["name"] . "-" . $_POST["location"])) ?? "",
+        'address' => createAddressJson() ?? "",
+        'accm_type' => $_POST["type"] ?? "",
+        'price' => $_POST["price"] ?? "",
+        'breakfast_price' => $_POST["breakfastPrice"] ?? "",
+        'discount' => $_POST["discount"] ?? "",
+        'capacity' => $_POST["capacity"] ?? "",
+        'rooms' => $_POST["rooms"] ?? "",
+        'facilities' => json_encode($_POST['facilities'], true) ?? "",
+        'description' => $_POST['description'] ?? "",
+        'languages' => json_encode($_POST['languages'], true) ?? "",
+        'contact_name' => $_POST["contactName"] ?? "",
+        'email' => $_POST["contactEmail"] ?? "",
+        'phone' => $_POST["contactPhone"] ?? "",
+        'webpage' => $_POST["webpage"] ?? "",
+        'last_modified' => time() ?? "",
+        'last_modified_by_user_id' => $_SESSION['userId'] ?? "",
+        'id' => $urlParams['pckId'] ?? ""
     ]);
 
     $statement = $pdo->prepare(
@@ -241,12 +335,14 @@ function packagePageHandler($slug)
     );
     $statement->execute([$slug['pckSlug']]);
     $package = $statement->fetch(PDO::FETCH_ASSOC);
-
+    
     echo render("wrapper.php", [
         "content" => render("pck-page.php", [
             "package" => $package,
+            "address" => json_decode($package['address'], true),
+            "languages" => json_decode($package['languages'], true),
+            "accmsLangs" => getAccmLangs(),
             "accmTypes" => getAccmTypes(),
-            "updatePackageId" => isset($_GET["edit"]),
             "resPackageId" => isset($_GET["res"]),
             "addImgToPckId" => isset($_GET["addimage"]),
             'isAuthorized' => isLoggedIn(),
