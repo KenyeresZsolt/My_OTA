@@ -1,5 +1,3 @@
-<div class="card p-3 m-5">
-
 <?php if($params['isRegistration']) : ?>
 
     <?php if($params['info'] === "emptyValue"): ?>
@@ -85,6 +83,3 @@
         </div>
     </div>
 <?php endif ?>
-</div>
-
-

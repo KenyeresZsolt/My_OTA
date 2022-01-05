@@ -10,8 +10,9 @@
     <?php if($params['activeLink'] === '/chat'): ?>
         <meta http-equiv="refresh" content="30">
     <?php endif; ?>
+    <link rel="icon" href="/public/icons/browser-tab.png">
 </head>
-<body class="TM_body">
+<body class="TM_body" style="padding-bottom: 70px;">
     <?php if($params['playChatSound']): ?>
     <audio controls autoplay style="display:none;">
         <source src="public/audio/chat.wav" type="audio/wav">
@@ -56,8 +57,9 @@
             <?php endif;?>
         </div>
     </nav>
-
+    <div class="card p-4 m-4">
         <?php echo $params['content'] ?>
+    </div>
     <footer class="bg-dark text-lg-start fixed-bottom container-fluid" style="font-size:1vw;">
             <div class="row">
                 <div class="text-center p-3" style="max-width: 92%;">
