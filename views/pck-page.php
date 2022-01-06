@@ -1,7 +1,3 @@
-<a href="/csomagok">
-    <button class="btn btn-sm btn-outline-success">Vissza</button>
-</a>
-<br>
 <?php if($params['info'] === "updated"): ?>
     <div class="alert alert-success">
         Csomag frissítve!
@@ -11,16 +7,16 @@
         Sikeres foglalás!
     </div>
 <?php endif ?>
-<div class="card border-primary mb-3" id="<?= $params['package']['id']?>">
+<div class="card border-primary mb-3 m-5" id="<?= $params['package']['id']?>">
     <div class="card-header">
         <div class="row">
-            <div class="h4 col-md-10">
+            <div class="h4 col-md-9">
                 <?= $params['package']['name'] . " " . $params['package']['location'];?>
             </div>
             <?php if($params['isAuthorized'] AND $params['isAdmin'] === "1"): ?>
-                <div class="btn-group float-end col-md-2">
+                <div class="btn-group float-end col-3">
                     <a href="/csomagok/<?= $params['package']["slug"] ?>?addimage=1#addImg">
-                        <button class="btn btn-sm btn-light float-end">+kép</button>
+                        <button class="btn btn-sm btn-light float-end">Kép hozzáad.</button>
                     </a>
 
                     <a href="/<?= $params['package']["slug"] ?>/szerkesztes">
@@ -36,7 +32,7 @@
     </div>
     <div class="card-body">
         <div class="row">
-            <div class="p-3" style="max-width:55rem">
+            <div class="p-3" style="max-width:50vw">
                 <?php if(isset($params['package']['image'])): ?>
                     <img class="img-thumbnail" src="<?= $params['package']['image']?>" alt="<?= $params['package']['name'] ?>" style="width:100%">
                 <?php endif; ?>
@@ -49,6 +45,7 @@
                         <div class="row"><?=(!empty($params['address']['street']) ? $params['address']['street'] . " utca" : "") . (!empty($params['address']['number']) ? ", " . $params['address']['number'] . " szám" : "") . (!empty($params['address']['building']) ? ", " . $params['address']['building'] . " épület" : "") . (!empty($params['address']['floor']) ? ", " . $params['address']['floor'] . " emelet" : "") . (!empty($params['address']['door']) ? ", " . $params['address']['door'] . " ajtó" : "")?></div>
                     </div>
                 </div>
+                <hr>
                 <div class="card border-primary mb-3">
                     <div class="card-header">Elérhetőségek</div>
                     <div class="card-body ms-3">
@@ -65,7 +62,9 @@
             <div class="card-header">Árak</div>
             <div class="card-body ms-3">
                 <div class="row">Szállás: <?= @$params['package']['price'];?> RON/fő/éj</div>
-                <div class="row">Reggeli: <?= @$params['package']['breakfast_price'];?> RON/fő/alkalom</div>
+                <?php if($params['package']['breakfast_price'] !== "0"): ?>
+                    <div class="row">Reggeli: <?= @$params['package']['breakfast_price'];?> RON/fő/alkalom</div>
+                <?php endif; ?>
             </div>
         </div>
         <hr>

@@ -40,10 +40,17 @@ function packageListHandler()
     $typeFilter = $_GET['t'] ?? "";
     $minPriceFilter = $_GET['minPrice'] ?? "";
     $maxPriceFilter = $_GET['maxPrice'] ?? "";
-    $discountFilter = $_GET['disc'] ?? "";
+    $facilityFilter = $_GET['f'] ?? "";
+    $langFilter = $_GET['l'] ?? "";
 
     $types = explode(" ", $typeFilter);
-    $cntTypes = count($types); 
+    $cntTypes = count($types);
+
+    $facilities = explode(" ", $facilityFilter);
+    $cntFacilities = count($facilities);
+
+    $langs = explode(" ", $langFilter);
+    $cntLangs = count($langs);
 
     $cond = [];
     $param = [];
@@ -66,9 +73,20 @@ function packageListHandler()
         $param[] = $maxPriceFilter;
     }
 
-    if(!empty($discountFilter)){
-        $cond[] = 'p.discount > ?';
-        $param[] = "0";
+    if(!empty($facilityFilter)){
+        for($i=0; $i<$cntFacilities; $i++){
+            $fcond[] = 'p.facilities LIKE ?';
+            $param[] = "%" . $facilities[$i] . "%";
+        }
+        $cond[] = "(" . implode(" OR ", $fcond) . ")";
+    }
+
+    if(!empty($langFilter)){
+        for($i=0; $i<$cntLangs; $i++){
+            $lcond[] = 'p.languages LIKE ?';
+            $param[] = "%" . $langs[$i] . "%";
+        }
+        $cond[] = "(" . implode(" OR ", $lcond) . ")";
     }
 
     $sql = "SELECT * from packages p";
@@ -85,12 +103,15 @@ function packageListHandler()
 
     echo render('wrapper.php', [
         'content' => render("pck-list.php", [
-            "packages" => $packages,
-            "accmTypes" => getAccmTypes(),
+            'packages' => $packages,
+            'accmTypes' => getAccmTypes(),
+            'accmFacilities' => getAccmFacilities(),
+            'accmLangs' => getAccmLangs(),
             'typeFilter' => $typeFilter,
             'minPriceFilter' => $minPriceFilter,
             'maxPriceFilter' => $maxPriceFilter,
-            'discountFilter' => $discountFilter,
+            'facilityFilter' => $facilityFilter,
+            'langFilter' => $langFilter,
             "info" => $_GET['info'] ?? "",
             'isAuthorized' => isLoggedIn(),
             'isAdmin' => isAdmin() ?? "",
@@ -127,11 +148,32 @@ function packageFilterHandler()
         $maxPirceUrl = "maxPrice=" . $_POST['maxPrice'] . "&";
     }
 
-    if(!empty($_POST['discount'])){
-        $discountUrl = "disc=" . $_POST['discount'] . "&";
+    $facilities = $_POST['facility'] ?? "";
+
+    if(!empty($facilities)){
+    $facilitiesCount = count($facilities);
+    $facilityUrl = "f=";
+
+    for($i=0; $i < $facilitiesCount; $i++){
+        $facilityUrl = $facilityUrl . $facilities[$i] . "+";
+    }
+    $facilityUrl = substr_replace($facilityUrl,"",-1) . "&";
     }
 
-    $finalUrl = ($typeUrl ?? "") . ($minPirceUrl ?? "") . ($maxPirceUrl ?? "") . ($discountUrl ?? "");
+    $langs = $_POST['lang'] ?? "";
+
+    if(!empty($langs)){
+    $langsCount = count($langs);
+    $langUrl = "l=";
+
+    for($i=0; $i < $langsCount; $i++){
+        $langUrl = $langUrl . $langs[$i] . "+";
+    }
+    $langUrl = substr_replace($langUrl,"",-1) . "&";
+    }
+
+
+    $finalUrl = ($typeUrl ?? "") . ($minPirceUrl ?? "") . ($maxPirceUrl ?? "") . ($facilityUrl ?? "") . ($langUrl ?? "");
     $finalUrl = substr_replace($finalUrl,"",-1);
 
     header('Location: /csomagok?' . $finalUrl);

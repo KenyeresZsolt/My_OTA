@@ -97,7 +97,7 @@
                     <h5>Szálláshely bemutatása</h5>
                     <div class="container">
                         <label for="description" class="form-label mt-4">Leírás</label>
-                        <textarea class="form-control form-control-sm" id="description" name="description" form="updtPck" rows="3"><?= $params['package']['description']?></textarea>
+                        <textarea class="form-control form-control-sm" id="description" name="description" form="updtPck" rows="10"><?= $params['package']['description']?></textarea>
                     </div>
                     <br>
                     <br><hr><br>

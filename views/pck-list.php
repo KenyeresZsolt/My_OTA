@@ -17,13 +17,13 @@
 <hr>
 <div class="row">
 <div class="col-md-2">
-    <div class="card border-primary sticky-top" id="filters" style="width:10rem">
+    <div class="card border-primary" id="filters" style="width:10rem">
         <div class="card-header container-fluid h4">
             Szűrők
         </div>
         <div class="card-body container-fluid">
             <form action="/csomagok" method="POST">
-                Típus
+                <p>Típus</p>
                 <?php foreach($params['accmTypes'] as $accmType) : ?>
                     <div class="form-check">
                         <label class="form-check-label" for="type">
@@ -40,10 +40,25 @@
                     <input class="form-control-sm" style="max-width: 3.5rem" type="text" name="maxPrice" placeholder="max" value="<?= $params['maxPriceFilter']?>" autocomplete="off">
                 </div>
                 <hr>
-                <label class="form-check-label" for="discount">
-                    <input class="form-check-input" type="checkbox"  name="discount" value="YES" <?= !empty($params['discountFilter']) ? "checked" : "" ?>>
-                    Kedvezmény biztosított
-                </label>
+                <p>Szolgáltatások</p>
+                <?php foreach($params['accmFacilities'] as $accmFacility) : ?>
+                    <div class="form-check">
+                        <label class="form-check-label" for="facility">
+                        <input class="form-check-input" type="checkbox"  name="facility[]" value="<?= $accmFacility['facility_code']?>" <?= strpos(" " /*meghekkelt megoldás :) */ . $params['facilityFilter'], $accmFacility['facility_code']) ? "checked" : "" ?>>
+                            <?= $accmFacility['name']?>
+                        </label>
+                    </div>
+                <?php endforeach; ?>
+                <hr>
+                <p>Beszélt nyelvek</p>
+                <?php foreach($params['accmLangs'] as $accmLang) : ?>
+                    <div class="form-check">
+                        <label class="form-check-label" for="lang">
+                        <input class="form-check-input" type="checkbox"  name="lang[]" value="<?= $accmLang['code']?>" <?= strpos(" " /*meghekkelt megoldás :) */ . $params['langFilter'], $accmLang['code']) ? "checked" : "" ?>>
+                            <?= $accmLang['name']?>
+                        </label>
+                    </div>
+                <?php endforeach; ?>
                 <hr>
                 <div class="btn-group float-end">
                     <a href="/csomagok">
@@ -70,7 +85,7 @@
                 </div>
                 <br>
                 <br>
-                <a href="/csomagok/<?php echo $package["slug"] ?>">
+                <a href="/csomagok/<?php echo $package["slug"] ?>" target="_blank">
                     <button class="btn btn-sm btn-outline-success float-end">Részletek</button>
                 </a>
                 <?php if($params['isAuthorized'] AND $params['isAdmin'] === "1"): ?>
