@@ -205,9 +205,10 @@ function editPackageHandler($urlParams)
 
     $pdo = getConnection();
     $statement = $pdo->prepare(
-        'SELECT p.*, at.name type
+        'SELECT p.*, at.name type, u.name modified_by_user_name
         FROM packages p
         LEFT JOIN accm_types at ON at.type_code = p.accm_type
+        LEFT JOIN users u ON u.id = p.last_modified_by_user_id
         WHERE p.slug = ?'
     );
     $statement->execute([$urlParams['pckSlug']]);
@@ -335,14 +336,16 @@ function packagePageHandler($slug)
     );
     $statement->execute([$slug['pckSlug']]);
     $package = $statement->fetch(PDO::FETCH_ASSOC);
-    
+
     echo render("wrapper.php", [
         "content" => render("pck-page.php", [
             "package" => $package,
             "address" => json_decode($package['address'], true),
             "languages" => json_decode($package['languages'], true),
-            "accmsLangs" => getAccmLangs(),
+            "facilities" => json_decode($package['facilities'], true),
+            "accmLangs" => getAccmLangs(),
             "accmTypes" => getAccmTypes(),
+            "accmFacilities" => getAccmFacilities(),
             "resPackageId" => isset($_GET["res"]),
             "addImgToPckId" => isset($_GET["addimage"]),
             'isAuthorized' => isLoggedIn(),

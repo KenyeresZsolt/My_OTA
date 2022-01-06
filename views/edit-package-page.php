@@ -159,6 +159,8 @@
                         </div>
                     </div>
                     <br><hr><br>
+                    <small>Utoljára szerkesztve ekkor: <b><?= $params['package']['last_modified'] === "0" ? "soha" : date("Y.m.d H:i:s", $params['package']['last_modified'])?></b></small><br>
+                    <small>Utoljára szerkesztette: <b><?= $params['package']['modified_by_user_name']?></b></small>
                     <div class="btn-group float-end m-2">
                         <a href="/csomagok/<?= $params['package']['slug']?>">
                             <button type="button" class="btn btn-sm btn-outline-primary mr-2">Vissza</button>
