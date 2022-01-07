@@ -169,7 +169,7 @@
                         <a href="/csomagok/<?= $params['package']['slug']?>">
                             <button type="button" class="btn btn-sm btn-outline-secondary mr-2">Vissza</button>
                         </a>
-                        <button type="submit" class="btn btn-sm btn-warning">Lementem</button>
+                        <button type="submit" class="btn btn-sm btn-success">Lementem</button>
                     </div>
                 </div>
             </form>

@@ -14,11 +14,14 @@
 <div class="card border-primary mb-3 m-5" id="<?= $params['package']['id']?>">
     <div class="card-header">
         <div class="row">
-            <div class="h4 col-md-10">
+            <div class="h4 col-md-9">
                 <?= $params['package']['name'] . " " . $params['package']['location'];?>
             </div>
             <?php if($params['isAuthorized'] AND $params['isAdmin'] === "1"): ?>
-                <div class="btn-group float-end col-2">
+                <div class="btn-group float-end col-3">
+                    <a href="/<?= $params['package']["slug"] ?>/beallitasok/adatok">
+                        <button class="btn btn-sm btn-light float-end">Beállítások</button>
+                    </a>
                     <a href="/<?= $params['package']["slug"] ?>/szerkesztes">
                         <button class="btn btn-sm btn-light float-end">Szerkesztés</button>
                     </a>

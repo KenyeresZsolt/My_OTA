@@ -1,6 +1,8 @@
-<h1>Mekkora legyen a sakktábla?</h1>
-<br>
-    <form method="GET">
+<h2 class="text-center m-3">Ez az oldal is elkészül hamarosan.</h2>
+<h4 class="text-center">Addig sakkozz:</h4>
+<hr>
+<p class="text-center">Mekkora legyen a sakktábla?</p>
+    <form class="me-auto ms-auto" method="GET">
         <table>
             <tr>
                 <td><input type="text" name ="negyzet" placeholder="négyzetek száma" autocomplete="off"></td>

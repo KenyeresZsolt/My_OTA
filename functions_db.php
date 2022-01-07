@@ -47,23 +47,6 @@ function homeHandler()
     ]);
 }
 
-//Sakktábla
-function chessHandler()
-{
-    redirectToLoginIfNotLoggedIn();
-
-    $chessTemplate = render('sakktabla.php');
-    echo render('wrapper.php', [
-        'content' => $chessTemplate,
-        'activeLink' => '/sakktabla',
-        "isAuthorized" => true,
-        'isAdmin' => isAdmin(),
-        'title' => "Sakktábla",
-        'unreadMessages' => countUnreadMessages(),
-        'playChatSound' => playChatSound()
-    ]);
-}
-
 function notFoundHandler()
 {
     echo render('wrapper.php', [

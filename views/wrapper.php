@@ -32,11 +32,6 @@
                         Foglalások
                     </a>
                 <?php endif;?>
-                <?php if($params['isAuthorized']): ?>
-                    <a class="nav-item nav-link <?php echo $params['activeLink'] === "/sakktabla" ? "active" : "" ?>" href="/sakktabla">
-                        Sakktábla
-                    </a>
-                <?php endif;?>
             </div>
             <?php if($params['isAuthorized']): ?>
                 <div class="btn-group">

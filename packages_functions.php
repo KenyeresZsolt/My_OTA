@@ -211,12 +211,14 @@ function createAddressJson()
 
 function imageUpload()
 {
-    $targetDir = "public/uploads/";
-    $targetFile = $targetDir . basename($_FILES["fileToUpload"]["name"]);
-    $imageFileType = strtolower(pathinfo($targetFile,PATHINFO_EXTENSION));
-    
-    move_uploaded_file($_FILES["fileToUpload"]["tmp_name"],$targetFile);
-    return $targetFile;
+    if(!empty($_FILES["fileToUpload"]["name"])){
+        $targetDir = "public/uploads/";
+        $targetFile = $targetDir . basename($_FILES["fileToUpload"]["name"]);
+        $imageFileType = strtolower(pathinfo($targetFile,PATHINFO_EXTENSION));
+        
+        move_uploaded_file($_FILES["fileToUpload"]["tmp_name"],$targetFile);
+        return $targetFile;
+    }
 }
 
 function createPackageHandler()
@@ -270,14 +272,18 @@ function editPackageHandler($urlParams)
     $facilities = json_decode($package['facilities'], true);
     
     echo render("wrapper.php", [
-        'content' => render('edit-package-page.php', [
+        'content' => render('pck-settings-page.php', [
+            'settingsContent' => render('edit-package-page.php', [
+                'package' => $package,
+                'address' => $address,
+                'languages' => $languages,
+                'facilities' => $facilities,
+                'accmTypes' => getAccmTypes(),
+                'accmLangs' => getAccmLangs(),
+                'accmFacilities' => getAccmFacilities(),
+            ]),
             'package' => $package,
-            'address' => $address,
-            'languages' => $languages,
-            'facilities' => $facilities,
-            'accmTypes' => getAccmTypes(),
-            'accmLangs' => getAccmLangs(),
-            'accmFacilities' => getAccmFacilities(),
+            'activeTab' => 'edit',
         ]),
         'activeLink' => '/csomagok',
         'isAuthorized' => isLoggedIn(),
@@ -286,7 +292,93 @@ function editPackageHandler($urlParams)
         'unreadMessages' => countUnreadMessages(),
         'playChatSound' => playChatSound()
     ]);
+}
 
+function editServicesHandler($urlParams)
+{
+    redirectToLoginIfNotLoggedIn();
+    $pdo = getConnection();
+    $statement = $pdo->prepare(
+        'SELECT p.*, at.name type, u.name modified_by_user_name
+        FROM packages p
+        LEFT JOIN accm_types at ON at.type_code = p.accm_type
+        LEFT JOIN users u ON u.id = p.last_modified_by_user_id
+        WHERE p.slug = ?'
+    );
+    $statement->execute([$urlParams['pckSlug']]);
+    $package = $statement->fetch(PDO::FETCH_ASSOC);
+
+    echo render("wrapper.php", [
+        'content' => render('pck-settings-page.php', [
+            'settingsContent' => render("coming-soon-page.php"),
+            'package' => $package,
+            'activeTab' => 'services',
+        ]),
+        'activeLink' => '/csomagok',
+        'isAuthorized' => isLoggedIn(),
+        'isAdmin' => isAdmin() ?? "",
+        'title' => "Szolgáltatások",
+        'unreadMessages' => countUnreadMessages(),
+        'playChatSound' => playChatSound()
+    ]);
+}
+
+function editDiscountsHandler($urlParams)
+{
+    redirectToLoginIfNotLoggedIn();
+    $pdo = getConnection();
+    $statement = $pdo->prepare(
+        'SELECT p.*, at.name type, u.name modified_by_user_name
+        FROM packages p
+        LEFT JOIN accm_types at ON at.type_code = p.accm_type
+        LEFT JOIN users u ON u.id = p.last_modified_by_user_id
+        WHERE p.slug = ?'
+    );
+    $statement->execute([$urlParams['pckSlug']]);
+    $package = $statement->fetch(PDO::FETCH_ASSOC);
+
+    echo render("wrapper.php", [
+        'content' => render('pck-settings-page.php', [
+            'settingsContent' => render("coming-soon-page.php"),
+            'package' => $package,
+            'activeTab' => 'discounts',
+        ]),
+        'activeLink' => '/csomagok',
+        'isAuthorized' => isLoggedIn(),
+        'isAdmin' => isAdmin() ?? "",
+        'title' => "Szolgáltatások",
+        'unreadMessages' => countUnreadMessages(),
+        'playChatSound' => playChatSound()
+    ]);
+}
+
+function editRoomsHandler($urlParams)
+{
+    redirectToLoginIfNotLoggedIn();
+    $pdo = getConnection();
+    $statement = $pdo->prepare(
+        'SELECT p.*, at.name type, u.name modified_by_user_name
+        FROM packages p
+        LEFT JOIN accm_types at ON at.type_code = p.accm_type
+        LEFT JOIN users u ON u.id = p.last_modified_by_user_id
+        WHERE p.slug = ?'
+    );
+    $statement->execute([$urlParams['pckSlug']]);
+    $package = $statement->fetch(PDO::FETCH_ASSOC);
+
+    echo render("wrapper.php", [
+        'content' => render('pck-settings-page.php', [
+            'settingsContent' => render("coming-soon-page.php"),
+            'package' => $package,
+            'activeTab' => 'rooms',
+        ]),
+        'activeLink' => '/csomagok',
+        'isAuthorized' => isLoggedIn(),
+        'isAdmin' => isAdmin() ?? "",
+        'title' => "Szolgáltatások",
+        'unreadMessages' => countUnreadMessages(),
+        'playChatSound' => playChatSound()
+    ]);
 }
 
 function updatePackageHandler($urlParams)
