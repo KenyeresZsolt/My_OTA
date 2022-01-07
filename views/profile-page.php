@@ -4,27 +4,34 @@
 <p><b>Utolsó módosítás:</b> <?= $params["user"]["last_modified"] === "0" ? "soha" : date("Y.m.d H:i:s",$params["user"]["last_modified"]) ?></p>
 <?php if($params['isAdmin'] === "1"): ?>
     <div>
-            <a href="/hero" class="btn btn-sm btn-primary float-end">Kollégák</a>
             <a href="/felhasznalok" class="btn btn-sm btn-primary float-end">Felhasználók</a>
     </div>
     <br>
 <?php endif; ?>
 <?php if($params['info'] === "updateSuccessfull"): ?>
-    <div class="alert alert-success text-center">
-        Módosítások lementve
-    </div>
+    <a href="/profil" style="text-decoration:none">
+        <div class="alert alert-success text-center">
+            Módosítások lementve
+        </div>
+    </a>
 <?php elseif($params['info'] === "isRegistered"): ?>
-    <div class="alert alert-danger text-center">
-        Létező emailcím
-    </div>
+    <a href="/profil" style="text-decoration:none">
+        <div class="alert alert-danger text-center">
+            Létező emailcím
+        </div>
+    </a>
 <?php elseif($params['info'] === "invalidPassword"): ?>
-    <div class="alert alert-danger text-center">
-        Érvénytelen jelszó
-    </div>
+    <a href="/profil" style="text-decoration:none">
+        <div class="alert alert-danger text-center">
+            Érvénytelen jelszó
+        </div>
+    </a>
 <?php elseif($params['info'] === "notIdenticalPassword"): ?>
-    <div class="alert alert-danger text-center">
-        Új jelszó nem egyezik
-    </div>    
+    <a href="/profil" style="text-decoration:none">
+        <div class="alert alert-danger text-center">
+            Új jelszó nem egyezik
+        </div>
+    </a> 
 <?php endif ?>
 <div class="card border-primary mb-3">
     <div class="card-header">Adatok módosítása</div>

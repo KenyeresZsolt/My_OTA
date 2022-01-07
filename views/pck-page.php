@@ -1,24 +1,24 @@
 <?php if($params['info'] === "updated"): ?>
-    <div class="alert alert-success">
-        Csomag frissítve!
-    </div>
+    <a href="/csomagok/<?= $params['package']['slug']?>" style="text-decoration:none">
+        <div class="alert alert-success text-center">
+            Csomag frissítve!
+        </div>
+    </a>
 <?php elseif($params["info"] === "reserved"): ?>
-    <div class="alert alert-success">
-        Sikeres foglalás!
-    </div>
+    <a href="/csomagok/<?= $params['package']['slug']?>" style="text-decoration:none">
+        <div class="alert alert-success text-center">
+            Sikeres foglalás!
+        </div>
+    </a>
 <?php endif ?>
 <div class="card border-primary mb-3 m-5" id="<?= $params['package']['id']?>">
     <div class="card-header">
         <div class="row">
-            <div class="h4 col-md-9">
+            <div class="h4 col-md-10">
                 <?= $params['package']['name'] . " " . $params['package']['location'];?>
             </div>
             <?php if($params['isAuthorized'] AND $params['isAdmin'] === "1"): ?>
-                <div class="btn-group float-end col-3">
-                    <a href="/csomagok/<?= $params['package']["slug"] ?>?addimage=1#addImg">
-                        <button class="btn btn-sm btn-light float-end">Kép hozzáad.</button>
-                    </a>
-
+                <div class="btn-group float-end col-2">
                     <a href="/<?= $params['package']["slug"] ?>/szerkesztes">
                         <button class="btn btn-sm btn-light float-end">Szerkesztés</button>
                     </a>
@@ -161,18 +161,5 @@
                 <p class="row justify-content-between"><?= @$params['package']['description']; ?></p>
             </div>
         </div>
-        
-        <?php if($params["addImgToPckId"]): ?>
-            <?php if($params['isAuthorized'] AND $params['isAdmin'] === "1"): ?>
-                <form action="/upload-pck-image/<?= $params['package']["id"] ?>" method="post" enctype="multipart/form-data" id="addImg">
-                    <input class="form-control col-md-2" type="file" name="fileToUpload" id="fileToUpload">
-                    <br>
-                    <input class="btn btn-sm btn-success" type="submit" value="Feltöltés" name="submit">
-                    <a href="/csomagok/<?= $params['package']["slug"]?>">
-                        <button type="button" class="btn btn-sm btn-outline-primary mr-2">Mégse</button>
-                    </a>
-                </form>
-            <?php endif; ?>
-        <?php endif; ?>
     </div>
 </div>

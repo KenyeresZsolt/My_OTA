@@ -1,11 +1,13 @@
 <?php if($params['isRegistration']) : ?>
 
     <?php if($params['info'] === "emptyValue"): ?>
-        <div class="row">
-            <div class="ms-auto me-auto alert alert-danger p-2 text-center" style="max-width: 25rem;">
-                Tölts ki minden mezőt!
+        <a href="/bejelentkezes?isRegistration=1" style="text-decoration:none">
+            <div class="row">
+                <div class="ms-auto me-auto alert alert-danger p-2 text-center" style="max-width: 25rem;">
+                    Tölts ki minden mezőt!
+                </div>
             </div>
-        </div>
+        </a>
     <?php endif; ?>
     <div class="row">
         <div class="card p-3 border-success ms-auto me-auto" style="max-width: 25rem;">
@@ -39,26 +41,32 @@
 
 <?php else: ?>
     <?php if($params['info'] === "invalidCredentials"): ?>
-        <div class="row">
-            <div class="ms-auto me-auto alert alert-danger p-2 text-center" style="max-width: 25rem;">
-                Helytelen bejelentkezési adatok
+        <a href="/bejelentkezes" style="text-decoration:none">
+            <div class="row">
+                <div class="ms-auto me-auto alert alert-danger p-2 text-center" style="max-width: 25rem;">
+                    Helytelen bejelentkezési adatok
+                </div>
             </div>
-        </div>
+        </a>
     <?php endif; ?>
 
     <?php if($params['info'] === "registrationSuccessfull"): ?>
-        <div class="row">
-            <div class="ms-auto me-auto alert alert-success p-2 text-center" style="max-width: 25rem;">
-                Sikeres regisztráció. Jelentkezz be!
+        <a href="/bejelentkezes" style="text-decoration:none">
+            <div class="row">
+                <div class="ms-auto me-auto alert alert-success p-2 text-center" style="max-width: 25rem;">
+                    Sikeres regisztráció. Jelentkezz be!
+                </div>
             </div>
-        </div>
+        </a>
     <?php endif; ?>
     <?php if($params['info'] === "isRegistered"): ?>
-        <div class="row">
-            <div class="ms-auto me-auto alert alert-danger p-2 text-center" style="max-width: 25rem;">
-                Ezzel az emailcímmel már regisztrálva vagy. Jelentkezz be!
+        <a href="/bejelentkezes" style="text-decoration:none">
+            <div class="row">
+                <div class="ms-auto me-auto alert alert-danger p-2 text-center" style="max-width: 25rem;">
+                    Ezzel az emailcímmel már regisztrálva vagy. Jelentkezz be!
+                </div>
             </div>
-        </div>
+        </a>
     <?php endif; ?>
     <div class="row">
         <div class="card p-3 border-success ms-auto me-auto" style="max-width: 25rem;">

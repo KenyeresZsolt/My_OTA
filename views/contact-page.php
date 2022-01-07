@@ -5,13 +5,17 @@
   </div>
 
   <?php if ($params['info'] === "kuldesSikeres") : ?>
-    <div class="alert alert-success" role="alert">
-      Küldés sikeres!
-    </div>
+    <a href="/kapcsolat" style="text-decoration:none">
+      <div class="alert alert-success text-center">
+        Küldés sikeres!
+      </div>
+    </a>
   <?php elseif($params['info'] === "emptyValue"): ?>
-    <div class="alert alert-danger p-3 m-5">
-        Tölts ki minden mezőt!
-    </div>
+    <a href="/kapcsolat" style="text-decoration:none">
+      <div class="alert alert-danger text-center">
+          Tölts ki minden mezőt!
+      </div>
+    </a>
 <?php endif; ?>
 
   <form id="contactForm" action="/submit-mail" method="POST">

@@ -1,16 +1,20 @@
 <?php if($params['info'] === "added"): ?>
-    <div class="alert alert-success">
-        Csomag létrehozva!
-    </div>
+    <a href="/csomagok" style="text-decoration:none">
+        <div class="alert alert-success text-center">
+            Csomag létrehozva!
+        </div>
+    </a>
 <?php elseif($params['info'] === "deleted"): ?>
-    <div class="alert alert-danger">
-        Csomag sikeresen törölve!
-    </div>
+    <a href="/csomagok" style="text-decoration:none">
+        <div class="alert alert-danger text-center">
+            Csomag sikeresen törölve!
+        </div>
+    </a>
 <?php endif ?>
 <?php if($params['isAuthorized'] AND $params['isAdmin'] === "1"): ?>
     <div class="container">
         <a href="/uj-csomag">
-            <button class="btn btn-sm btn-primary float-end">Új csomag</button>
+            <button class="btn btn-sm btn-outline-success float-end">Új csomag</button>
         </a>
     </div>
 <?php endif; ?>
@@ -62,7 +66,7 @@
                 <hr>
                 <div class="btn-group float-end">
                     <a href="/csomagok">
-                        <button type="button" class="btn btn-sm btn-outline-primary mr-2">Törlés</button>
+                        <button type="button" class="btn btn-sm btn-outline-secondary mr-2">Törlés</button>
                     </a>
                     <button type="submit" class="btn btn-sm btn-success">Szűrés</button>
                 </div>
@@ -71,10 +75,10 @@
     </div>
 </div> 
 <div class="row col-md-10">
-    <p><?= count($params['packages']) . " találat"?></p>
+    <p style="max-height:1rem"><?= count($params['packages']) . " találat"?></p>
     <?php foreach($params['packages'] as $package): ?>
-        <div class="card border-success mb-5 me-auto col-auto" id="<?php echo $package['id']?>" style="width:20rem">
-            <div class="card-header container-fluid h4">
+        <div class="card border-success mb-5 me-auto" id="<?php echo $package['id']?>" style="width:20rem">
+            <div class="card-header h4">
                 <?php echo $package['name'] . " " . $package['location'];?>
             </div>
             <div class="card-body container-fluid">
@@ -102,7 +106,7 @@
     <hr>
     <div class="container">
         <a href="/uj-csomag">
-            <button class="btn btn-sm btn-primary float-end">Új csomag</button>
+            <button class="btn btn-sm btn-outline-success float-end">Új csomag</button>
         </a>
     </div>
 <?php endif; ?>

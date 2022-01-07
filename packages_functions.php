@@ -209,14 +209,23 @@ function createAddressJson()
     ), true);
 }
 
+function imageUpload()
+{
+    $targetDir = "public/uploads/";
+    $targetFile = $targetDir . basename($_FILES["fileToUpload"]["name"]);
+    $imageFileType = strtolower(pathinfo($targetFile,PATHINFO_EXTENSION));
+    
+    move_uploaded_file($_FILES["fileToUpload"]["tmp_name"],$targetFile);
+    return $targetFile;
+}
+
 function createPackageHandler()
 {
     redirectToLoginIfNotLoggedIn();
-
     $pdo = getConnection();
     $statement = $pdo->prepare(
-        'INSERT INTO packages (name, location, slug, address, accm_type, price, breakfast_price, discount, capacity, rooms, facilities, description, languages, contact_name, email, phone, webpage)
-        VALUES (:name, :location, :slug, :address, :accm_type, :price, :breakfast_price, :discount, :capacity, :rooms, :facilities, :description, :languages, :contact_name, :email, :phone, :webpage)'
+        'INSERT INTO packages (name, location, slug, address, accm_type, price, breakfast_price, discount, capacity, rooms, facilities, description, languages, image, contact_name, email, phone, webpage)
+        VALUES (:name, :location, :slug, :address, :accm_type, :price, :breakfast_price, :discount, :capacity, :rooms, :facilities, :description, :languages, :image, :contact_name, :email, :phone, :webpage)'
     );
     $statement->execute([
         'name' => $_POST["name"] ?? "", 
@@ -232,6 +241,7 @@ function createPackageHandler()
         'facilities' => json_encode($_POST['facilities'], true) ?? "",
         'description' => $_POST['description'] ?? "",
         'languages' => json_encode($_POST['languages'], true) ?? "",
+        'image' => imageUpload() ?? "",
         'contact_name' => $_POST["contactName"] ?? "",
         'email' => $_POST["contactEmail"] ?? "",
         'phone' => $_POST["contactPhone"] ?? "",
@@ -282,10 +292,19 @@ function editPackageHandler($urlParams)
 function updatePackageHandler($urlParams)
 {
     redirectToLoginIfNotLoggedIn();
+
     $pdo = getConnection();
     $statement = $pdo->prepare(
+        'SELECT *
+        FROM packages p
+        WHERE p.id = ?'
+    );
+    $statement->execute([$urlParams['pckId']]);
+    $package = $statement->fetch(PDO::FETCH_ASSOC);
+    
+    $statement = $pdo->prepare(
         'UPDATE packages
-        SET name = :name, location = :location, slug = :slug, address = :address, accm_type = :accm_type, price = :price, breakfast_price = :breakfast_price, discount = :discount, capacity = :capacity, rooms = :rooms, facilities = :facilities, description = :description, languages = :languages, contact_name = :contact_name, email = :email, phone = :phone, webpage = :webpage, last_modified = :last_modified, last_modified_by_user_id = :last_modified_by_user_id
+        SET name = :name, location = :location, slug = :slug, address = :address, accm_type = :accm_type, price = :price, breakfast_price = :breakfast_price, discount = :discount, capacity = :capacity, rooms = :rooms, facilities = :facilities, description = :description, languages = :languages, image = :image, contact_name = :contact_name, email = :email, phone = :phone, webpage = :webpage, last_modified = :last_modified, last_modified_by_user_id = :last_modified_by_user_id
         WHERE id = :id'
     );
     $statement->execute([
@@ -302,6 +321,7 @@ function updatePackageHandler($urlParams)
         'facilities' => json_encode($_POST['facilities'], true) ?? "",
         'description' => $_POST['description'] ?? "",
         'languages' => json_encode($_POST['languages'], true) ?? "",
+        'image' => imageUpload() ?? $package['image'],
         'contact_name' => $_POST["contactName"] ?? "",
         'email' => $_POST["contactEmail"] ?? "",
         'phone' => $_POST["contactPhone"] ?? "",
@@ -310,15 +330,7 @@ function updatePackageHandler($urlParams)
         'last_modified_by_user_id' => $_SESSION['userId'] ?? "",
         'id' => $urlParams['pckId'] ?? ""
     ]);
-
-    $statement = $pdo->prepare(
-        'SELECT *
-        FROM packages p
-        WHERE p.id = ?'
-    );
-    $statement->execute([$urlParams['pckId']]);
-    $package = $statement->fetch(PDO::FETCH_ASSOC);
-    
+   
     header("Location: /csomagok/" . $package['slug'] . "?info=updated");
 }
 

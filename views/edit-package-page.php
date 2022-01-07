@@ -1,7 +1,7 @@
 <div class="card border-success mb-3 m-5">
     <div class="card-header">Szállás szerkesztése</div>
         <div class="card-body">
-            <form class="form-inline" action="/update-package/<?= $params['package']['id']?>" method="POST" id="updtPck">
+            <form class="form-inline" action="/update-package/<?= $params['package']['id']?>" method="POST" enctype="multipart/form-data" id="updtPck">
                 <div class="form-group">
                     <div class="container">
                         <h5>Alapadatok</h5>
@@ -10,6 +10,17 @@
                                 <label for="name" class="form-label mt-4">Szállás neve</label>
                                 <input class="form-control form-control-sm" type="text" name="name" value="<?= $params['package']['name']?>" autocomplete="off"/>                                        
                             </div>                
+                        </div>
+                        <div class="row">
+                            <p class="mt-4">Szálláshely típusa</p>
+                            <?php foreach($params['accmTypes'] as $accmType) : ?>
+                                <div class="form-check" style="max-width: 8rem;">
+                                    <label class="form-check-label" for="type">
+                                    <input class="form-check-input" type="radio"  name="type" value="<?= $accmType['type_code']?>" <?= $accmType['type_code'] === $params['package']["accm_type"] ? "checked" : "" ?>>
+                                        <?= $accmType['name']?>
+                                    </label>
+                                </div>                                    
+                            <?php endforeach; ?>
                         </div>
                         <div class="row">
                             <div style="max-width: 10rem;">
@@ -36,18 +47,11 @@
                     </div>
                     <br><hr><br>
                     <div class="container">
-                        <h5>Szálláshely típusa</h5>
+                        <h5>Képek a szállásról</h5>
                         <br>
-                            <div class="row">
-                            <?php foreach($params['accmTypes'] as $accmType) : ?>
-                                <div class="form-check" style="max-width: 8rem;">
-                                    <label class="form-check-label" for="type">
-                                    <input class="form-check-input" type="radio"  name="type" value="<?= $accmType['type_code']?>" <?= $accmType['type_code'] === $params['package']["accm_type"] ? "checked" : "" ?>>
-                                        <?= $accmType['name']?>
-                                    </label>
-                                </div>                                    
-                            <?php endforeach; ?>
-                        </div>                                       
+                        <div class="row">
+                            <input class="form-control" style="max-width:25rem;" type="file" name="fileToUpload" id="fileToUpload">
+                        </div>                   
                     </div>
                     <br><hr><br>
                     <div class="container">
@@ -163,9 +167,9 @@
                     <small>Utoljára szerkesztette: <b><?= $params['package']['modified_by_user_name']?></b></small>
                     <div class="btn-group float-end m-2">
                         <a href="/csomagok/<?= $params['package']['slug']?>">
-                            <button type="button" class="btn btn-sm btn-outline-primary mr-2">Vissza</button>
+                            <button type="button" class="btn btn-sm btn-outline-secondary mr-2">Vissza</button>
                         </a>
-                        <button type="submit" class="btn btn-sm btn-success">Lementem</button>
+                        <button type="submit" class="btn btn-sm btn-warning">Lementem</button>
                     </div>
                 </div>
             </form>

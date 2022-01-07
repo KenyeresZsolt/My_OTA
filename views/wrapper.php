@@ -18,7 +18,7 @@
         <source src="public/audio/chat.wav" type="audio/wav">
     </audio>
     <?php endif ?>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-navbar">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-secondary fixed-navbar">
         <div class="container">
             <div class="navbar-nav">
                 <a class="nav-item nav-link <?php echo $params['activeLink'] === "/" ? "active" : "" ?>" href="/">
@@ -60,9 +60,9 @@
     <div class="card p-4 m-4">
         <?php echo $params['content'] ?>
     </div>
-    <footer class="bg-dark text-lg-start fixed-bottom container-fluid" style="font-size:1vw;">
+    <footer class="bg-secondary text-lg-start fixed-bottom container-fluid" style="font-size:1vw;">
             <div class="row">
-                <div class="text-center p-3" style="max-width: 92%;">
+                <div class="text-center p-3 text-white" style="max-width: 92%;">
                     @Kenyeres Zsolt
                 </div>
                 <div class="float-end p-3" style="max-width: 8%;">

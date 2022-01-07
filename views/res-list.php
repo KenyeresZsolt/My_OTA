@@ -1,11 +1,15 @@
 <?php if($params['info'] === "deleted"): ?>
-    <div class="alert alert-success">
-        Foglalás törölve!
-    </div>
+    <a href="/foglalasok" style="text-decoration:none">
+        <div class="alert alert-success text-center">
+            Foglalás törölve!
+        </div>
+    </a>
 <?php elseif($params['info'] === "updated"): ?>
-    <div class="alert alert-success">
-        Foglalás frissítve!
-    </div>
+    <a href="/foglalasok" style="text-decoration:none">
+        <div class="alert alert-success text-center">
+            Foglalás frissítve!
+        </div>
+    </a>
 <?php endif; ?>
 <?php foreach($params['reservations'] as $reservation): ?>
     <div class="accordion" id="accordionExample">
