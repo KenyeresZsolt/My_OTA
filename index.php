@@ -32,6 +32,8 @@ $routes = [
     ['POST', '/delete-package/{pckId}' , 'deletePackageHandler'],
     ['POST', '/update-package/{pckId}' , 'updatePackageHandler'],
     ['POST', '/reserve-package/{pckId}' , 'reservePackageHandler'],
+    ['POST', '/update-meals/{pckId}' , 'updateMealsHandler'],
+    ['POST', '/update-wellness/{pckId}' , 'updateWellnessHandler'],
     ['POST', '/update-reservation' , 'updateReservationHandler'],
     ['POST', '/cancel-reservation' , 'cancelReservationHandler'],
     ['POST', '/delete-reservation' , 'deleteReservationHandler'],

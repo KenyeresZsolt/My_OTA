@@ -226,8 +226,8 @@ function createPackageHandler()
     redirectToLoginIfNotLoggedIn();
     $pdo = getConnection();
     $statement = $pdo->prepare(
-        'INSERT INTO packages (name, location, slug, address, accm_type, price, breakfast_price, discount, capacity, rooms, facilities, description, languages, image, contact_name, email, phone, webpage)
-        VALUES (:name, :location, :slug, :address, :accm_type, :price, :breakfast_price, :discount, :capacity, :rooms, :facilities, :description, :languages, :image, :contact_name, :email, :phone, :webpage)'
+        'INSERT INTO packages (name, location, slug, address, accm_type, price, discount, capacity, rooms, bathrooms, facilities, description, languages, image, contact_name, email, phone, webpage)
+        VALUES (:name, :location, :slug, :address, :accm_type, :price, :discount, :capacity, :rooms, :bathrooms, :facilities, :description, :languages, :image, :contact_name, :email, :phone, :webpage)'
     );
     $statement->execute([
         'name' => $_POST["name"] ?? "", 
@@ -236,10 +236,10 @@ function createPackageHandler()
         'address' => createAddressJson() ?? "",
         'accm_type' => $_POST["type"] ?? "",
         'price' => $_POST["price"] ?? "",
-        'breakfast_price' => $_POST["breakfastPrice"] ?? "",
         'discount' => $_POST["discount"] ?? "",
         'capacity' => $_POST["capacity"] ?? "",
         'rooms' => $_POST["rooms"] ?? "",
+        'bathrooms' => $_POST["bathrooms"] ?? "",
         'facilities' => json_encode($_POST['facilities'], true) ?? "",
         'description' => $_POST['description'] ?? "",
         'languages' => json_encode($_POST['languages'], true) ?? "",
@@ -294,6 +294,30 @@ function editPackageHandler($urlParams)
     ]);
 }
 
+function getServicesByCategory($category)
+{
+    $pdo = getConnection();
+    $statement = $pdo->prepare(
+        'SELECT *
+        FROM services s
+        where s.category = ?'
+    );
+    $statement->execute([$category]);
+    return $statement->fetchAll(PDO::FETCH_ASSOC);
+}
+
+function getServicesStatusByCategory($category)
+{
+    $pdo = getConnection();
+    $statement = $pdo->prepare(
+        'SELECT *
+        FROM services_status ss
+        where ss.category = ?'
+    );
+    $statement->execute([$category]);
+    return $statement->fetchAll(PDO::FETCH_ASSOC);
+}
+
 function editServicesHandler($urlParams)
 {
     redirectToLoginIfNotLoggedIn();
@@ -307,10 +331,20 @@ function editServicesHandler($urlParams)
     );
     $statement->execute([$urlParams['pckSlug']]);
     $package = $statement->fetch(PDO::FETCH_ASSOC);
+    $mealDetails = json_decode($package['meal_details'], true);
+    $wellnessDetails = json_decode($package['wellness_details'], true);
 
     echo render("wrapper.php", [
         'content' => render('pck-settings-page.php', [
-            'settingsContent' => render("coming-soon-page.php"),
+            'settingsContent' => render("edit-services-page.php", [
+                'package' => $package,
+                'mealDetails' => $mealDetails,
+                'meals' => getServicesByCategory("meal"),
+                'mealsStatus' => getServicesStatusByCategory("meal"),
+                'wellnessDetails' => $wellnessDetails,
+                'wellnessFacilities' => getServicesByCategory("wellness"),
+                'wellnessStatus' => getServicesStatusByCategory("wellness"),
+            ]),
             'package' => $package,
             'activeTab' => 'services',
         ]),
@@ -321,6 +355,99 @@ function editServicesHandler($urlParams)
         'unreadMessages' => countUnreadMessages(),
         'playChatSound' => playChatSound()
     ]);
+}
+
+function updateMealsHandler($urlParams)
+{
+    redirectToLoginIfNotLoggedIn();
+    $pdo = getConnection();
+    $statement = $pdo->prepare(
+        'SELECT *
+        FROM packages p
+        WHERE p.id = ?'
+    );
+    $statement->execute([$urlParams['pckId']]);
+    $package = $statement->fetch(PDO::FETCH_ASSOC);
+
+    if($_POST['mealOffered'] === "NO"){
+        $_POST['breakfast'] = "NOTPROVIDED";
+        $_POST['lunch'] = "NOTPROVIDED";
+        $_POST['dinner'] = "NOTPROVIDED";
+    }
+
+    if(($_POST['breakfast'] === "PAYABLE" AND  empty($_POST['breakfastPrice'])) OR ($_POST['lunch'] === "PAYABLE" AND  empty($_POST['lunchPrice'])) OR ($_POST['dinner'] === "PAYABLE" AND  empty($_POST['dinnerPrice']))){
+        return header('Location: /' . $package['slug'] . '/beallitasok/szolgaltatasok?info=mealsEmptyPrice'); 
+    }
+
+    if($_POST['mealOffered'] === "YES" AND $_POST['breakfast'] === "NOTPROVIDED" AND $_POST['lunch'] === "NOTPROVIDED" AND $_POST['dinner'] === "NOTPROVIDED"){
+        return header('Location: /' . $package['slug'] . '/beallitasok/szolgaltatasok?info=mealsNotSpecified'); 
+    }
+
+    if($_POST['breakfast'] !== "PAYABLE"){
+        $_POST['breakfastPrice'] ="";
+    }
+    if($_POST['lunch'] !== "PAYABLE"){
+        $_POST['lunchPrice'] ="";
+    }
+    if($_POST['dinner'] !== "PAYABLE"){
+        $_POST['dinnerPrice'] ="";
+    }
+
+    $mealDetails = json_encode($_POST, true);
+
+    $statement = $pdo->prepare(
+        'UPDATE packages
+        SET meal_offered = ?, meal_details= ?
+        WHERE id = ?');
+    $statement->execute([
+        $_POST['mealOffered'],
+        $mealDetails,
+        $urlParams['pckId'],
+    ]);
+
+    header('Location: /' . $package['slug'] . '/beallitasok/szolgaltatasok?info=mealsUpdated');
+
+}
+
+function updateWellnessHandler($urlParams)
+{
+    redirectToLoginIfNotLoggedIn();
+    $pdo = getConnection();
+    $statement = $pdo->prepare(
+        'SELECT *
+        FROM packages p
+        WHERE p.id = ?'
+    );
+    $statement->execute([$urlParams['pckId']]);
+    $package = $statement->fetch(PDO::FETCH_ASSOC);
+
+    if($_POST['wellnessOffered'] === "NO"){
+        $_POST['wellnessFacilities'] = "";
+        $_POST['wellnessStatus'] = "NOTPROVIDED";
+        $_POST['wellnessPrice'] = "0";
+    }
+
+    if($_POST['wellnessStatus'] === "PAYABLE" AND empty($_POST['wellnessPrice'])){
+        return header('Location: /' . $package['slug'] . '/beallitasok/szolgaltatasok?info=wellnessEmptyPrice'); 
+    }
+
+    if($_POST['wellnessOffered'] === "YES" AND (empty($_POST['wellnessFacilities']) OR empty($_POST['wellnessStatus']))){
+        return header('Location: /' . $package['slug'] . '/beallitasok/szolgaltatasok?info=wellnessFacilitiesNotSpecified'); 
+    }
+
+    $wellnessDetails = json_encode($_POST, true);
+
+    $statement = $pdo->prepare(
+        'UPDATE packages
+        SET wellness_offered = ?, wellness_details= ?
+        WHERE id = ?');
+    $statement->execute([
+        $_POST['wellnessOffered'],
+        $wellnessDetails,
+        $urlParams['pckId'],
+    ]);
+
+    header('Location: /' . $package['slug'] . '/beallitasok/szolgaltatasok?info=wellnessUpdated');
 }
 
 function editDiscountsHandler($urlParams)
@@ -346,7 +473,7 @@ function editDiscountsHandler($urlParams)
         'activeLink' => '/csomagok',
         'isAuthorized' => isLoggedIn(),
         'isAdmin' => isAdmin() ?? "",
-        'title' => "Szolgáltatások",
+        'title' => "Kedvezmények",
         'unreadMessages' => countUnreadMessages(),
         'playChatSound' => playChatSound()
     ]);
@@ -375,7 +502,7 @@ function editRoomsHandler($urlParams)
         'activeLink' => '/csomagok',
         'isAuthorized' => isLoggedIn(),
         'isAdmin' => isAdmin() ?? "",
-        'title' => "Szolgáltatások",
+        'title' => "Szobák",
         'unreadMessages' => countUnreadMessages(),
         'playChatSound' => playChatSound()
     ]);
@@ -396,7 +523,7 @@ function updatePackageHandler($urlParams)
     
     $statement = $pdo->prepare(
         'UPDATE packages
-        SET name = :name, location = :location, slug = :slug, address = :address, accm_type = :accm_type, price = :price, breakfast_price = :breakfast_price, discount = :discount, capacity = :capacity, rooms = :rooms, facilities = :facilities, description = :description, languages = :languages, image = :image, contact_name = :contact_name, email = :email, phone = :phone, webpage = :webpage, last_modified = :last_modified, last_modified_by_user_id = :last_modified_by_user_id
+        SET name = :name, location = :location, slug = :slug, address = :address, accm_type = :accm_type, price = :price, discount = :discount, capacity = :capacity, rooms = :rooms, bathrooms = :bathrooms, facilities = :facilities, description = :description, languages = :languages, image = :image, contact_name = :contact_name, email = :email, phone = :phone, webpage = :webpage, last_modified = :last_modified, last_modified_by_user_id = :last_modified_by_user_id
         WHERE id = :id'
     );
     $statement->execute([
@@ -406,10 +533,10 @@ function updatePackageHandler($urlParams)
         'address' => createAddressJson() ?? "",
         'accm_type' => $_POST["type"] ?? "",
         'price' => $_POST["price"] ?? "",
-        'breakfast_price' => $_POST["breakfastPrice"] ?? "",
         'discount' => $_POST["discount"] ?? "",
         'capacity' => $_POST["capacity"] ?? "",
         'rooms' => $_POST["rooms"] ?? "",
+        'bathrooms' => $_POST["bathrooms"] ?? "",
         'facilities' => json_encode($_POST['facilities'], true) ?? "",
         'description' => $_POST['description'] ?? "",
         'languages' => json_encode($_POST['languages'], true) ?? "",

@@ -14,18 +14,14 @@
 <div class="card border-primary mb-3 m-5" id="<?= $params['package']['id']?>">
     <div class="card-header">
         <div class="row">
-            <div class="h4 col-md-9">
+            <div class="h4 col-md-10">
                 <?= $params['package']['name'] . " " . $params['package']['location'];?>
             </div>
             <?php if($params['isAuthorized'] AND $params['isAdmin'] === "1"): ?>
-                <div class="btn-group float-end col-3">
+                <div class="btn-group float-end col-2">
                     <a href="/<?= $params['package']["slug"] ?>/beallitasok/adatok">
                         <button class="btn btn-sm btn-light float-end">Beállítások</button>
                     </a>
-                    <a href="/<?= $params['package']["slug"] ?>/szerkesztes">
-                        <button class="btn btn-sm btn-light float-end">Szerkesztés</button>
-                    </a>
-                        
                     <form action="/delete-package/<?= $params['package']["id"] ?>" method="post">
                         <button type="submit" class="btn btn-sm btn-danger float-end">Törlés</button>
                     </form>
@@ -65,9 +61,6 @@
             <div class="card-header">Árak</div>
             <div class="card-body ms-3">
                 <div class="row">Szállás: <?= @$params['package']['price'];?> RON/fő/éj</div>
-                <?php if($params['package']['breakfast_price'] !== "0"): ?>
-                    <div class="row">Reggeli: <?= @$params['package']['breakfast_price'];?> RON/fő/alkalom</div>
-                <?php endif; ?>
             </div>
         </div>
         <hr>
@@ -123,7 +116,7 @@
             <div class="card-header">Szálláshely adatai</div>
             <div class="card-body ms-3">
                 <div class="row"><?= "Típus: " . $params['package']['type']?></div>
-                <div class="row"><?= "Férőhelyek: " . $params['package']['capacity'] . " személy (" . $params['package']['rooms'] . " szoba)"?></div>
+                <div class="row"><?= "Férőhelyek: " . $params['package']['capacity'] . " személy (" . $params['package']['rooms'] . " szoba, " . $params['package']['bathrooms'] . " fürdőszoba)"?></div>
                 <hr style="border: 1px dashed white;width:15rem">
                 <div class="row">Beszélt nyelvek:
                     <?php if(!empty($params['languages'])){

@@ -31,6 +31,10 @@
                                 <label for="rooms" class="form-label mt-4">Szobák száma</label>
                                 <input class="form-control form-control-sm" type="text" name="rooms" autocomplete="off"/>                                        
                             </div>
+                            <div style="max-width: 11rem;">
+                                <label for="bathrooms" class="form-label mt-4">Fördőszobák száma</label>
+                                <input class="form-control form-control-sm" type="text" name="bathrooms" autocomplete="off"/>                                        
+                            </div>
                         </div>
                         <br>
                         <div class="row">
@@ -62,13 +66,6 @@
                                 <input class="form-control form-control-sm" type="text" name="price" autocomplete="off"/>
                             </div>
                             <label for="price" class="col-sm-2 col-form-label">RON/fő/éj</label>                                
-                        </div>
-                        <div class="row">
-                            <label for="breakfastPrice" class="col-sm-1 col-form-label">Reggeli</label>
-                            <div class="col-sm-1">
-                                <input class="form-control form-control-sm" type="text" name="breakfastPrice" autocomplete="off"/>
-                            </div>
-                            <label for="breakfastPrice" class="col-sm-2 col-form-label">RON/fő/alkalom</label>                                
                         </div>
                     </div>
                     <br><hr><br>
