@@ -57,7 +57,7 @@ function updatePackageHandler($urlParams)
     
     $statement = $pdo->prepare(
         'UPDATE packages
-        SET name = :name, location = :location, slug = :slug, address = :address, accm_type = :accm_type, price = :price, discount = :discount, capacity = :capacity, rooms = :rooms, bathrooms = :bathrooms, facilities = :facilities, description = :description, languages = :languages, image = :image, contact_name = :contact_name, email = :email, phone = :phone, webpage = :webpage, last_modified = :last_modified, last_modified_by_user_id = :last_modified_by_user_id
+        SET name = :name, location = :location, slug = :slug, address = :address, accm_type = :accm_type, price = :price, capacity = :capacity, rooms = :rooms, bathrooms = :bathrooms, facilities = :facilities, description = :description, languages = :languages, image = :image, contact_name = :contact_name, email = :email, phone = :phone, webpage = :webpage, last_modified = :last_modified, last_modified_by_user_id = :last_modified_by_user_id
         WHERE id = :id'
     );
     $statement->execute([
@@ -67,7 +67,6 @@ function updatePackageHandler($urlParams)
         'address' => createAddressJson() ?? "",
         'accm_type' => $_POST["type"] ?? "",
         'price' => $_POST["price"] ?? "",
-        'discount' => $_POST["discount"] ?? "",
         'capacity' => $_POST["capacity"] ?? "",
         'rooms' => $_POST["rooms"] ?? "",
         'bathrooms' => $_POST["bathrooms"] ?? "",

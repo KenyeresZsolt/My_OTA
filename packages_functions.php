@@ -226,8 +226,8 @@ function createPackageHandler()
     redirectToLoginIfNotLoggedIn();
     $pdo = getConnection();
     $statement = $pdo->prepare(
-        'INSERT INTO packages (name, location, slug, address, accm_type, price, discount, capacity, rooms, bathrooms, facilities, description, languages, image, contact_name, email, phone, webpage)
-        VALUES (:name, :location, :slug, :address, :accm_type, :price, :discount, :capacity, :rooms, :bathrooms, :facilities, :description, :languages, :image, :contact_name, :email, :phone, :webpage)'
+        'INSERT INTO packages (name, location, slug, address, accm_type, price, capacity, rooms, bathrooms, facilities, description, languages, image, contact_name, email, phone, webpage)
+        VALUES (:name, :location, :slug, :address, :accm_type, :price, :capacity, :rooms, :bathrooms, :facilities, :description, :languages, :image, :contact_name, :email, :phone, :webpage)'
     );
     $statement->execute([
         'name' => $_POST["name"] ?? "", 
@@ -236,7 +236,6 @@ function createPackageHandler()
         'address' => createAddressJson() ?? "",
         'accm_type' => $_POST["type"] ?? "",
         'price' => $_POST["price"] ?? "",
-        'discount' => $_POST["discount"] ?? "",
         'capacity' => $_POST["capacity"] ?? "",
         'rooms' => $_POST["rooms"] ?? "",
         'bathrooms' => $_POST["bathrooms"] ?? "",

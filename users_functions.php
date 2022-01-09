@@ -41,7 +41,7 @@ function createUserHandler()
     $pdo = getConnection();
     
     $statement = $pdo->prepare(
-        'INSERT INTO users (name, email, password, createdAt)
+        'INSERT INTO users (name, email, password, registered)
         VALUES (?, ?, ?, ?)'
     );
     $statement->execute([
@@ -62,7 +62,7 @@ function updateUserHandler()
     $pdo = getConnection();
     $statement = $pdo->prepare(
         'UPDATE users u
-        SET u.name = ? , u.email = ?, u.isAdmin = ?
+        SET u.name = ? , u.email = ?, u.is_Admin = ?
         WHERE u.id = ?'
     );
     $statement->execute([
