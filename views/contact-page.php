@@ -7,7 +7,7 @@
   <?php if ($params['info'] === "kuldesSikeres") : ?>
     <a href="/kapcsolat" style="text-decoration:none">
       <div class="alert alert-success text-center">
-        Küldés sikeres!
+        <?php echo validationMessages('kuldesSikeres') ?>
       </div>
     </a>
   <?php elseif($params['info'] === "emptyValue"): ?>

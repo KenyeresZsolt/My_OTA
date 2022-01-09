@@ -14,7 +14,7 @@
             Módosítások lementve
         </div>
     </a>
-<?php elseif($params['info'] === "isRegistered"): ?>
+<?php elseif($params['info'] === "emailUsed"): ?>
     <a href="/profil" style="text-decoration:none">
         <div class="alert alert-danger text-center">
             Létező emailcím

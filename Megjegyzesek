@@ -1,0 +1,20 @@
+I. DB
+    1. Atrendezni a db strukturat. Foleg a json-os mezoket.
+    pl
+    packages_facilities
+    id - package_id - facility_id
+
+    2. Default ertekek NULL-ol legyenek
+    3. Indexeket csinalni a WHERE es ORDER_BY -os mezokre
+    4. Kulso kulcsokat beallitani
+    5. Csinalni select / insert / update / delete altalanos fuggvenyt => lecserelni!
+
+II.
+
+    1. header => redirect fuggveny
+        url_redirect(bejelentkezes?info=invalidCredentials);
+    2. kodban sok helyen '' helyett, null legyen
+    3. email_send();
+    4. A handler az csak az iranyito feladatot lassa el, nem kell oda sql pl.
+
+

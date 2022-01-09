@@ -1,5 +1,6 @@
 <?php
 
+require './common.php';
 require './login_functions.php';
 require './packages_functions.php';
 require './packages_settings_functions.php';
@@ -12,8 +13,8 @@ require './Mailer.php';
 function getConnection()
 {
     return new PDO(
-        'mysql:host='. $_SERVER['DB_HOST'] .';dbname=' . $_SERVER['DB_NAME'], 
-        $_SERVER['DB_USER'], 
+        'mysql:host='. $_SERVER['DB_HOST'] .';dbname=' . $_SERVER['DB_NAME'],
+        $_SERVER['DB_USER'],
         $_SERVER['DB_PASSWORD']
     );
 }

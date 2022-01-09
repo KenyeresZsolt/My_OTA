@@ -1,22 +1,22 @@
 <?php
 
-function isRegistered():bool
+function emailUsed():bool
 {
-    $userId = $_SESSION['userId'] ?? '';
+    $userId = $_SESSION['userId'] ?? null;
+    if ($userId) {
+        $pdo = getConnection();
+        $statement = $pdo->prepare(
+            'SELECT u.email
+            FROM users u
+            WHERE u.id <> ?'
+        );
+        $statement->execute([$userId]);
+        $users = $statement->fetchAll(PDO::FETCH_ASSOC);
 
-    $pdo = getConnection();
-    $statement = $pdo->prepare(
-        'SELECT u.email
-        FROM users u
-        WHERE u.id <> ?'
-    );
-    $statement->execute([$userId]);
-    $users = $statement->fetchAll(PDO::FETCH_ASSOC);
-
-    foreach($users as $user){
-        if($user['email'] === $_POST['email']){
-            return true;
-            exit;
+        foreach($users as $user){
+            if($user['email'] === $_POST['email']){
+                return true;
+            }
         }
     }
     return false;
@@ -24,17 +24,18 @@ function isRegistered():bool
 
 function registrationHandler()
 {
-    if (empty($_POST["name"]) OR empty($_POST["email"]) OR empty($_POST["password"])) {
-        header('Location: /bejelentkezes?isRegistration=1&info=emptyValue');
-
-        return ;
+    if (empty($postedData["name"]) OR empty($postedData["email"]) OR empty($postedData["password"])) {
+        url_redirect('bejelentkezes', [
+            'isRegistration' => 1,
+            'info' => 'emptyValue'
+        ]);
     }
 
     //ellenőrzés, hogy regisztrálva van-e már
-
-    if(isRegistered()){
-    header('Location: /bejelentkezes?info=isRegistered');
-    return;
+    if(emailUsed()){
+        url_redirect('bejelentkezes', [
+            'info' => 'emailUsed'
+        ]);
     }
     //ellenőrzés vége
 
@@ -49,6 +50,11 @@ function registrationHandler()
         password_hash($_POST["password"], PASSWORD_DEFAULT),
         time()
     ]);
+
+
+    // insertUser($data);
+    //sendRegistrationMail($userID);
+
 
     //email
     $statement = insertMailSql();
@@ -114,7 +120,7 @@ function isLoggedIn(): bool
     }
 
     if(!isset($_SESSION['userId'])){
-            return false;
+        return false;
     }
     
     return true;
@@ -214,8 +220,8 @@ function updateProfilHandler()
 {
     redirectToLoginIfNotLoggedIn();
 
-    if(isRegistered()){
-        header('Location: /profil?info=isRegistered#updtProfile');
+    if(emailUsed()){
+        header('Location: /profil?info=emailUsed#updtProfile');
         return;
         }
     

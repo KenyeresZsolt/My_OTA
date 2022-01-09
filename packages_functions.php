@@ -8,7 +8,7 @@ function getAccmTypes()
         FROM accm_types'
     );
     $statement->execute();
-    return $accmTypes = $statement->fetchAll(PDO::FETCH_ASSOC);
+    return $statement->fetchAll(PDO::FETCH_ASSOC);
 }
 
 function getAccmLangs()
@@ -19,7 +19,7 @@ function getAccmLangs()
         FROM accm_languages'
     );
     $statement->execute();
-    return $accmLangs = $statement->fetchAll(PDO::FETCH_ASSOC);
+    return $statement->fetchAll(PDO::FETCH_ASSOC);
 }
 
 function getAccmFacilities()
@@ -30,7 +30,7 @@ function getAccmFacilities()
         FROM accm_facilities'
     );
     $statement->execute();
-    return $accmFacilities = $statement->fetchAll(PDO::FETCH_ASSOC);
+    return $statement->fetchAll(PDO::FETCH_ASSOC);
 }
 
 function packageListHandler()

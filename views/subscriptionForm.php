@@ -59,7 +59,7 @@
             </div>
         </a>
     <?php endif; ?>
-    <?php if($params['info'] === "isRegistered"): ?>
+    <?php if($params['info'] === "emailUsed"): ?>
         <a href="/bejelentkezes" style="text-decoration:none">
             <div class="row">
                 <div class="ms-auto me-auto alert alert-danger p-2 text-center" style="max-width: 25rem;">
