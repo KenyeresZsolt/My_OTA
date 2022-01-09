@@ -1,3 +1,10 @@
+<?php if($params['info'] === "updated"): ?>
+    <a href="/csomagok/<?= $params['package']['slug']?>/beallitasok/adatok" style="text-decoration:none">
+        <div class="alert alert-success text-center mb-3 m-5">
+            Csomag frissítve!
+        </div>
+    </a>
+<?php endif; ?>
 <div class="card border-success mb-3 m-5">
     <div class="card-header">Szállás szerkesztése</div>
         <div class="card-body">
@@ -160,14 +167,7 @@
                         </div>
                     </div>
                     <br><hr><br>
-                    <small>Utoljára szerkesztve ekkor: <b><?= $params['package']['last_modified'] === "0" ? "soha" : date("Y.m.d H:i:s", $params['package']['last_modified'])?></b></small><br>
-                    <small>Utoljára szerkesztette: <b><?= $params['package']['modified_by_user_name']?></b></small>
-                    <div class="btn-group float-end m-2">
-                        <a href="/csomagok/<?= $params['package']['slug']?>">
-                            <button type="button" class="btn btn-sm btn-outline-secondary mr-2">Vissza</button>
-                        </a>
                         <button type="submit" class="btn btn-sm btn-success">Lementem</button>
-                    </div>
                 </div>
             </form>
         </div>

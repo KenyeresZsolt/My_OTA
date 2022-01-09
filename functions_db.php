@@ -2,6 +2,7 @@
 
 require './login_functions.php';
 require './packages_functions.php';
+require './packages_settings_functions.php';
 require './reservations_functions.php';
 require './users_functions.php';
 require './chat_functions.php';

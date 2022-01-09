@@ -1,4 +1,23 @@
-<div class="card border-success mb-3 m-5">
+<?php if($params['info'] === "mealsUpdated"): ?>
+    <a href="/csomagok/<?= $params['package']['slug']?>/beallitasok/szolgaltatasok?#editMealsForm" style="text-decoration:none">
+        <div class="alert alert-success text-center mb-3 m-5" id="editMealsMessage">
+            Étkezések frissítve!
+        </div>
+    </a>
+<?php elseif($params['info'] === "mealsEmptyPrice"): ?>
+<a href="/csomagok/<?= $params['package']['slug']?>/beallitasok/szolgaltatasok?#editMealsForm" style="text-decoration:none">
+    <div class="alert alert-danger text-center mb-3 m-5" id="editMealsMessage">
+        Add meg az árat fizetős étkezés esetén!
+    </div>
+</a>
+<?php elseif($params['info'] === "mealsNotSpecified"): ?>
+<a href="/csomagok/<?= $params['package']['slug']?>/beallitasok/szolgaltatasok?#editMealsForm" style="text-decoration:none">
+    <div class="alert alert-danger text-center mb-3 m-5" id="editMealsMessage">
+        Add meg a biztosított étkezéseket!
+    </div>
+</a>
+<?php endif; ?>
+<div class="card border-success mb-3 m-5" id="editMealsForm">
     <div class="card-header">Étkezés</div>
     <div class="card-body">
         <form class="form-inline" action="/update-meals/<?= $params['package']['id'] ?>" method="POST">
@@ -51,7 +70,26 @@
         </form>
     </div>
 </div>
-<div class="card border-success mb-3 m-5">
+<?php if($params['info'] === "wellnessUpdated"): ?>
+    <a href="/csomagok/<?= $params['package']['slug']?>/beallitasok/szolgaltatasok?#editWellnessForm" style="text-decoration:none">
+        <div class="alert alert-success text-center mb-3 m-5" id="editWellnessMessage">
+            Wellness frissítve!
+        </div>
+    </a>
+<?php elseif($params['info'] === "wellnessEmptyPrice"): ?>
+<a href="/csomagok/<?= $params['package']['slug']?>/beallitasok/szolgaltatasok?#editWellnessForm" style="text-decoration:none">
+    <div class="alert alert-danger text-center mb-3 m-5" id="editWellnessMessage">
+        Add meg a wellness árát!
+    </div>
+</a>
+<?php elseif($params['info'] === "wellnessFacilitiesNotSpecified"): ?>
+<a href="/csomagok/<?= $params['package']['slug']?>/beallitasok/szolgaltatasok?#editWellnessForm" style="text-decoration:none">
+    <div class="alert alert-danger text-center mb-3 m-5" id="editWellnessMessage">
+        Add meg a wellness részleteit!
+    </div>
+</a>
+<?php endif; ?>
+<div class="card border-success mb-3 m-5" id="editWellnessForm">
     <div class="card-header">Wellness</div>
     <div class="card-body">
     <form class="form-inline" action="/update-wellness/<?= $params['package']['id'] ?>" method="POST">
@@ -98,7 +136,7 @@
                     <div class="col-sm-1">
                         <input class="form-control form-control-sm" type="text" name="wellnessPrice" value="<?= @$params['wellnessDetails']['wellnessPrice'] ?>" autocomplete="off"/>
                     </div>
-                    <label for="wellnessPrice" class="col-sm-2">RON/fő/nap</label>
+                    <label for="wellnessPrice" class="col-sm-2">RON/fő/alkalom</label>
                 </div>
             </div>
             <br>
@@ -106,7 +144,7 @@
         </form>
     </div>
 </div>
-<div class="card border-success mb-3 m-5">
+<div class="card border-success m-5">
     <div class="card-header">Szolgáltatások és felszereltség</div>
     <div class="card-body">
     </div>

@@ -1,10 +1,4 @@
-<?php if($params['info'] === "updated"): ?>
-    <a href="/csomagok/<?= $params['package']['slug']?>" style="text-decoration:none">
-        <div class="alert alert-success text-center">
-            Csomag frissítve!
-        </div>
-    </a>
-<?php elseif($params["info"] === "reserved"): ?>
+<?php if($params["info"] === "reserved"): ?>
     <a href="/csomagok/<?= $params['package']['slug']?>" style="text-decoration:none">
         <div class="alert alert-success text-center">
             Sikeres foglalás!
@@ -19,7 +13,7 @@
             </div>
             <?php if($params['isAuthorized'] AND $params['isAdmin'] === "1"): ?>
                 <div class="btn-group float-end col-2">
-                    <a href="/<?= $params['package']["slug"] ?>/beallitasok/adatok">
+                    <a href="/csomagok/<?= $params['package']["slug"] ?>/beallitasok/adatok">
                         <button class="btn btn-sm btn-light float-end">Beállítások</button>
                     </a>
                     <form action="/delete-package/<?= $params['package']["id"] ?>" method="post">
@@ -60,7 +54,19 @@
         <div class="card border-primary mb-3">
             <div class="card-header">Árak</div>
             <div class="card-body ms-3">
-                <div class="row">Szállás: <?= @$params['package']['price'];?> RON/fő/éj</div>
+                <table>
+                    <tr class="bg-light">
+                        <td class="text-center" style="width: 5rem;">
+                            <input class="form-check-input" type="checkbox"  name="languages[]" value="">
+                        </td>
+                        <td style="width: 40rem;">
+                            Szállás
+                        </td>
+                        <td class="text-center" style="width: 40rem;">
+                            <?= $params['package']['price']?> RON
+                        </td>
+                    </tr>
+                </table>
             </div>
         </div>
         <hr>
