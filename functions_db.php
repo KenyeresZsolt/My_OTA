@@ -42,7 +42,7 @@ function homeHandler()
         'content' => render('home.php'),
         'activeLink' => '/',
         'isAuthorized' => isLoggedIn(),
-        'isAdmin' => isAdmin() ?? "",
+        'isAdmin' => isAdmin() ?? NULL,
         'title' => "Főoldal",
         'unreadMessages' => countUnreadMessages(),
         'playChatSound' => playChatSound()

@@ -37,11 +37,11 @@ function packageListHandler()
 {
     //szűrő forrása: https://phpdelusions.net/pdo_examples/dynamical_where
 
-    $typeFilter = $_GET['t'] ?? "";
-    $minPriceFilter = $_GET['minPrice'] ?? "";
-    $maxPriceFilter = $_GET['maxPrice'] ?? "";
-    $facilityFilter = $_GET['f'] ?? "";
-    $langFilter = $_GET['l'] ?? "";
+    $typeFilter = $_GET['t'] ?? NULL;
+    $minPriceFilter = $_GET['minPrice'] ?? NULL;
+    $maxPriceFilter = $_GET['maxPrice'] ?? NULL;
+    $facilityFilter = $_GET['f'] ?? NULL;
+    $langFilter = $_GET['l'] ?? NULL;
 
     $types = explode(" ", $typeFilter);
     $cntTypes = count($types);
@@ -112,13 +112,13 @@ function packageListHandler()
             'maxPriceFilter' => $maxPriceFilter,
             'facilityFilter' => $facilityFilter,
             'langFilter' => $langFilter,
-            "info" => $_GET['info'] ?? "",
+            "info" => $_GET['info'] ?? NULL,
             'isAuthorized' => isLoggedIn(),
-            'isAdmin' => isAdmin() ?? "",
+            'isAdmin' => isAdmin() ?? NULL,
         ]),
         'activeLink' => '/csomagok',
         'isAuthorized' => isLoggedIn(),
-        'isAdmin' => isAdmin() ?? "",
+        'isAdmin' => isAdmin() ?? NULL,
         'title' => "Csomagok",
         'unreadMessages' => countUnreadMessages(),
         'playChatSound' => playChatSound()
@@ -128,7 +128,7 @@ function packageListHandler()
 
 function packageFilterHandler()
 {
-    $types = $_POST['type'] ?? "";
+    $types = $_POST['type'] ?? NULL;
 
     if(!empty($types)){
     $typesCount = count($types);
@@ -148,7 +148,7 @@ function packageFilterHandler()
         $maxPirceUrl = "maxPrice=" . $_POST['maxPrice'] . "&";
     }
 
-    $facilities = $_POST['facility'] ?? "";
+    $facilities = $_POST['facility'] ?? NULL;
 
     if(!empty($facilities)){
     $facilitiesCount = count($facilities);
@@ -160,7 +160,7 @@ function packageFilterHandler()
     $facilityUrl = substr_replace($facilityUrl,"",-1) . "&";
     }
 
-    $langs = $_POST['lang'] ?? "";
+    $langs = $_POST['lang'] ?? NULL;
 
     if(!empty($langs)){
     $langsCount = count($langs);
@@ -190,7 +190,7 @@ function newPackageHandler()
         ]),
         'activeLink' => '/csomagok',
         'isAuthorized' => isLoggedIn(),
-        'isAdmin' => isAdmin() ?? "",
+        'isAdmin' => isAdmin() ?? NULL,
         'title' => "Új csomag",
         'unreadMessages' => countUnreadMessages(),
         'playChatSound' => playChatSound()
@@ -230,26 +230,28 @@ function createPackageHandler()
         VALUES (:name, :location, :slug, :address, :accm_type, :price, :capacity, :rooms, :bathrooms, :facilities, :description, :languages, :image, :contact_name, :email, :phone, :webpage)'
     );
     $statement->execute([
-        'name' => $_POST["name"] ?? "", 
-        'location' => $_POST["location"] ?? "", 
-        'slug' => strtolower(slugify($_POST["name"] . "-" . $_POST["location"])) ?? "",
-        'address' => createAddressJson() ?? "",
-        'accm_type' => $_POST["type"] ?? "",
-        'price' => $_POST["price"] ?? "",
-        'capacity' => $_POST["capacity"] ?? "",
-        'rooms' => $_POST["rooms"] ?? "",
-        'bathrooms' => $_POST["bathrooms"] ?? "",
-        'facilities' => json_encode($_POST['facilities'], true) ?? "",
-        'description' => $_POST['description'] ?? "",
-        'languages' => json_encode($_POST['languages'], true) ?? "",
-        'image' => imageUpload() ?? "",
-        'contact_name' => $_POST["contactName"] ?? "",
-        'email' => $_POST["contactEmail"] ?? "",
-        'phone' => $_POST["contactPhone"] ?? "",
-        'webpage' => $_POST["webpage"] ?? "",
+        'name' => $_POST["name"] ?? NULL, 
+        'location' => $_POST["location"] ?? NULL, 
+        'slug' => strtolower(slugify($_POST["name"] . "-" . $_POST["location"])) ?? NULL,
+        'address' => createAddressJson() ?? NULL,
+        'accm_type' => $_POST["type"] ?? NULL,
+        'price' => $_POST["price"] ?? NULL,
+        'capacity' => $_POST["capacity"] ?? NULL,
+        'rooms' => $_POST["rooms"] ?? NULL,
+        'bathrooms' => $_POST["bathrooms"] ?? NULL,
+        'facilities' => json_encode($_POST['facilities'], true) ?? NULL,
+        'description' => $_POST['description'] ?? NULL,
+        'languages' => json_encode($_POST['languages'], true) ?? NULL,
+        'image' => imageUpload() ?? NULL,
+        'contact_name' => $_POST["contactName"] ?? NULL,
+        'email' => $_POST["contactEmail"] ?? NULL,
+        'phone' => $_POST["contactPhone"] ?? NULL,
+        'webpage' => $_POST["webpage"] ?? NULL,
     ]);
     
-    header("Location: /csomagok?info=added");
+    urlRedirect('csomagok', [
+        'info' => 'added'
+    ]);
 }
 
 function deletePackageHandler($urlParams)
@@ -261,7 +263,9 @@ function deletePackageHandler($urlParams)
         WHERE id = ?');
     $statement->execute([$urlParams['pckId']]);
 
-    header("Location: /csomagok?info=deleted");
+    urlRedirect('csomagok', [
+        'info' => 'deleted'
+    ]);
 }
 
 function packagePageHandler($slug)
@@ -288,9 +292,9 @@ function packagePageHandler($slug)
             "resPackageId" => isset($_GET["res"]),
             "addImgToPckId" => isset($_GET["addimage"]),
             'isAuthorized' => isLoggedIn(),
-            'isAdmin' => isAdmin() ?? "",
-            'info' => $_GET['info'] ?? "",
-            'values' => json_decode(base64_decode($_GET['values'] ?? ''), true)
+            'isAdmin' => isAdmin() ?? NULL,
+            'info' => $_GET['info'] ?? NULL,
+            'values' => json_decode(base64_decode($_GET['values'] ?? NULL), true)
         ]),
         "isAuthorized" => isLoggedIn(),
         "isAdmin" => isAdmin(),

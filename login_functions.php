@@ -25,7 +25,7 @@ function emailUsed():bool
 function registrationHandler()
 {
     if (empty($postedData["name"]) OR empty($postedData["email"]) OR empty($postedData["password"])) {
-        url_redirect('bejelentkezes', [
+        urlRedirect('bejelentkezes', [
             'isRegistration' => 1,
             'info' => 'emptyValue'
         ]);
@@ -33,7 +33,7 @@ function registrationHandler()
 
     //ellenőrzés, hogy regisztrálva van-e már
     if(emailUsed()){
-        url_redirect('bejelentkezes', [
+        urlRedirect('bejelentkezes', [
             'info' => 'emailUsed'
         ]);
     }
@@ -60,8 +60,8 @@ function registrationHandler()
     $statement = insertMailSql();
 
     $body = render("registration-email-template.php", [
-        'name' =>  $_POST['name'] ?? '',
-        'email' =>  $_POST['email'] ?? ''
+        'name' =>  $_POST['name'] ?? NULL,
+        'email' =>  $_POST['email'] ?? NULL
     ]);
 
     $statement->execute([
@@ -73,7 +73,9 @@ function registrationHandler()
         time()
     ]);
 
-    header('Location: /bejelentkezes?info=registrationSuccessfull');
+    urlRedirect('bejelentkezes', [
+        'info' => 'registrationSuccessfull'
+    ]);
 
     sendMailsHandler();
 }
@@ -92,20 +94,22 @@ function loginHandler()
     $user = $statement->fetch(PDO::FETCH_ASSOC);
 
     if(!$user) {
-        header('Location: /bejelentkezes?info=invalidCredentials');
-        return;
+        urlRedirect('bejelentkezes', [
+            'info' => 'invalidCredentials'
+        ]);
     }
     
     $isVerified = password_verify($_POST['password'], $user['password']);
 
     if(!$isVerified) {
-        header('Location: /bejelentkezes?info=invalidCredentials');
-        return;
+        urlRedirect('bejelentkezes', [
+            'info' => 'invalidCredentials'
+        ]);
     }
 
     session_start();
     $_SESSION['userId'] = $user['id'];
-    header('Location: /');
+    urlRedirect('');
 
 }
 
@@ -131,8 +135,9 @@ function redirectToLoginIfNotLoggedIn()
     if(isLoggedIn()) {
         return;
     }
-    header('Location: /bejelentkezes');
-    exit;
+    urlRedirect('bejelentkezes',[
+        'info' => 'notLoggedIn'
+    ]);
 }
 
 function isAdmin()
@@ -160,7 +165,7 @@ function logoutHandler()
     session_start();
 
     $params = session_get_cookie_params();
-    setcookie(session_name(), '', 0, $params['path'], $params['domain'], $params['secure'], isset($params['httponly']));
+    setcookie(session_name(), NULL, 0, $params['path'], $params['domain'], $params['secure'], isset($params['httponly']));
 
     session_destroy();
     header('Location: ' . getPath($_SERVER['HTTP_REFERER']));
@@ -181,13 +186,12 @@ function getUserById()
 function subsFormHandler()
 {
     if(isLoggedIn()){
-        header('Location: /');
-        return;
+        urlRedirect('');
     }
 
     echo render("wrapper.php",[
         'content' => render('subscriptionForm.php',[
-            'info' => $_GET['info'] ?? '',
+            'info' => $_GET['info'] ?? NULL,
             'isRegistration' => isset($_GET['isRegistration'])
         ]),
         'isAuthorized' => false,
@@ -221,22 +225,25 @@ function updateProfilHandler()
     redirectToLoginIfNotLoggedIn();
 
     if(emailUsed()){
-        header('Location: /profil?info=emailUsed#updtProfile');
-        return;
-        }
+        urlRedirect('profil', [
+            'info' => 'emailUsed#updtProfile'
+        ]);
+    }
     
     $user = getUserById();
 
     if(!empty($_POST['oldPassword']) OR !empty($_POST['newPassword']) OR !empty($_POST['newPassword2'])){
         $isVerified = password_verify($_POST['oldPassword'], $user['password']);
         if(!$isVerified) {
-            header('Location: /profil?info=invalidPassword#updtProfile');
-            return;
+            urlRedirect('profil', [
+                'info' => 'invalidPassword#updtProfile'
+            ]);
         }
 
         if($_POST['newPassword'] !== $_POST['newPassword2']){
-            header('Location: /profil?info=notIdenticalPassword#updtProfile');
-            return;
+            urlRedirect('profil', [
+                'info' => 'notIdenticalPassword#updtProfile'
+            ]);
         }
     }
 
@@ -254,7 +261,10 @@ function updateProfilHandler()
         time(),
         $_SESSION['userId']
     ]);
-    header('Location: /profil?info=updateSuccessfull#updtProfile');
+    
+    urlRedirect('profil', [
+        'info' => 'updateSuccessfull#updtProfile'
+    ]);
 
 }
 

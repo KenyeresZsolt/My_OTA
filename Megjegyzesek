@@ -12,8 +12,8 @@ I. DB
 II.
 
     1. header => redirect fuggveny
-        url_redirect(bejelentkezes?info=invalidCredentials);
-    2. kodban sok helyen '' helyett, null legyen
+        url_redirect(bejelentkezes?info=invalidCredentials); - módosítva (1-2 kivétellel, pl a szűrő függvényben)
+    2. kodban sok helyen '' helyett, null legyen - megvan
     3. email_send();
     4. A handler az csak az iranyito feladatot lassa el, nem kell oda sql pl.
 

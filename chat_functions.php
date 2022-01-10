@@ -64,8 +64,8 @@ function chatPageHandler()
         'content' => render("chat-page.php", [
             "conversationsWithMessages" => $conversations,
             "userId" => $_SESSION["userId"],
-            "info" => $_GET['info'] ?? "",
-            "manageMembers" => $_GET['manage-members'] ?? "",
+            "info" => $_GET['info'] ?? NULL,
+            "manageMembers" => $_GET['manage-members'] ?? NULL,
             "allUsers" => $allUsers,
             "convMembers" => $convMembers
         ]),
@@ -120,7 +120,9 @@ function newConversationHandler()
         $startUser
     ]);
 
-    header('Location: /chat?info=started#' . $newConvId);
+    urlRedirect('chat', [
+        'info' => "started#$newConvId"
+    ]);
 
 }
 
@@ -141,7 +143,9 @@ function sendMessageHandler()
         $_POST['message']
     ]);
 
-    header('Location: /chat?href=#' . $convId);
+    urlRedirect('chat', [
+        'href' => "#$convId"
+    ]);
 }
 
 function addMemberHandler()
@@ -178,7 +182,9 @@ function deleteMemberHandler()
         $_GET['convMember']
     ]);
 
-    header('Location: /chat?manage-members=' . $convId . '#' . $convId);
+    urlRedirect('chat', [
+        'manage-members' => "$convId#$convId"
+    ]);
 }
 
 function deleteConversationHandler()
@@ -203,7 +209,9 @@ function deleteConversationHandler()
         WHERE id = ?');
     $statement->execute([$deleteConvId]);
 
-    header('Location: /chat?info=deleted');
+    urlRedirect('chat', [
+        'info' => 'deleted'
+    ]);
     
 }
 
@@ -242,6 +250,5 @@ function playChatSound()
         return false;
     }
 }
-
 
 ?>

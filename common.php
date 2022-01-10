@@ -1,6 +1,6 @@
 <?php
 
-function url_redirect($url, $params = [])
+function urlRedirect($url, $params = [])
 {
     $p = '';
     foreach ($params as $k => $v)

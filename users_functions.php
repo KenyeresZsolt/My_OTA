@@ -21,7 +21,7 @@ function userListHandler()
         "isAdded" => $isAdded,
         "isUpdated" => $isUpdated,
         "isDeleted" => $isDeleted,
-        "editedUserId" => $_GET["edit"] ?? ""
+        "editedUserId" => $_GET["edit"] ?? NULL
     ]);
     echo render('wrapper.php', [
         'content' => $userListTemplate,
@@ -51,13 +51,15 @@ function createUserHandler()
         time()
     ]);
 
-    header("Location: /felhasznalok?added=1");
+    urlRedirect('felhasznalok', [
+        'added' => "1" 
+    ]);
 }
 
 function updateUserHandler()
 {
     redirectToLoginIfNotLoggedIn();
-    $updateUserId = $_GET['id'] ?? "";
+    $updateUserId = $_GET['id'] ?? NULL;
 
     $pdo = getConnection();
     $statement = $pdo->prepare(
@@ -72,7 +74,9 @@ function updateUserHandler()
         $updateUserId
     ]);
 
-    header("Location: /felhasznalok?updated=1");
+    urlRedirect('felhasznalok', [
+        'updated' => "1" 
+    ]);
 }
 
 function deleteUserHandler()
@@ -86,7 +90,9 @@ function deleteUserHandler()
     );
     $statement->execute([$_GET['id']]);
     
-    header("Location: /felhasznalok?deleted=1");
+    urlRedirect('felhasznalok', [
+        'deleted' => "1" 
+    ]);
 }
 
 ?>

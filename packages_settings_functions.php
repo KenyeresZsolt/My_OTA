@@ -21,7 +21,7 @@ function editPackageHandler($urlParams)
     echo render("wrapper.php", [
         'content' => render('pck-settings-page.php', [
             'settingsContent' => render('edit-package-page.php', [
-                'info' => $_GET['info'] ?? "",
+                'info' => $_GET['info'] ?? NULL,
                 'package' => $package,
                 'address' => $address,
                 'languages' => $languages,
@@ -35,7 +35,7 @@ function editPackageHandler($urlParams)
         ]),
         'activeLink' => '/csomagok',
         'isAuthorized' => isLoggedIn(),
-        'isAdmin' => isAdmin() ?? "",
+        'isAdmin' => isAdmin() ?? NULL,
         'title' => "Szerkesztés",
         'unreadMessages' => countUnreadMessages(),
         'playChatSound' => playChatSound()
@@ -61,29 +61,31 @@ function updatePackageHandler($urlParams)
         WHERE id = :id'
     );
     $statement->execute([
-        'name' => $_POST["name"] ?? "", 
-        'location' => $_POST["location"] ?? "", 
-        'slug' => strtolower(slugify($_POST["name"] . "-" . $_POST["location"])) ?? "",
-        'address' => createAddressJson() ?? "",
-        'accm_type' => $_POST["type"] ?? "",
-        'price' => $_POST["price"] ?? "",
-        'capacity' => $_POST["capacity"] ?? "",
-        'rooms' => $_POST["rooms"] ?? "",
-        'bathrooms' => $_POST["bathrooms"] ?? "",
-        'facilities' => json_encode($_POST['facilities'], true) ?? "",
-        'description' => $_POST['description'] ?? "",
-        'languages' => json_encode($_POST['languages'], true) ?? "",
+        'name' => $_POST["name"] ?? NULL, 
+        'location' => $_POST["location"] ?? NULL, 
+        'slug' => strtolower(slugify($_POST["name"] . "-" . $_POST["location"])) ?? NULL,
+        'address' => createAddressJson() ?? NULL,
+        'accm_type' => $_POST["type"] ?? NULL,
+        'price' => $_POST["price"] ?? NULL,
+        'capacity' => $_POST["capacity"] ?? NULL,
+        'rooms' => $_POST["rooms"] ?? NULL,
+        'bathrooms' => $_POST["bathrooms"] ?? NULL,
+        'facilities' => json_encode($_POST['facilities'], true) ?? NULL,
+        'description' => $_POST['description'] ?? NULL,
+        'languages' => json_encode($_POST['languages'], true) ?? NULL,
         'image' => imageUpload() ?? $package['image'],
-        'contact_name' => $_POST["contactName"] ?? "",
-        'email' => $_POST["contactEmail"] ?? "",
-        'phone' => $_POST["contactPhone"] ?? "",
-        'webpage' => $_POST["webpage"] ?? "",
-        'last_modified' => time() ?? "",
-        'last_modified_by_user_id' => $_SESSION['userId'] ?? "",
-        'id' => $urlParams['pckId'] ?? ""
+        'contact_name' => $_POST["contactName"] ?? NULL,
+        'email' => $_POST["contactEmail"] ?? NULL,
+        'phone' => $_POST["contactPhone"] ?? NULL,
+        'webpage' => $_POST["webpage"] ?? NULL,
+        'last_modified' => time() ?? NULL,
+        'last_modified_by_user_id' => $_SESSION['userId'] ?? NULL,
+        'id' => $urlParams['pckId'] ?? NULL
     ]);
-   
-    header("Location: /csomagok/" . $package['slug'] . "/beallitasok/adatok?info=updated");
+
+    urlRedirect('csomagok/' . $package['slug'] . "/beallitasok/adatok", [
+        'info'=> 'updated'
+    ]);
 }
 
 function getServicesByCategory($category)
@@ -129,7 +131,7 @@ function editServicesHandler($urlParams)
     echo render("wrapper.php", [
         'content' => render('pck-settings-page.php', [
             'settingsContent' => render("edit-services-page.php", [
-                'info' => $_GET['info'] ?? "",
+                'info' => $_GET['info'] ?? NULL,
                 'package' => $package,
                 'mealDetails' => $mealDetails,
                 'meals' => getServicesByCategory("meal"),
@@ -143,7 +145,7 @@ function editServicesHandler($urlParams)
         ]),
         'activeLink' => '/csomagok',
         'isAuthorized' => isLoggedIn(),
-        'isAdmin' => isAdmin() ?? "",
+        'isAdmin' => isAdmin() ?? NULL,
         'title' => "Szolgáltatások",
         'unreadMessages' => countUnreadMessages(),
         'playChatSound' => playChatSound()
@@ -169,11 +171,15 @@ function updateMealsHandler($urlParams)
     }
 
     if(($_POST['breakfast'] === "PAYABLE" AND  empty($_POST['breakfastPrice'])) OR ($_POST['lunch'] === "PAYABLE" AND  empty($_POST['lunchPrice'])) OR ($_POST['dinner'] === "PAYABLE" AND  empty($_POST['dinnerPrice']))){
-        return header('Location: /csomagok/' . $package['slug'] . '/beallitasok/szolgaltatasok?info=mealsEmptyPrice#editMealsMessage'); 
+        return urlRedirect('csomagok/' . $package['slug'] . '/beallitasok/szolgaltatasok', [
+                    'info' => 'mealsEmptyPrice#editMealsMessage'
+                ]);
     }
 
     if($_POST['mealOffered'] === "YES" AND $_POST['breakfast'] === "NOTPROVIDED" AND $_POST['lunch'] === "NOTPROVIDED" AND $_POST['dinner'] === "NOTPROVIDED"){
-        return header('Location: /csomagok/' . $package['slug'] . '/beallitasok/szolgaltatasok?info=mealsNotSpecified#editMealsMessage'); 
+        return urlRedirect('csomagok/' . $package['slug'] . '/beallitasok/szolgaltatasok', [
+                    'info' => 'mealsNotSpecified#editMealsMessage'
+                ]);
     }
 
     if($_POST['breakfast'] !== "PAYABLE"){
@@ -201,12 +207,14 @@ function updateMealsHandler($urlParams)
         $_POST['lunchPrice'],
         $_POST['dinner'],
         $_POST['dinnerPrice'],
-        time() ?? "",
-        $_SESSION['userId'] ?? "",
+        time() ?? NULL,
+        $_SESSION['userId'] ?? NULL,
         $urlParams['pckId'],
     ]);
 
-    header('Location: /csomagok/' . $package['slug'] . '/beallitasok/szolgaltatasok?info=mealsUpdated#editMealsMessage');
+    urlRedirect('csomagok/' . $package['slug'] . '/beallitasok/szolgaltatasok', [
+        'info' => 'mealsUpdated#editMealsMessage'
+    ]);
 
 }
 
@@ -229,11 +237,15 @@ function updateWellnessHandler($urlParams)
     }
 
     if($_POST['wellnessStatus'] === "PAYABLE" AND empty($_POST['wellnessPrice'])){
-        return header('Location: /csomagok/' . $package['slug'] . '/beallitasok/szolgaltatasok?info=wellnessEmptyPrice#editWellnessMessage'); 
+        return urlRedirect('csomagok/' . $package['slug'] . '/beallitasok/szolgaltatasok', [
+                    'info' => 'wellnessEmptyPrice#editWellnessMessage'
+                ]);
     }
 
     if($_POST['wellnessOffered'] === "YES" AND (!isset($_POST['wellnessFacilities']) OR empty($_POST['wellnessFacilities']) OR !isset($_POST['wellnessStatus']) OR empty($_POST['wellnessStatus']))){
-        return header('Location: /csomagok/' . $package['slug'] . '/beallitasok/szolgaltatasok?info=wellnessFacilitiesNotSpecified#editWellnessMessage'); 
+        return urlRedirect('csomagok/' . $package['slug'] . '/beallitasok/szolgaltatasok', [
+                    'info' => 'wellnessFacilitiesNotSpecified#editWellnessMessage'
+                ]);
     }
 
     $wellnessDetails = json_encode($_POST, true);
@@ -245,12 +257,14 @@ function updateWellnessHandler($urlParams)
     $statement->execute([
         $_POST['wellnessOffered'],
         $wellnessDetails,
-        time() ?? "",
-        $_SESSION['userId'] ?? "",
+        time() ?? NULL,
+        $_SESSION['userId'] ?? NULL,
         $urlParams['pckId'],
     ]);
 
-    header('Location: /csomagok/' . $package['slug'] . '/beallitasok/szolgaltatasok?info=wellnessUpdated#editWellnessMessage');
+    urlRedirect('csomagok/' . $package['slug'] . '/beallitasok/szolgaltatasok', [
+        'info' => 'wellnessUpdated#editWellnessMessage'
+    ]);
 }
 
 function editDiscountsHandler($urlParams)
@@ -279,7 +293,7 @@ function editDiscountsHandler($urlParams)
         ]),
         'activeLink' => '/csomagok',
         'isAuthorized' => isLoggedIn(),
-        'isAdmin' => isAdmin() ?? "",
+        'isAdmin' => isAdmin() ?? NULL,
         'title' => "Kedvezmények",
         'unreadMessages' => countUnreadMessages(),
         'playChatSound' => playChatSound()
@@ -319,7 +333,9 @@ function updateDiscountsHandler($urlParams)
         OR (isset($_POST['groupDiscount']) AND (empty($_POST['groupDiscountPercent']) OR empty($_POST['groupPersonNumber'])))
         OR (isset($_POST['earlyBookingDiscount']) AND (empty($_POST['earlyBookingDiscountPercent']) OR empty($_POST['earlyBookingDays'])))
         OR (isset($_POST['lastMinuteDiscount']) AND (empty($_POST['lastMinuteDiscountPercent']) OR empty($_POST['lastMinuteDays'])))){
-            return header('Location: /csomagok/' . $package['slug'] . '/beallitasok/kedvezmenyek?info=emptyValue');
+            return urlRedirect('csomagok/' . $package['slug'] . '/beallitasok/kedvezmenyek', [
+                        'info' => 'emptyValue'
+                    ]);
         }
 
     $discounts = json_encode($_POST, true);
@@ -331,12 +347,14 @@ function updateDiscountsHandler($urlParams)
     );
     $statement->execute([
         $discounts,
-        time() ?? "",
-        $_SESSION['userId'] ?? "",
+        time() ?? NULL,
+        $_SESSION['userId'] ?? NULL,
         $urlParams['pckId'],
     ]);
 
-    header('Location: /csomagok/' . $package['slug'] . '/beallitasok/kedvezmenyek?info=updated');
+    urlRedirect('csomagok/' . $package['slug'] . '/beallitasok/kedvezmenyek', [
+        'info' => 'updated'
+    ]);
 }
 
 function editRoomsHandler($urlParams)
@@ -361,7 +379,7 @@ function editRoomsHandler($urlParams)
         ]),
         'activeLink' => '/csomagok',
         'isAuthorized' => isLoggedIn(),
-        'isAdmin' => isAdmin() ?? "",
+        'isAdmin' => isAdmin() ?? NULL,
         'title' => "Szobák",
         'unreadMessages' => countUnreadMessages(),
         'playChatSound' => playChatSound()

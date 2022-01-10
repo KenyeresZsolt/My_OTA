@@ -4,7 +4,7 @@ function contactPageHandler()
 {
     echo render("wrapper.php", [
         'content' => render("contact-page.php", [
-            'info' => $_GET['info'] ?? ''
+            'info' => $_GET['info'] ?? NULL
         ]),
         'isAuthorized' => isLoggedIn(),
         'isAdmin' => isAdmin(),
@@ -18,9 +18,10 @@ function contactPageHandler()
 function submitMailHandler()
 {
     if (empty($_POST["name"]) OR empty($_POST["email"]) OR empty($_POST["content"])) {
-        header('Location: /kapcsolat?info=emptyValue');
+        urlRedirect('kapcsolat', [
+            'info' => 'emptyValue'
+        ]);
 
-        return ;
     }
 
     //értesítő email
@@ -28,8 +29,8 @@ function submitMailHandler()
     $statement = insertMailSql();
 
     $body = render("email-template.php", [
-        'name' =>  $_POST['name'] ?? '',
-        'email' =>  $_POST['email'] ?? '',
+        'name' =>  $_POST['name'] ?? NULL,
+        'email' =>  $_POST['email'] ?? NULL,
         'content' =>  $_POST['content'],
     ]);
 
@@ -46,8 +47,8 @@ function submitMailHandler()
     $statement = insertMailSql();
 
     $body = render("confirmation-email-template.php", [
-        'name' =>  $_POST['name'] ?? '',
-        'email' =>  $_POST['email'] ?? '',
+        'name' =>  $_POST['name'] ?? NULL,
+        'email' =>  $_POST['email'] ?? NULL,
         'content' =>  $_POST['content'],
     ]);
 
@@ -60,7 +61,9 @@ function submitMailHandler()
         time()
     ]);
 
-    header('Location: /kapcsolat?info=kuldesSikeres#contactForm');
+    urlRedirect('kapcsolat', [
+        'info' => 'kuldesSikeres#contactForm'
+    ]);
 
     sendMailsHandler();
 }

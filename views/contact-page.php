@@ -22,15 +22,15 @@
     <div class="row align-items-stretch mb-5">
       <div class="col-md-6">
         <div class="form-group">
-          <input class="form-control" name="name" type="text" placeholder="Név" required />
+          <input class="form-control" name="name" type="text" placeholder="Név"/>
         </div>
         <div class="form-group">
-          <input class="form-control" name="email" type="email" placeholder="Email cím" required />
+          <input class="form-control" name="email" type="email" placeholder="Email cím"/>
         </div>
       </div>
       <div class="col-md-6">
         <div class="form-group form-group-textarea mb-md-0">
-          <textarea class="form-control" name="content" placeholder="Küldj üzenetet..." required></textarea>
+          <textarea class="form-control" name="content" placeholder="Küldj üzenetet..."></textarea>
         </div>
       </div>
     </div>

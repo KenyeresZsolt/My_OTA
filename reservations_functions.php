@@ -30,8 +30,12 @@ function reservePackageHandler($urlParams)
         OR empty($_POST["checkin"])
         OR empty($_POST["checkout"])
         OR empty($_POST["phone"])) {
-        header('Location: /csomagok/' . $package['slug'] .'?res=1&info=emptyValue&values=' . base64_encode(json_encode($_POST)) . '&href=#infoMessage');
-
+        urlRedirect('csomagok/' . $package['slug'], [
+            'res' => "1",
+            'info' => "emptyValue",
+            'values' => base64_encode(json_encode($_POST)),
+            'href' => '#infoMessage'
+        ]);
         return ;
     }
 
@@ -57,8 +61,8 @@ function reservePackageHandler($urlParams)
     $statement = insertMailSql();
 
     $body = render("res-confirm-email-template.php", [
-        'name' =>  $_POST['name'] ?? '',
-        'email' =>  $_POST['email'] ?? '',
+        'name' =>  $_POST['name'] ?? NULL,
+        'email' =>  $_POST['email'] ?? NULL,
         'guests' => $_POST['guests'],
         'checkin' => $_POST['checkin'],
         'checkout' => $_POST['checkout'],
@@ -76,7 +80,9 @@ function reservePackageHandler($urlParams)
         time()
     ]);
 
-    header("Location: /csomagok/" . $package['slug'] ."?info=reserved");
+    urlRedirect('csomagok/' . $package['slug'], [
+        'info' => 'reserved'
+    ]);
 
     sendMailsHandler();
 }
@@ -103,8 +109,8 @@ function reservationListHandler()
     $heroListTemplate = render("res-list.php", [
         "reservations" => $reservations,
         "packages" => $packages,
-        "updateReservationId" => $_GET["edit"] ?? "",
-        "info" => $_GET['info'] ?? "",
+        "updateReservationId" => $_GET["edit"] ?? NULL,
+        "info" => $_GET['info'] ?? NULL,
     ]);
     echo render('wrapper.php', [
         'content' => $heroListTemplate,
@@ -139,8 +145,9 @@ function updateReservationHandler()
         $_GET['id']
     ]);
 
-    header("Location: /foglalasok?info=updated");
-
+    urlRedirect('foglalasok', [
+        'info' => 'updated'
+    ]);
 }
 
 function cancelReservationHandler()
@@ -155,7 +162,9 @@ function cancelReservationHandler()
     );
     $statement->execute([$_GET['id']]);
 
-    header("Location: /foglalasok?info=canceled");
+    urlRedirect('foglalasok', [
+        'info' => 'canceled'
+    ]);
 }
 
 function deleteReservationHandler()
@@ -169,7 +178,9 @@ function deleteReservationHandler()
     );
     $statement->execute([$_GET['id']]);
 
-    header("Location: /foglalasok?info=deleted");
+    urlRedirect('foglalasok', [
+        'info' => 'deleted'
+    ]);
 }
 
 ?>
