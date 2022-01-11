@@ -24,8 +24,8 @@
                 <a class="nav-item nav-link <?php echo $params['activeLink'] === "/" ? "active" : "" ?>" href="/">
                     Főoldal
                 </a>
-                <a class="nav-item nav-link <?php echo $params['activeLink'] === "/csomagok" ? "active" : "" ?>" href="/csomagok">
-                    Csomagok
+                <a class="nav-item nav-link <?php echo $params['activeLink'] === "/szallasok" ? "active" : "" ?>" href="/szallasok">
+                    Szállások
                 </a>
                 <?php if($params['isAuthorized'] AND $params['isAdmin'] === "1"): ?>
                     <a class="nav-item nav-link <?php echo $params['activeLink'] === "/foglalasok" ? "active" : "" ?>" href="/foglalasok">

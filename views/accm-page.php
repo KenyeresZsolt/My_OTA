@@ -1,22 +1,22 @@
 <?php if($params["info"] === "reserved"): ?>
-    <a href="/csomagok/<?= $params['package']['slug']?>" style="text-decoration:none">
+    <a href="/csomagok/<?= $params['accm']['slug']?>" style="text-decoration:none">
         <div class="alert alert-success text-center">
             Sikeres foglalás!
         </div>
     </a>
 <?php endif ?>
-<div class="card border-primary mb-3 m-5" id="<?= $params['package']['id']?>">
+<div class="card border-primary mb-3 m-5" id="<?= $params['accm']['id']?>">
     <div class="card-header">
         <div class="row">
             <div class="h4 col-md-10">
-                <?= $params['package']['name'] . " " . $params['package']['location'];?>
+                <?= $params['accm']['name'] . " " . $params['accm']['location'];?>
             </div>
             <?php if($params['isAuthorized'] AND $params['isAdmin'] === "1"): ?>
                 <div class="btn-group float-end col-2">
-                    <a href="/csomagok/<?= $params['package']["slug"] ?>/beallitasok/adatok">
+                    <a href="/csomagok/<?= $params['accm']["slug"] ?>/beallitasok/adatok">
                         <button class="btn btn-sm btn-light float-end">Beállítások</button>
                     </a>
-                    <form action="/delete-package/<?= $params['package']["id"] ?>" method="post">
+                    <form action="/delete-accm/<?= $params['accm']["id"] ?>" method="post">
                         <button type="submit" class="btn btn-sm btn-danger float-end">Törlés</button>
                     </form>
                 </div>
@@ -26,15 +26,15 @@
     <div class="card-body">
         <div class="row">
             <div class="p-3" style="max-width:50vw">
-                <?php if(isset($params['package']['image'])): ?>
-                    <img class="img-thumbnail" src="<?= $params['package']['image']?>" alt="<?= $params['package']['name'] ?>" style="width:100%">
+                <?php if(isset($params['accm']['image'])): ?>
+                    <img class="img-thumbnail" src="<?= $params['accm']['image']?>" alt="<?= $params['accm']['name'] ?>" style="width:100%">
                 <?php endif; ?>
             </div>
             <div class="p-3 col-md-4">
                 <div class="card border-primary mb-3">
                     <div class="card-header">Cím</div>
                     <div class="card-body ms-3">
-                        <div class="row"><?=$params['package']['location']?></div>
+                        <div class="row"><?=$params['accm']['location']?></div>
                         <div class="row"><?=(!empty($params['address']['street']) ? $params['address']['street'] . " utca" : "") . (!empty($params['address']['number']) ? ", " . $params['address']['number'] . " szám" : "") . (!empty($params['address']['building']) ? ", " . $params['address']['building'] . " épület" : "") . (!empty($params['address']['floor']) ? ", " . $params['address']['floor'] . " emelet" : "") . (!empty($params['address']['door']) ? ", " . $params['address']['door'] . " ajtó" : "")?></div>
                     </div>
                 </div>
@@ -42,10 +42,10 @@
                 <div class="card border-primary mb-3">
                     <div class="card-header">Elérhetőségek</div>
                     <div class="card-body ms-3">
-                        <div class="row">Kapcsolattartó neve: <?=$params['package']['contact_name']?></div><br>
-                        <div class="row">Email: <?=$params['package']['email']?></div>
-                        <div class="row">Telefonszám: <?=$params['package']['phone']?></div>
-                        <div class="row">Weboldal: <?=$params['package']['webpage']?></div>
+                        <div class="row">Kapcsolattartó neve: <?=$params['accm']['contact_name']?></div><br>
+                        <div class="row">Email: <?=$params['accm']['email']?></div>
+                        <div class="row">Telefonszám: <?=$params['accm']['phone']?></div>
+                        <div class="row">Weboldal: <?=$params['accm']['webpage']?></div>
                     </div>
                 </div>
             </div>
@@ -63,7 +63,7 @@
                             Szállás
                         </td>
                         <td class="text-center" style="width: 40rem;">
-                            <?= $params['package']['price']?> RON
+                            <?= $params['accm']['price']?> RON
                         </td>
                     </tr>
                 </table>
@@ -79,7 +79,7 @@
             <div class="card-header">Küldd el foglalásod most!</div>
             <div class="card-body">
                 <p class="card-title">Add meg az adataidat:</p>
-                <form class="form-inline" action="/reserve-package/<?= $params['package']["id"] ?>" method="POST" id="resForm">
+                <form class="form-inline" action="/reserve-accm/<?= $params['accm']["id"] ?>" method="POST" id="resForm">
                     <div class="form-group">
                         <div class="row">
                             <div style="max-width: 15rem;">
@@ -121,8 +121,8 @@
         <div class="card border-primary mb-3">
             <div class="card-header">Szálláshely adatai</div>
             <div class="card-body ms-3">
-                <div class="row"><?= "Típus: " . $params['package']['type']?></div>
-                <div class="row"><?= "Férőhelyek: " . $params['package']['capacity'] . " személy (" . $params['package']['rooms'] . " szoba, " . $params['package']['bathrooms'] . " fürdőszoba)"?></div>
+                <div class="row"><?= "Típus: " . $params['accm']['type']?></div>
+                <div class="row"><?= "Férőhelyek: " . $params['accm']['capacity'] . " személy (" . $params['accm']['rooms'] . " szoba, " . $params['accm']['bathrooms'] . " fürdőszoba)"?></div>
                 <hr style="border: 1px dashed white;width:15rem">
                 <div class="row">Beszélt nyelvek:
                     <?php if(!empty($params['languages'])){
@@ -160,7 +160,7 @@
         <div class="card border-primary mb-3">
             <div class="card-header">Leírás</div>
             <div class="card-body ms-3">
-                <p class="row justify-content-between"><?= @$params['package']['description']; ?></p>
+                <p class="row justify-content-between"><?= @$params['accm']['description']; ?></p>
             </div>
         </div>
     </div>

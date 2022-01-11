@@ -1,7 +1,7 @@
 <div class="card border-success mb-3 m-5">
     <div class="card-header">Kedvezmények szerkesztése</div>
     <div class="card-body">
-        <form class="form-inline" action="/update-discounts/<?= $params['package']['id'] ?>" method="POST">
+        <form class="form-inline" action="/update-discounts/<?= $params['accm']['id'] ?>" method="POST">
             <div class="form-check" style="max-width: 15rem;">
                 <label class="form-check-label" for="childrenDiscount">
                 <input class="form-check-input" type="checkbox"  name="childrenDiscount" value="YES" <?= @$params['discounts']['childrenDiscount'] === "YES" ? "checked" : "" ?>>
@@ -34,7 +34,7 @@
                                         szállás
                                     </label>
                                 </div>
-                                <?php if($params['package']['meal_offered'] === "YES"): ?>
+                                <?php if($params['accm']['meal_offered'] === "YES"): ?>
                                     <div class="form-check" style="max-width: 10rem;">
                                         <label class="form-check-label" for="discountFor">
                                         <input class="form-check-input" type="checkbox"  name="childrenDiscountFor[]" value="meals" <?= (isset($params['discounts']['childrenDiscountFor']) AND in_array("meals", $params['discounts']['childrenDiscountFor'])) ? "checked" : "" ?>>
@@ -42,7 +42,7 @@
                                         </label>
                                     </div>
                                 <?php endif; ?>
-                                <?php if($params['package']['wellness_offered'] === "YES"): ?>
+                                <?php if($params['accm']['wellness_offered'] === "YES"): ?>
                                     <div class="form-check" style="max-width: 10rem;">
                                         <label class="form-check-label" for="discountFor">
                                         <input class="form-check-input" type="checkbox"  name="childrenDiscountFor[]" value="wellness" <?= (isset($params['discounts']['childrenDiscountFor']) AND in_array("wellness", $params['discounts']['childrenDiscountFor'])) ? "checked" : "" ?>>

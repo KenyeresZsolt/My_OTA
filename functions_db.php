@@ -2,8 +2,8 @@
 
 require './common.php';
 require './login_functions.php';
-require './packages_functions.php';
-require './packages_settings_functions.php';
+require './accms_functions.php';
+require './accms_settings_functions.php';
 require './reservations_functions.php';
 require './users_functions.php';
 require './chat_functions.php';

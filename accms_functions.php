@@ -33,7 +33,7 @@ function getAccmFacilities()
     return $statement->fetchAll(PDO::FETCH_ASSOC);
 }
 
-function packageListHandler()
+function accmListHandler()
 {
     //szűrő forrása: https://phpdelusions.net/pdo_examples/dynamical_where
 
@@ -89,7 +89,7 @@ function packageListHandler()
         $cond[] = "(" . implode(" OR ", $lcond) . ")";
     }
 
-    $sql = "SELECT * from packages p";
+    $sql = "SELECT * from accms p";
 
     if($cond)
     {
@@ -99,11 +99,11 @@ function packageListHandler()
     $pdo = getConnection();
     $statement = $pdo->prepare($sql);
     $statement->execute($param);
-    $packages = $statement->fetchAll(PDO::FETCH_ASSOC);
+    $accms = $statement->fetchAll(PDO::FETCH_ASSOC);
 
     echo render('wrapper.php', [
-        'content' => render("pck-list.php", [
-            'packages' => $packages,
+        'content' => render("accm-list.php", [
+            'accms' => $accms,
             'accmTypes' => getAccmTypes(),
             'accmFacilities' => getAccmFacilities(),
             'accmLangs' => getAccmLangs(),
@@ -116,17 +116,17 @@ function packageListHandler()
             'isAuthorized' => isLoggedIn(),
             'isAdmin' => isAdmin() ?? NULL,
         ]),
-        'activeLink' => '/csomagok',
+        'activeLink' => '/szallasok',
         'isAuthorized' => isLoggedIn(),
         'isAdmin' => isAdmin() ?? NULL,
-        'title' => "Csomagok",
+        'title' => "Szállások",
         'unreadMessages' => countUnreadMessages(),
         'playChatSound' => playChatSound()
     ]);
 
 }
 
-function packageFilterHandler()
+function accmFilterHandler()
 {
     $types = $_POST['type'] ?? NULL;
 
@@ -176,22 +176,22 @@ function packageFilterHandler()
     $finalUrl = ($typeUrl ?? "") . ($minPirceUrl ?? "") . ($maxPirceUrl ?? "") . ($facilityUrl ?? "") . ($langUrl ?? "");
     $finalUrl = substr_replace($finalUrl,"",-1);
 
-    header('Location: /csomagok?' . $finalUrl);
+    header('Location: /szallasok?' . $finalUrl);
 }
 
-function newPackageHandler()
+function newAccmHandler()
 {
     redirectToLoginIfNotLoggedIn();
     echo render('wrapper.php', [
-        'content' => render('new-package-page.php', [
+        'content' => render('new-accm-page.php', [
             'accmTypes' => getAccmTypes(),
             'accmLangs' => getAccmLangs(),
             'accmFacilities' => getAccmFacilities(),
         ]),
-        'activeLink' => '/csomagok',
+        'activeLink' => '/szallasok',
         'isAuthorized' => isLoggedIn(),
         'isAdmin' => isAdmin() ?? NULL,
-        'title' => "Új csomag",
+        'title' => "Új szállás",
         'unreadMessages' => countUnreadMessages(),
         'playChatSound' => playChatSound()
     ]);
@@ -221,12 +221,12 @@ function imageUpload()
     }
 }
 
-function createPackageHandler()
+function createAccmHandler()
 {
     redirectToLoginIfNotLoggedIn();
     $pdo = getConnection();
     $statement = $pdo->prepare(
-        'INSERT INTO packages (name, location, slug, address, accm_type, price, capacity, rooms, bathrooms, facilities, description, languages, image, contact_name, email, phone, webpage)
+        'INSERT INTO accms (name, location, slug, address, accm_type, price, capacity, rooms, bathrooms, facilities, description, languages, image, contact_name, email, phone, webpage)
         VALUES (:name, :location, :slug, :address, :accm_type, :price, :capacity, :rooms, :bathrooms, :facilities, :description, :languages, :image, :contact_name, :email, :phone, :webpage)'
     );
     $statement->execute([
@@ -249,48 +249,48 @@ function createPackageHandler()
         'webpage' => $_POST["webpage"] ?? NULL,
     ]);
     
-    urlRedirect('csomagok', [
+    urlRedirect('szallasok', [
         'info' => 'added'
     ]);
 }
 
-function deletePackageHandler($urlParams)
+function deleteAccmHandler($urlParams)
 {
     redirectToLoginIfNotLoggedIn();
     $pdo = getConnection();
     $statement = $pdo->prepare(
-        'DELETE FROM packages
+        'DELETE FROM accms
         WHERE id = ?');
-    $statement->execute([$urlParams['pckId']]);
+    $statement->execute([$urlParams['accmId']]);
 
-    urlRedirect('csomagok', [
+    urlRedirect('szallasok', [
         'info' => 'deleted'
     ]);
 }
 
-function packagePageHandler($slug)
+function accmPageHandler($slug)
 {   
     $pdo = getConnection();
     $statement = $pdo->prepare(
         'SELECT p.*, at.name type
-        FROM packages p
+        FROM accms p
         LEFT JOIN accm_types at ON at.type_code = p.accm_type
         WHERE p.slug = ?'
     );
-    $statement->execute([$slug['pckSlug']]);
-    $package = $statement->fetch(PDO::FETCH_ASSOC);
+    $statement->execute([$slug['accmSlug']]);
+    $accm = $statement->fetch(PDO::FETCH_ASSOC);
 
     echo render("wrapper.php", [
-        "content" => render("pck-page.php", [
-            "package" => $package,
-            "address" => json_decode($package['address'], true),
-            "languages" => json_decode($package['languages'], true),
-            "facilities" => json_decode($package['facilities'], true),
+        "content" => render("accm-page.php", [
+            "accm" => $accm,
+            "address" => json_decode($accm['address'], true),
+            "languages" => json_decode($accm['languages'], true),
+            "facilities" => json_decode($accm['facilities'], true),
             "accmLangs" => getAccmLangs(),
             "accmTypes" => getAccmTypes(),
             "accmFacilities" => getAccmFacilities(),
-            "resPackageId" => isset($_GET["res"]),
-            "addImgToPckId" => isset($_GET["addimage"]),
+            "resAccmId" => isset($_GET["res"]),
+            "addImgToAccmId" => isset($_GET["addimage"]),
             'isAuthorized' => isLoggedIn(),
             'isAdmin' => isAdmin() ?? NULL,
             'info' => $_GET['info'] ?? NULL,
@@ -298,8 +298,8 @@ function packagePageHandler($slug)
         ]),
         "isAuthorized" => isLoggedIn(),
         "isAdmin" => isAdmin(),
-        'activeLink' => '/csomagok',
-        'title' => $package['name'] . " " . $package['location'],
+        'activeLink' => '/szallasok',
+        'title' => $accm['name'] . " " . $accm['location'],
         'unreadMessages' => countUnreadMessages(),
         'playChatSound' => playChatSound()
     ]);

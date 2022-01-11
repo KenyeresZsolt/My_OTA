@@ -1,5 +1,5 @@
 <p>Kedves <?= $params['name'] ?>!</p>
-<p>A(z) <?= $params['package']['location'] ?> településen található <?= $params['package']['name'] ?> szálláshelyre elküldött foglalásodat megerősítem.<br>
+<p>A(z) <?= $params['accm']['location'] ?> településen található <?= $params['accm']['name'] ?> szálláshelyre elküldött foglalásodat megerősítem.<br>
 <p>Alább találod a foglalásod adatait:</p>
 <ul>
     <li>Érkezés dátuma: <?= $params['checkin'] ?></li>

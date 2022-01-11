@@ -1,20 +1,20 @@
 <?php if($params['info'] === "added"): ?>
-    <a href="/csomagok" style="text-decoration:none">
+    <a href="/szallasok" style="text-decoration:none">
         <div class="alert alert-success text-center">
-            Csomag létrehozva!
+            Szállás létrehozva!
         </div>
     </a>
 <?php elseif($params['info'] === "deleted"): ?>
-    <a href="/csomagok" style="text-decoration:none">
+    <a href="/szallasok" style="text-decoration:none">
         <div class="alert alert-danger text-center">
-            Csomag sikeresen törölve!
+            Szállás sikeresen törölve!
         </div>
     </a>
 <?php endif ?>
 <?php if($params['isAuthorized'] AND $params['isAdmin'] === "1"): ?>
     <div class="container">
-        <a href="/uj-csomag">
-            <button class="btn btn-sm btn-outline-success float-end">Új csomag</button>
+        <a href="/uj-szallas">
+            <button class="btn btn-sm btn-outline-success float-end">Új szállás</button>
         </a>
     </div>
 <?php endif; ?>
@@ -26,7 +26,7 @@
             Szűrők
         </div>
         <div class="card-body container-fluid">
-            <form action="/csomagok" method="POST">
+            <form action="/filter-accms" method="POST">
                 <p>Típus</p>
                 <?php foreach($params['accmTypes'] as $accmType) : ?>
                     <div class="form-check">
@@ -65,7 +65,7 @@
                 <?php endforeach; ?>
                 <hr>
                 <div class="btn-group float-end">
-                    <a href="/csomagok">
+                    <a href="/szallasok">
                         <button type="button" class="btn btn-sm btn-outline-secondary mr-2">Törlés</button>
                     </a>
                     <button type="submit" class="btn btn-sm btn-success">Szűrés</button>
@@ -75,25 +75,25 @@
     </div>
 </div> 
 <div class="row col-md-10">
-    <p style="max-height:1rem"><?= count($params['packages']) . " találat"?></p>
-    <?php foreach($params['packages'] as $package): ?>
-        <div class="card border-success mb-5 me-auto" id="<?php echo $package['id']?>" style="width:20rem">
+    <p style="max-height:1rem"><?= count($params['accms']) . " találat"?></p>
+    <?php foreach($params['accms'] as $accm): ?>
+        <div class="card border-success mb-5 me-auto" id="<?php echo $accm['id']?>" style="width:20rem">
             <div class="card-header h4">
-                <?php echo $package['name'] . " " . $package['location'];?>
+                <?php echo $accm['name'] . " " . $accm['location'];?>
             </div>
             <div class="card-body container-fluid">
                 <div class="align-middle">    
-                    <?php if(isset($package['image'])): ?>
-                        <img class="img-fluid img-thumbnail" src="<?php echo $package['image']?>" alt="<?php echo $package['name'] ?>" style="width:318px">
+                    <?php if(isset($accm['image'])): ?>
+                        <img class="img-fluid img-thumbnail" src="<?php echo $accm['image']?>" alt="<?php echo $accm['name'] ?>" style="width:318px">
                     <?php endif; ?>
                 </div>
                 <br>
                 <br>
-                <a href="/csomagok/<?php echo $package["slug"] ?>" target="_blank">
+                <a href="/szallasok/<?php echo $accm["slug"] ?>" target="_blank">
                     <button class="btn btn-sm btn-outline-success float-end">Részletek</button>
                 </a>
                 <?php if($params['isAuthorized'] AND $params['isAdmin'] === "1"): ?>
-                    <form action="/delete-package/<?php echo $package['id'] ?>" method="post">
+                    <form action="/delete-accm/<?php echo $accm['id'] ?>" method="post">
                         <button type="submit" class="btn btn-sm btn-danger float-end">Törlés</button>
                     </form>
                 <?php endif; ?>
@@ -105,8 +105,8 @@
 <?php if($params['isAuthorized'] AND $params['isAdmin'] === "1"): ?>
     <hr>
     <div class="container">
-        <a href="/uj-csomag">
-            <button class="btn btn-sm btn-outline-success float-end">Új csomag</button>
+        <a href="/uj-szallas">
+            <button class="btn btn-sm btn-outline-success float-end">Új szállás</button>
         </a>
     </div>
 <?php endif; ?>

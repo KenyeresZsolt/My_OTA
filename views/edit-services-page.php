@@ -1,17 +1,17 @@
 <?php if($params['info'] === "mealsUpdated"): ?>
-    <a href="/csomagok/<?= $params['package']['slug']?>/beallitasok/szolgaltatasok?#editMealsForm" style="text-decoration:none">
+    <a href="/csomagok/<?= $params['accm']['slug']?>/beallitasok/szolgaltatasok?#editMealsForm" style="text-decoration:none">
         <div class="alert alert-success text-center mb-3 m-5" id="editMealsMessage">
             Étkezések frissítve!
         </div>
     </a>
 <?php elseif($params['info'] === "mealsEmptyPrice"): ?>
-<a href="/csomagok/<?= $params['package']['slug']?>/beallitasok/szolgaltatasok?#editMealsForm" style="text-decoration:none">
+<a href="/csomagok/<?= $params['accm']['slug']?>/beallitasok/szolgaltatasok?#editMealsForm" style="text-decoration:none">
     <div class="alert alert-danger text-center mb-3 m-5" id="editMealsMessage">
         Add meg az árat fizetős étkezés esetén!
     </div>
 </a>
 <?php elseif($params['info'] === "mealsNotSpecified"): ?>
-<a href="/csomagok/<?= $params['package']['slug']?>/beallitasok/szolgaltatasok?#editMealsForm" style="text-decoration:none">
+<a href="/csomagok/<?= $params['accm']['slug']?>/beallitasok/szolgaltatasok?#editMealsForm" style="text-decoration:none">
     <div class="alert alert-danger text-center mb-3 m-5" id="editMealsMessage">
         Add meg a biztosított étkezéseket!
     </div>
@@ -20,17 +20,17 @@
 <div class="card border-success mb-3 m-5" id="editMealsForm">
     <div class="card-header">Étkezés</div>
     <div class="card-body">
-        <form class="form-inline" action="/update-meals/<?= $params['package']['id'] ?>" method="POST">
+        <form class="form-inline" action="/update-meals/<?= $params['accm']['id'] ?>" method="POST">
             <div class="container row">            
                 <div class="form-check" style="max-width: 15rem;">
                     <label class="form-check-label" for="mealOffered">
-                    <input class="form-check-input" type="radio"  name="mealOffered" value="YES" <?= $params['package']['meal_offered'] === "YES" ? "checked" : "" ?>>
+                    <input class="form-check-input" type="radio"  name="mealOffered" value="YES" <?= $params['accm']['meal_offered'] === "YES" ? "checked" : "" ?>>
                         Biztosítok étkezést
                     </label>
                 </div>
                 <div class="form-check" style="max-width: 15rem;">
                     <label class="form-check-label" for="mealOffered">
-                    <input class="form-check-input" type="radio"  name="mealOffered" value="NO" <?= $params['package']['meal_offered'] !== "YES" ? "checked" : "" ?>>
+                    <input class="form-check-input" type="radio"  name="mealOffered" value="NO" <?= $params['accm']['meal_offered'] !== "YES" ? "checked" : "" ?>>
                         Nem biztosítok étkezést 
                     </label>
                 </div>
@@ -47,7 +47,7 @@
                                     <div class="row">          
                                         <div class="form-check" style="max-width: 15rem;">
                                             <label class="form-check-label" for="<?= $meal['value'] ?>">
-                                            <input class="form-check-input" type="radio"  name="<?= $meal['value'] ?>" value="<?= $mealStatus['value'] ?>" <?= (($mealStatus['value'] === @$params['mealDetails'][$meal['value']]) OR ($params['package']['meal_offered'] !== "YES" AND $mealStatus['value'] === "NOTPROVIDED"))  ? "checked" : "" ?>>
+                                            <input class="form-check-input" type="radio"  name="<?= $meal['value'] ?>" value="<?= $mealStatus['value'] ?>" <?= (($mealStatus['value'] === @$params['mealDetails'][$meal['value']]) OR ($params['accm']['meal_offered'] !== "YES" AND $mealStatus['value'] === "NOTPROVIDED"))  ? "checked" : "" ?>>
                                                 <?= $mealStatus['name'] ?>
                                             </label>
                                         </div>
@@ -71,19 +71,19 @@
     </div>
 </div>
 <?php if($params['info'] === "wellnessUpdated"): ?>
-    <a href="/csomagok/<?= $params['package']['slug']?>/beallitasok/szolgaltatasok?#editWellnessForm" style="text-decoration:none">
+    <a href="/csomagok/<?= $params['accm']['slug']?>/beallitasok/szolgaltatasok?#editWellnessForm" style="text-decoration:none">
         <div class="alert alert-success text-center mb-3 m-5" id="editWellnessMessage">
             Wellness frissítve!
         </div>
     </a>
 <?php elseif($params['info'] === "wellnessEmptyPrice"): ?>
-<a href="/csomagok/<?= $params['package']['slug']?>/beallitasok/szolgaltatasok?#editWellnessForm" style="text-decoration:none">
+<a href="/csomagok/<?= $params['accm']['slug']?>/beallitasok/szolgaltatasok?#editWellnessForm" style="text-decoration:none">
     <div class="alert alert-danger text-center mb-3 m-5" id="editWellnessMessage">
         Add meg a wellness árát!
     </div>
 </a>
 <?php elseif($params['info'] === "wellnessFacilitiesNotSpecified"): ?>
-<a href="/csomagok/<?= $params['package']['slug']?>/beallitasok/szolgaltatasok?#editWellnessForm" style="text-decoration:none">
+<a href="/csomagok/<?= $params['accm']['slug']?>/beallitasok/szolgaltatasok?#editWellnessForm" style="text-decoration:none">
     <div class="alert alert-danger text-center mb-3 m-5" id="editWellnessMessage">
         Add meg a wellness részleteit!
     </div>
@@ -92,17 +92,17 @@
 <div class="card border-success mb-3 m-5" id="editWellnessForm">
     <div class="card-header">Wellness</div>
     <div class="card-body">
-    <form class="form-inline" action="/update-wellness/<?= $params['package']['id'] ?>" method="POST">
+    <form class="form-inline" action="/update-wellness/<?= $params['accm']['id'] ?>" method="POST">
             <div class="container row">            
                 <div class="form-check" style="max-width: 15rem;">
                     <label class="form-check-label" for="wellnessOffered">
-                    <input class="form-check-input" type="radio"  name="wellnessOffered" value="YES" <?= $params['package']['wellness_offered'] === "YES" ? "checked" : "" ?>>
+                    <input class="form-check-input" type="radio"  name="wellnessOffered" value="YES" <?= $params['accm']['wellness_offered'] === "YES" ? "checked" : "" ?>>
                         Biztosítok wellnesst
                     </label>
                 </div>
                 <div class="form-check" style="max-width: 15rem;">
                     <label class="form-check-label" for="wellnessOffered">
-                    <input class="form-check-input" type="radio"  name="wellnessOffered" value="NO" <?= $params['package']['wellness_offered'] !== "YES" ? "checked" : "" ?>>
+                    <input class="form-check-input" type="radio"  name="wellnessOffered" value="NO" <?= $params['accm']['wellness_offered'] !== "YES" ? "checked" : "" ?>>
                         Nem biztosítok wellnesst 
                     </label>
                 </div>
