@@ -359,6 +359,19 @@ function updateDiscountsHandler($urlParams)
 
 function editRoomsHandler($urlParams)
 {
+
+    $sqlInput = array(
+        'table' => "accms",
+        'columns' => array('meal_offered', 'meal_details', 'breakfast', 'breakfast_price', 'lunch', 'lunch_price', 'dinner', 'dinner_price', 'last_modified', 'last_modified_by_user_id'),
+        'conditions' => array('id')
+    );
+  
+    echo "<pre>";
+    var_dump($sqlInput);
+    echo generateUpdateSql($sqlInput);
+    exit;
+
+
     redirectToLoginIfNotLoggedIn();
     $pdo = getConnection();
     $statement = $pdo->prepare(

@@ -11,6 +11,15 @@ function urlRedirect($url, $params = [])
     exit;
 }
 
+function generateUpdateSql($sqlInput)
+{
+    $table = $sqlInput['table'];
+    $col = implode(" = ?, ", $sqlInput['columns']);
+    $cond = implode(" = ? AND ", $sqlInput['conditions']);
+    return "UPDATE $table SET $col = ? WHERE $cond = ?";
+
+}
+
 
 function validationMessages($type = null)
 {

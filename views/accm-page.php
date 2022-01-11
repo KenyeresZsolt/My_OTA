@@ -1,5 +1,5 @@
 <?php if($params["info"] === "reserved"): ?>
-    <a href="/csomagok/<?= $params['accm']['slug']?>" style="text-decoration:none">
+    <a href="/szallasok/<?= $params['accm']['slug']?>" style="text-decoration:none">
         <div class="alert alert-success text-center">
             Sikeres foglalás!
         </div>
@@ -13,7 +13,7 @@
             </div>
             <?php if($params['isAuthorized'] AND $params['isAdmin'] === "1"): ?>
                 <div class="btn-group float-end col-2">
-                    <a href="/csomagok/<?= $params['accm']["slug"] ?>/beallitasok/adatok">
+                    <a href="/szallasok/<?= $params['accm']["slug"] ?>/beallitasok/adatok">
                         <button class="btn btn-sm btn-light float-end">Beállítások</button>
                     </a>
                     <form action="/delete-accm/<?= $params['accm']["id"] ?>" method="post">

@@ -16,7 +16,7 @@ function getAccmLangs()
     $pdo = getConnection();
     $statement = $pdo->prepare(
         'SELECT *
-        FROM accm_languages'
+        FROM languages'
     );
     $statement->execute();
     return $statement->fetchAll(PDO::FETCH_ASSOC);
@@ -27,7 +27,7 @@ function getAccmFacilities()
     $pdo = getConnection();
     $statement = $pdo->prepare(
         'SELECT *
-        FROM accm_facilities'
+        FROM facilities'
     );
     $statement->execute();
     return $statement->fetchAll(PDO::FETCH_ASSOC);
