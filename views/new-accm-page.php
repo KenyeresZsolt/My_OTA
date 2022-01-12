@@ -1,7 +1,7 @@
 <div class="card border-success mb-3 m-5">
     <div class="card-header">Új szállás</div>
         <div class="card-body">
-            <form class="form-inline" action="/add-package" method="POST" enctype="multipart/form-data" id="newPck">
+            <form class="form-inline" action="/add-accm" method="POST" enctype="multipart/form-data" id="newPck">
                 <div class="form-group">
                     <div class="container">
                         <h5>Alapadatok</h5>

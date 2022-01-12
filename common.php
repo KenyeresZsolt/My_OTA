@@ -11,13 +11,43 @@ function urlRedirect($url, $params = [])
     exit;
 }
 
-function generateUpdateSql($sqlInput)
+function generateInsertSql($table, $columns, $execute)
 {
-    $table = $sqlInput['table'];
-    $col = implode(" = ?, ", $sqlInput['columns']);
-    $cond = implode(" = ? AND ", $sqlInput['conditions']);
-    return "UPDATE $table SET $col = ? WHERE $cond = ?";
+    $pdo = getConnection();
 
+    $col = implode(", ", $columns);
+    $val = [];
+    for($i = 0; $i < count($columns); $i++){
+        $val[] = "?";
+    }
+    $val = implode(", ", $val);
+    $sql = "INSERT INTO $table ($col) VALUES ($val)";
+    
+    /*echo $sql;
+    echo "<pre>";
+    var_dump($execute);
+    exit;*/
+
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute($execute);
+    return $pdo->lastInsertId();
+}
+
+function generateUpdateSql($table, $columns, $conditions, $execute)
+{
+    $pdo = getConnection();
+        
+    $col = implode(" = ?, ", $columns);
+    $cond = implode(" ? AND ", $conditions);
+    $sql = "UPDATE $table SET $col = ? WHERE $cond ?";
+
+    /*echo $sql;
+    echo "<pre>";
+    var_dump($execute);
+    exit;*/
+
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute($execute);
 }
 
 

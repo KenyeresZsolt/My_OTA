@@ -48,17 +48,26 @@ function chatPageHandler()
     $convMembers = $statement->fetchAll(PDO::FETCH_ASSOC);
 
     //látta beállítása
-    $statement = $pdo->prepare(
-        'UPDATE chat_messages cm
-        LEFT JOIN conversation_users cu on cm.conversation_id = cu.conversation_id
-        SET cm.seen = "1", cm.seen_at = ?
-        WHERE cm.seen = "0" AND cu.member_user_id = ? AND cm.from_user_id <> ?'
-    );
-    $statement->execute([
+
+    $table = "chat_messages cm LEFT JOIN conversation_users cu on cm.conversation_id = cu.conversation_id";
+    $columns = [
+        'cm.seen',
+        'cm.seen_at'
+    ];
+    $conditions = [
+        'cm.seen = ',
+        'cu.member_user_id =',
+        'cm.from_user_id <>'
+    ];
+    $execute = [
+        "1",
         time(),
+        "0",
         $_SESSION["userId"],
         $_SESSION["userId"]
-    ]);
+    ];
+
+    generateUpdateSql($table, $columns, $conditions, $execute);
 
     echo render('wrapper.php', [
         'content' => render("chat-page.php", [
@@ -87,17 +96,20 @@ function newConversationHandler()
     $startUser = $_SESSION["userId"];
     $startTime = time();
 
-    $pdo = getConnection();
-    $statement = $pdo->prepare(
-        'INSERT INTO conversations (name, started_by_user_id, started_at)
-        VALUES (?, ?, ?)'
-    );
-    $statement->execute([
+    $table = "conversations";
+    $columns = [
+        'name', 
+        'started_by_user_id', 
+        'started_at'
+    ];
+    $execute = [
         $_POST['name'],
         $startUser,
         $startTime,
-    ]);
+    ];
+    generateInsertSql($table, $columns, $execute);
 
+    $pdo = getConnection();
     $statement = $pdo->prepare(
         'SELECT *
         FROM conversations c
@@ -111,14 +123,17 @@ function newConversationHandler()
 
     $newConvId = $startedConv[0]['id'];
 
-    $statement = $pdo->prepare(
-        'INSERT INTO conversation_users (conversation_id, member_user_id)
-        VALUES (?, ?)'
-    );
-    $statement->execute([
+    $table = "conversation_users";
+    $columns = [
+        'conversation_id', 
+        'member_user_id'
+    ];
+    $execute = [
         $newConvId,
         $startUser
-    ]);
+    ];
+
+    generateInsertSql($table, $columns, $execute);
 
     urlRedirect('chat', [
         'info' => "started#$newConvId"
@@ -132,16 +147,22 @@ function sendMessageHandler()
 
     $convId = $_GET['convId'];
 
-    $pdo = getConnection();
-    $statement = $pdo->prepare(
-        'INSERT INTO chat_messages (conversation_id, from_user_id, sent_at, message)
-        VALUES (?, ?, ?, ?)');
-    $statement->execute([
+    $table = "chat_messages";
+    $columns = [
+        'conversation_id', 
+        'from_user_id', 
+        'sent_at', 
+        'message', 
+        'seen'
+    ];
+    $execute = [
         $convId,
         $_SESSION['userId'],
         time(),
-        $_POST['message']
-    ]);
+        $_POST['message'],
+        "0",
+    ];
+    generateInsertSql($table, $columns, $execute);
 
     urlRedirect('chat', [
         'href' => "#$convId"
@@ -154,16 +175,21 @@ function addMemberHandler()
 
     $convId = $_GET['convId'];
 
-    $pdo = getConnection();
-    $statement = $pdo->prepare(
-        'INSERT INTO conversation_users (conversation_id, member_user_id)
-            VALUES (?, ?)');
-    $statement->execute([
+    $table = "conversation_users";
+    $columns = [
+        'conversation_id', 
+        'member_user_id'
+    ];
+    $execute = [
         $convId,
         $_POST['member']
+    ];
+    generateInsertSql($table, $columns, $execute);
+
+    urlRedirect('chat', [
+        'manage-members' => "$convId#$convId"
     ]);
 
-    header ('Location: /chat?manage-members=' . $convId . '#' . $convId);
 }
 
 function deleteMemberHandler()

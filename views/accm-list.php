@@ -89,7 +89,7 @@
                 </div>
                 <br>
                 <br>
-                <a href="/szallasok/<?php echo $accm["slug"] ?>" target="_blank">
+                <a href="/szallasok/<?php echo $accm["slug"] ?>">
                     <button class="btn btn-sm btn-outline-success float-end">Részletek</button>
                 </a>
                 <?php if($params['isAuthorized'] AND $params['isAdmin'] === "1"): ?>

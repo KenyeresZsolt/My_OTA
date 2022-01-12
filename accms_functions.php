@@ -224,32 +224,67 @@ function imageUpload()
 function createAccmHandler()
 {
     redirectToLoginIfNotLoggedIn();
-    $pdo = getConnection();
-    $statement = $pdo->prepare(
-        'INSERT INTO accms (name, location, slug, address, accm_type, price, capacity, rooms, bathrooms, facilities, description, languages, image, contact_name, email, phone, webpage)
-        VALUES (:name, :location, :slug, :address, :accm_type, :price, :capacity, :rooms, :bathrooms, :facilities, :description, :languages, :image, :contact_name, :email, :phone, :webpage)'
-    );
-    $statement->execute([
-        'name' => $_POST["name"] ?? NULL, 
-        'location' => $_POST["location"] ?? NULL, 
-        'slug' => strtolower(slugify($_POST["name"] . "-" . $_POST["location"])) ?? NULL,
-        'address' => createAddressJson() ?? NULL,
-        'accm_type' => $_POST["type"] ?? NULL,
-        'price' => $_POST["price"] ?? NULL,
-        'capacity' => $_POST["capacity"] ?? NULL,
-        'rooms' => $_POST["rooms"] ?? NULL,
-        'bathrooms' => $_POST["bathrooms"] ?? NULL,
-        'facilities' => json_encode($_POST['facilities'], true) ?? NULL,
-        'description' => $_POST['description'] ?? NULL,
-        'languages' => json_encode($_POST['languages'], true) ?? NULL,
-        'image' => imageUpload() ?? NULL,
-        'contact_name' => $_POST["contactName"] ?? NULL,
-        'email' => $_POST["contactEmail"] ?? NULL,
-        'phone' => $_POST["contactPhone"] ?? NULL,
-        'webpage' => $_POST["webpage"] ?? NULL,
-    ]);
+
+    if(empty($_POST['name'])){
+        urlRedirect("uj-szallas", [
+            'info' => 'emptyName'
+        ]);
+    }
+
+    $slug = strtolower(slugify($_POST["name"] . "-" . $_POST["location"]));
+
+    $table = "accms";
+    $columns = [
+        'name', 
+        'location', 
+        'slug', 
+        'address', 
+        'accm_type', 
+        'price', 
+        'capacity', 
+        'rooms', 
+        'bathrooms', 
+        'facilities', 
+        'description', 
+        'languages', 
+        'image', 
+        'contact_name', 
+        'email', 
+        'phone', 
+        'webpage'
+    ];
+    $execute = [
+        $_POST["name"] ?? NULL, 
+        $_POST["location"] ?? NULL, 
+        $slug ?? NULL,
+        createAddressJson() ?? NULL,
+        $_POST["type"] ?? NULL,
+        $_POST["price"] ?? NULL,
+        $_POST["capacity"] ?? NULL,
+        $_POST["rooms"] ?? NULL,
+        $_POST["bathrooms"] ?? NULL,
+        json_encode($_POST['facilities'], true) ?? NULL,
+        $_POST['description'] ?? NULL,
+        json_encode($_POST['languages'], true) ?? NULL,
+        imageUpload() ?? NULL,
+        $_POST["contactName"] ?? NULL,
+        $_POST["contactEmail"] ?? NULL,
+        $_POST["contactPhone"] ?? NULL,
+        $_POST["webpage"] ?? NULL,
+    ];
+
+    $id = generateInsertSql($table, $columns, $execute);
+
+    $table = "accm_meals";
+    $columns = [
+        'accm_id'
+    ];
+    $execute = [
+        $id
+    ];
+    generateInsertSql($table, $columns, $execute);
     
-    urlRedirect('szallasok', [
+    urlRedirect("szallasok/$slug", [
         'info' => 'added'
     ]);
 }
@@ -261,6 +296,11 @@ function deleteAccmHandler($urlParams)
     $statement = $pdo->prepare(
         'DELETE FROM accms
         WHERE id = ?');
+    $statement->execute([$urlParams['accmId']]);
+
+    $statement = $pdo->prepare(
+        'DELETE FROM accm_meals
+        WHERE accm_id = ?');
     $statement->execute([$urlParams['accmId']]);
 
     urlRedirect('szallasok', [

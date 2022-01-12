@@ -38,18 +38,22 @@ function userListHandler()
 function createUserHandler()
 {
     redirectToLoginIfNotLoggedIn();
-    $pdo = getConnection();
-    
-    $statement = $pdo->prepare(
-        'INSERT INTO users (name, email, password, registered)
-        VALUES (?, ?, ?, ?)'
-    );
-    $statement->execute([
+
+    $table = "users";
+    $columns = [
+        'name', 
+        'email', 
+        'password', 
+        'registered'
+    ];
+    $execute = [
         $_POST["name"],
         $_POST["email"],
         password_hash($_POST["password"], PASSWORD_DEFAULT),
         time()
-    ]);
+    ];
+
+    generateInsertSql($table, $columns, $execute);
 
     urlRedirect('felhasznalok', [
         'added' => "1" 
@@ -61,18 +65,21 @@ function updateUserHandler()
     redirectToLoginIfNotLoggedIn();
     $updateUserId = $_GET['id'] ?? NULL;
 
-    $pdo = getConnection();
-    $statement = $pdo->prepare(
-        'UPDATE users u
-        SET u.name = ? , u.email = ?, u.is_Admin = ?
-        WHERE u.id = ?'
-    );
-    $statement->execute([
+    $table = "users";
+    $columns = [
+        'name',
+        'email',
+        'is_Admin',
+    ];
+    $conditions = ['id ='];
+    $execute = [
         $_POST["name"],
         $_POST["email"],
         $_POST["isAdmin"],
         $updateUserId
-    ]);
+    ];
+
+    generateUpdateSql($table, $columns, $conditions, $execute);
 
     urlRedirect('felhasznalok', [
         'updated' => "1" 

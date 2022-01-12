@@ -1,7 +1,7 @@
 <?php if($params['info'] === "updated"): ?>
-    <a href="/csomagok/<?= $params['accm']['slug']?>/beallitasok/adatok" style="text-decoration:none">
+    <a href="/szallasok/<?= $params['accm']['slug']?>/beallitasok/adatok" style="text-decoration:none">
         <div class="alert alert-success text-center mb-3 m-5">
-            Csomag frissítve!
+            Szállás frissítve!
         </div>
     </a>
 <?php endif; ?>
@@ -73,17 +73,6 @@
                                 <input class="form-control form-control-sm" type="text" name="price" value="<?= $params['accm']['price']?>" autocomplete="off"/>
                             </div>
                             <label for="price" class="col-sm-2 col-form-label">RON/fő/éj</label>                                
-                        </div>
-                    </div>
-                    <br><hr><br>
-                    <div class="container">
-                        <h5>Kedvezmények</h5>
-                        <div class="row">
-                            <label for="discount" class="col-sm-2 col-form-label">Szállás kedvezmény</label>
-                            <div class="col-sm-1">
-                                <input class="form-control form-control-sm" type="text" name="discount" value="<?= $params['accm']['discount']?>" autocomplete="off"/>
-                            </div>
-                            <label for="discount" class="col-sm-1 col-form-label">%</label>                                
                         </div>
                     </div>
                     <br><hr><br>

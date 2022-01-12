@@ -24,7 +24,7 @@ function emailUsed():bool
 
 function registrationHandler()
 {
-    if (empty($postedData["name"]) OR empty($postedData["email"]) OR empty($postedData["password"])) {
+    if (empty($_POST["name"]) OR empty($_POST["email"]) OR empty($_POST["password"])) {
         urlRedirect('bejelentkezes', [
             'isRegistration' => 1,
             'info' => 'emptyValue'
@@ -39,18 +39,25 @@ function registrationHandler()
     }
     //ellenőrzés vége
 
-    $pdo = getConnection();
-    $statement = $pdo->prepare(
-        'INSERT INTO users (name, email, password, registered)
-        VALUES (?, ?, ?, ?)'
-    );
-    $statement->execute([
+    $table = "users";
+    $columns = [
+        'name',
+        'email', 
+        'password', 
+        'is_admin',
+        'registered',
+        'last_modified'
+    ];
+    $execute = [
         $_POST["name"],
         $_POST["email"],
         password_hash($_POST["password"], PASSWORD_DEFAULT),
-        time()
-    ]);
+        "0",
+        time(),
+        "0"
+    ];
 
+    generateInsertSql($table, $columns, $execute);
 
     // insertUser($data);
     //sendRegistrationMail($userID);
@@ -247,21 +254,26 @@ function updateProfilHandler()
         }
     }
 
-    $pdo = getConnection();
-    $statement = $pdo->prepare(
-        'UPDATE users
-        SET name = ?, phone = ?, email = ?, password = ?, last_modified = ?
-        WHERE id = ?'
-    );
-    $statement->execute([
+    $table = "users";
+    $columns = [
+        'name',
+        'phone',
+        'email',
+        'password',
+        'last_modified',
+    ];
+    $conditions = ['id ='];
+    $execute = [
         $_POST['name'],
         $_POST['phone'],
         $_POST['email'],
         empty($_POST['newPassword']) ? $user['password'] : password_hash($_POST["newPassword"], PASSWORD_DEFAULT),
         time(),
         $_SESSION['userId']
-    ]);
-    
+    ];
+
+    generateUpdateSql($table, $columns, $conditions, $execute);
+  
     urlRedirect('profil', [
         'info' => 'updateSuccessfull#updtProfile'
     ]);
