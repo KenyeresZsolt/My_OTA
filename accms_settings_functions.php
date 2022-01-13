@@ -139,7 +139,7 @@ function editServicesHandler($urlParams)
     redirectToLoginIfNotLoggedIn();
     $pdo = getConnection();
     $statement = $pdo->prepare(
-        'SELECT a.id, a.name, a.slug, a.accm_type, a.wellness_offered, a.wellness_details, am.*, at.name type, u.name modified_by_user_name
+        'SELECT a.id, a.name, a.slug, a.accm_type, a.wellness_offered, a.wellness_details, a.last_modified, a.last_modified_by_user_id, am.*, at.name type, u.name modified_by_user_name
         FROM accms a
         LEFT JOIN accm_types at ON at.type_code = a.accm_type
         LEFT JOIN users u ON u.id = a.last_modified_by_user_id
@@ -223,10 +223,8 @@ function updateMealsHandler($urlParams)
         'lunch_price',
         'dinner',
         'dinner_price',
-        'last_modified',
-        'last_modified_by_user_id',
     ];
-    $conditions = ['accm_id = '];
+    $conditions = ['accm_id ='];
     $execute = [
         $_POST['mealOffered'],
         $_POST['breakfast'],
@@ -235,6 +233,18 @@ function updateMealsHandler($urlParams)
         $_POST['lunchPrice'],
         $_POST['dinner'],
         $_POST['dinnerPrice'],
+        $urlParams['accmId'],        
+    ];
+
+    generateUpdateSql($table, $columns, $conditions, $execute);
+
+    $table ="accms";
+    $columns = [
+        'last_modified',
+        'last_modified_by_user_id',
+    ];
+    $conditions = ['id ='];
+    $execute = [
         time() ?? NULL,
         $_SESSION['userId'] ?? NULL,
         $urlParams['accmId'],
@@ -266,35 +276,69 @@ function updateWellnessHandler($urlParams)
         $_POST['wellnessPrice'] = NULL;
     }
 
+    if($_POST['wellnessStatus'] === "INPRICE"){
+        $_POST['wellnessPrice'] = NULL;
+    }
+
     if($_POST['wellnessStatus'] === "PAYABLE" AND empty($_POST['wellnessPrice'])){
         return urlRedirect('szallasok/' . $accm['slug'] . '/beallitasok/szolgaltatasok', [
                     'info' => 'wellnessEmptyPrice#editWellnessMessage'
                 ]);
     }
 
-    if($_POST['wellnessOffered'] === "YES" AND (!isset($_POST['wellnessFacilities']) OR empty($_POST['wellnessFacilities']) OR !isset($_POST['wellnessStatus']) OR empty($_POST['wellnessStatus']))){
+    $facilities = getServicesByCategory('wellness');
+    foreach($facilities as $facility){
+        $facilityValues[] = $facility['value'];
+    }
+
+    $submitFacilities = "";
+    for($i = 0; $i<count($facilityValues); $i++){
+        $submitFacilities .= $_POST[$facilityValues[$i]] ?? NULL;
+    }
+
+    if($_POST['wellnessOffered'] === "YES" AND ((strlen($submitFacilities) === 0) OR !isset($_POST['wellnessStatus']))){
         return urlRedirect('szallasok/' . $accm['slug'] . '/beallitasok/szolgaltatasok', [
                     'info' => 'wellnessFacilitiesNotSpecified#editWellnessMessage'
                 ]);
     }
 
-    $wellnessDetails = json_encode($_POST, true);
-
-    $table = "accms";
+    $table = "accm_wellness";
     $columns = [
         'wellness_offered',
-        'wellness_details',
+        'pool',
+        'sauna',
+        'jacuzzi',
+        'tub',
+        'fitness',
+        'wellness_status',
+        'wellness_price',
+    ];
+    $conditions = ['accm_id = '];
+    $execute = [
+        $_POST['wellnessOffered'],
+        $_POST['pool'],
+        $_POST['sauna'],
+        $_POST['jacuzzi'],
+        $_POST['tub'],
+        $_POST['fitness'],
+        $_POST['wellnessStatus'],
+        $_POST['wellnessPrice'],
+        $urlParams['accmId'],
+    ];
+    generateUpdateSql($table, $columns, $conditions, $execute);
+
+    $table ="accms";
+    $columns = [
         'last_modified',
         'last_modified_by_user_id',
     ];
-    $conditions = ['id = '];
+    $conditions = ['id ='];
     $execute = [
-        $_POST['wellnessOffered'],
-        $wellnessDetails,
         time() ?? NULL,
         $_SESSION['userId'] ?? NULL,
         $urlParams['accmId'],
     ];
+
     generateUpdateSql($table, $columns, $conditions, $execute);
 
     urlRedirect('szallasok/' . $accm['slug'] . '/beallitasok/szolgaltatasok', [

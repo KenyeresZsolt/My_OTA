@@ -18,3 +18,7 @@ II.
     4. A handler az csak az iranyito feladatot lassa el, nem kell oda sql pl.
 
 
+    !!! Idegen kulcs létrehozásakor mindkét tábla összekötött ID oszlopában ugyanazoknak az értékeknek kell szerepelnie, másképp nem fogja tudni a kulcsot beilleszteni.
+    
+
+

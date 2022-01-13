@@ -283,6 +283,15 @@ function createAccmHandler()
         $id
     ];
     generateInsertSql($table, $columns, $execute);
+
+    $table = "accm_wellness";
+    $columns = [
+        'accm_id'
+    ];
+    $execute = [
+        $id
+    ];
+    generateInsertSql($table, $columns, $execute);
     
     urlRedirect("szallasok/$slug", [
         'info' => 'added'
@@ -296,11 +305,6 @@ function deleteAccmHandler($urlParams)
     $statement = $pdo->prepare(
         'DELETE FROM accms
         WHERE id = ?');
-    $statement->execute([$urlParams['accmId']]);
-
-    $statement = $pdo->prepare(
-        'DELETE FROM accm_meals
-        WHERE accm_id = ?');
     $statement->execute([$urlParams['accmId']]);
 
     urlRedirect('szallasok', [

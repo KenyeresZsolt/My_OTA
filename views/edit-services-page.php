@@ -113,7 +113,7 @@
                 <?php foreach($params['wellnessFacilities'] as $wellnessFacility) : ?>
                     <div class="form-check" style="max-width: 10rem;">
                         <label class="form-check-label" for="wellnessFacilities">
-                        <input class="form-check-input" type="checkbox"  name="wellnessFacilities[]" value="<?= $wellnessFacility['value']?>" <?= !is_array(@$params['wellnessDetails']['wellnessFacilities']) ? "" : in_array($wellnessFacility['value'], $params['wellnessDetails']['wellnessFacilities']) ? "checked" : "" ?>>
+                        <input class="form-check-input" type="checkbox"  name="<?= $wellnessFacility['value']?>" value="YES" <?= !is_array(@$params['wellnessDetails']['wellnessFacilities']) ? "" : in_array($wellnessFacility['value'], $params['wellnessDetails']['wellnessFacilities']) ? "checked" : "" ?>>
                             <?= $wellnessFacility['name']?>
                         </label>
                     </div>                                    
