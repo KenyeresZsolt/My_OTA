@@ -18,6 +18,7 @@ $routes = [
     ['GET', '/szallasok/{accmSlug}/beallitasok/szolgaltatasok' , 'editServicesHandler'],
     ['GET', '/szallasok/{accmSlug}/beallitasok/kedvezmenyek' , 'editDiscountsHandler'],
     ['GET', '/szallasok/{accmSlug}/beallitasok/szobak' , 'editRoomsHandler'],
+    ['GET', '/szallasok/{accmSlug}/beallitasok/szobak/uj-szoba' , 'newRoomHandler'],
     ['GET', '/foglalasok' , 'reservationListHandler'],
     ['GET', '/chat' , 'chatPageHandler'],
     ['GET', '/profil' , 'profilHandler'],

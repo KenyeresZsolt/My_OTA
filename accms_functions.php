@@ -243,7 +243,7 @@ function createAccmHandler()
         'price', 
         'capacity', 
         'rooms', 
-        'bathrooms', 
+        'bathrooms',
         'facilities', 
         'description', 
         'languages', 
@@ -292,6 +292,15 @@ function createAccmHandler()
         $id
     ];
     generateInsertSql($table, $columns, $execute);
+
+    $table = "accm_discounts";
+    $columns = [
+        'accm_id'
+    ];
+    $execute = [
+        $id
+    ];
+    generateInsertSql($table, $columns, $execute);
     
     urlRedirect("szallasok/$slug", [
         'info' => 'added'
@@ -316,13 +325,24 @@ function accmPageHandler($slug)
 {   
     $pdo = getConnection();
     $statement = $pdo->prepare(
-        'SELECT p.*, at.name type
-        FROM accms p
-        LEFT JOIN accm_types at ON at.type_code = p.accm_type
-        WHERE p.slug = ?'
+        "SELECT a.*, ad.*, am.*, aw.*, at.name type, (SELECT ss.name FROM services_status ss WHERE ss.value = am.breakfast AND ss.category = 'meal') breakfast_hu_status, (SELECT ss.name FROM services_status ss WHERE ss.value = am.lunch AND ss.category = 'meal') lunch_hu_status, (SELECT ss.name FROM services_status ss WHERE ss.value = am.dinner AND ss.category = 'meal') dinner_hu_status
+        FROM accms a
+        LEFT JOIN accm_types at ON at.type_code = a.accm_type
+        LEFT JOIN accm_discounts ad ON ad.accm_id = a.id
+        LEFT JOIN accm_meals am ON am.accm_id = a.id
+        LEFT JOIN accm_wellness aw ON aw.accm_id = a.id
+        WHERE a.slug = ?"
     );
     $statement->execute([$slug['accmSlug']]);
     $accm = $statement->fetch(PDO::FETCH_ASSOC);
+
+    $wellnessFacilities = getServicesByCategory("wellness");
+    $wellnessFacilityNames=[];
+    foreach($wellnessFacilities as $wellnessFacility){
+        if($accm[$wellnessFacility['value']] === "YES"){
+            $wellnessFacilityNames[] = $wellnessFacility['name'];
+        }
+    }
 
     echo render("wrapper.php", [
         "content" => render("accm-page.php", [
@@ -330,6 +350,8 @@ function accmPageHandler($slug)
             "address" => json_decode($accm['address'], true),
             "languages" => json_decode($accm['languages'], true),
             "facilities" => json_decode($accm['facilities'], true),
+            "meals" => getServicesByCategory("meal"),
+            "wellnessFacilityNames" => $wellnessFacilityNames,
             "accmLangs" => getAccmLangs(),
             "accmTypes" => getAccmTypes(),
             "accmFacilities" => getAccmFacilities(),

@@ -139,16 +139,16 @@ function editServicesHandler($urlParams)
     redirectToLoginIfNotLoggedIn();
     $pdo = getConnection();
     $statement = $pdo->prepare(
-        'SELECT a.id, a.name, a.slug, a.accm_type, a.wellness_offered, a.wellness_details, a.last_modified, a.last_modified_by_user_id, am.*, at.name type, u.name modified_by_user_name
+        'SELECT a.id, a.name, a.slug, a.accm_type, a.last_modified, a.last_modified_by_user_id, am.*, aw.*, at.name type, u.name modified_by_user_name
         FROM accms a
         LEFT JOIN accm_types at ON at.type_code = a.accm_type
         LEFT JOIN users u ON u.id = a.last_modified_by_user_id
         LEFT JOIN accm_meals am on am.accm_id = a.id
+        LEFT JOIN accm_wellness aw on aw.accm_id = a.id
         WHERE a.slug = ?'
     );
     $statement->execute([$urlParams['accmSlug']]);
     $accm = $statement->fetch(PDO::FETCH_ASSOC);
-    $wellnessDetails = json_decode($accm['wellness_details'], true);
 
     echo render("wrapper.php", [
         'content' => render('accm-settings-page.php', [
@@ -157,7 +157,6 @@ function editServicesHandler($urlParams)
                 'accm' => $accm,
                 'meals' => getServicesByCategory("meal"),
                 'mealsStatus' => getServicesStatusByCategory("meal"),
-                'wellnessDetails' => $wellnessDetails,
                 'wellnessFacilities' => getServicesByCategory("wellness"),
                 'wellnessStatus' => getServicesStatusByCategory("wellness"),
             ]),
@@ -271,7 +270,11 @@ function updateWellnessHandler($urlParams)
     $accm = $statement->fetch(PDO::FETCH_ASSOC);
 
     if($_POST['wellnessOffered'] === "NO"){
-        $_POST['wellnessFacilities'] = NULL;
+        $_POST['pool'] = NULL;
+        $_POST['sauna'] = NULL;
+        $_POST['jacuzzi'] = NULL;
+        $_POST['tub'] = NULL;
+        $_POST['fitness'] = NULL;
         $_POST['wellnessStatus'] = "NOTPROVIDED";
         $_POST['wellnessPrice'] = NULL;
     }
@@ -351,21 +354,22 @@ function editDiscountsHandler($urlParams)
     redirectToLoginIfNotLoggedIn();
     $pdo = getConnection();
     $statement = $pdo->prepare(
-        'SELECT p.*, at.name type, u.name modified_by_user_name
-        FROM accms p
-        LEFT JOIN accm_types at ON at.type_code = p.accm_type
-        LEFT JOIN users u ON u.id = p.last_modified_by_user_id
-        WHERE p.slug = ?'
+        'SELECT a.id, a.name, a.slug, a.accm_type, a.last_modified, a.last_modified_by_user_id, am.meal_offered, aw.wellness_offered, ad.*, at.name type, u.name modified_by_user_name
+        FROM accms a
+        LEFT JOIN accm_types at ON at.type_code = a.accm_type
+        LEFT JOIN users u ON u.id = a.last_modified_by_user_id
+        LEFT JOIN accm_meals am on a.id = am.accm_id
+        LEFT JOIN accm_wellness aw on a.id = aw.accm_id
+        LEFT JOIN accm_discounts ad on a.id = ad.accm_id
+        WHERE a.slug = ?'
     );
     $statement->execute([$urlParams['accmSlug']]);
     $accm = $statement->fetch(PDO::FETCH_ASSOC);
-    $discounts = json_decode($accm['discounts'], true);
 
     echo render("wrapper.php", [
         'content' => render('accm-settings-page.php', [
             'settingsContent' => render('edit-discounts-page.php', [
                 'accm' => $accm,
-                'discounts' => $discounts,
             ]),
             'accm' => $accm,
             'activeTab' => 'discounts',
@@ -390,25 +394,29 @@ function updateDiscountsHandler($urlParams)
     );
     $statement->execute([$urlParams['accmId']]);
     $accm = $statement->fetch(PDO::FETCH_ASSOC);
-
+    
     if(!isset($_POST['childrenDiscount'])){
-        $_POST['childrenDiscountPercent'] = "";
-        $_POST['childrenDiscountFor'] = [];
+        $_POST['childrenDiscountPercent'] = NULL;
+        $_POST['childrenDiscountForAccm'] = NULL;
+        $_POST['childrenDiscountForMeals'] = NULL;
+        $_POST['childrenDiscountForWellness'] = NULL;
     }
     if(!isset($_POST['groupDiscount'])){
-        $_POST['groupDiscountPercent'] = "";
-        $_POST['groupPersonNumber'] = "";
+        $_POST['groupDiscountPercent'] = NULL;
+        $_POST['groupPersonNumber'] = NULL;
     }
     if(!isset($_POST['earlyBookingDiscount'])){
-        $_POST['earlyBookingDiscountPercent'] = "";
-        $_POST['earlyBookingDays'] = "";
+        $_POST['earlyBookingDiscountPercent'] = NULL;
+        $_POST['earlyBookingDays'] = NULL;
     }
     if(!isset($_POST['lastMinuteDiscount'])){
-        $_POST['lastMinuteDiscountPercent'] = "";
-        $_POST['lastMinuteDays'] = "";
+        $_POST['lastMinuteDiscountPercent'] = NULL;
+        $_POST['lastMinuteDays'] = NULL;
     }
 
-    if((isset($_POST['childrenDiscount']) AND (empty($_POST['childrenDiscountPercent']) OR empty($_POST['childrenDiscountFor'])))
+    $chDiscFor = ($_POST['childrenDiscountForAccm'] ?? NULL) . ($_POST['childrenDiscountForMeals'] ?? NULL) . ($_POST['childrenDiscountForWellness'] ?? NULL);
+
+    if((isset($_POST['childrenDiscount']) AND (empty($_POST['childrenDiscountPercent']) OR strlen($chDiscFor) === 0))
         OR (isset($_POST['groupDiscount']) AND (empty($_POST['groupDiscountPercent']) OR empty($_POST['groupPersonNumber'])))
         OR (isset($_POST['earlyBookingDiscount']) AND (empty($_POST['earlyBookingDiscountPercent']) OR empty($_POST['earlyBookingDays'])))
         OR (isset($_POST['lastMinuteDiscount']) AND (empty($_POST['lastMinuteDiscountPercent']) OR empty($_POST['lastMinuteDays'])))){
@@ -417,21 +425,55 @@ function updateDiscountsHandler($urlParams)
                     ]);
         }
 
-    $discounts = json_encode($_POST, true);
-
-    $table = "accms";
+    $table = "accm_discounts";
     $columns = [
-        'discounts',
+        'children_discount',
+        'children_discount_percent',
+        'children_discount_for_accm',
+        'children_discount_for_meals',
+        'children_discount_for_wellness',
+        'group_discount',
+        'group_discount_percent',
+        'group_person_number',
+        'early_booking_discount',
+        'early_booking_discount_percent',
+        'early_booking_days',
+        'last_minute_discount',
+        'last_minute_discount_percent',
+        'last_minute_days',
+    ];
+    $conditions = ['accm_id = '];
+    $execute = [
+        $_POST['childrenDiscount'] ?? NULL,
+        $_POST['childrenDiscountPercent'] ?? NULL,
+        $_POST['childrenDiscountForAccm'] ?? NULL,
+        $_POST['childrenDiscountForMeals'] ?? NULL,
+        $_POST['childrenDiscountForWellness'] ?? NULL,
+        $_POST['groupDiscount'] ?? NULL,
+        $_POST['groupDiscountPercent'] ?? NULL,
+        $_POST['groupPersonNumber'] ?? NULL,
+        $_POST['earlyBookingDiscount'] ?? NULL,
+        $_POST['earlyBookingDiscountPercent'] ?? NULL,
+        $_POST['earlyBookingDays'] ?? NULL,
+        $_POST['lastMinuteDiscount'] ?? NULL,
+        $_POST['lastMinuteDiscountPercent'] ?? NULL,
+        $_POST['lastMinuteDays'] ?? NULL,
+        $urlParams['accmId'],
+    ];
+    generateUpdateSql($table, $columns, $conditions, $execute);
+
+    $table ="accms";
+    $columns = [
         'last_modified',
         'last_modified_by_user_id',
     ];
-    $conditions = ['id = '];
+    $conditions = ['id ='];
     $execute = [
-        $discounts,
         time() ?? NULL,
         $_SESSION['userId'] ?? NULL,
         $urlParams['accmId'],
     ];
+
     generateUpdateSql($table, $columns, $conditions, $execute);
 
     urlRedirect('szallasok/' . $accm['slug'] . '/beallitasok/kedvezmenyek', [
@@ -455,7 +497,9 @@ function editRoomsHandler($urlParams)
 
     echo render("wrapper.php", [
         'content' => render('accm-settings-page.php', [
-            'settingsContent' => render("coming-soon-page.php"),
+            'settingsContent' => render('accm-rooms-list.php', [
+                'accm' => $accm,
+            ]),
             'accm' => $accm,
             'activeTab' => 'rooms',
         ]),
@@ -463,6 +507,22 @@ function editRoomsHandler($urlParams)
         'isAuthorized' => isLoggedIn(),
         'isAdmin' => isAdmin() ?? NULL,
         'title' => "Szobák",
+        'unreadMessages' => countUnreadMessages(),
+        'playChatSound' => playChatSound()
+    ]);
+}
+
+function newRoomHandler()
+{
+    redirectToLoginIfNotLoggedIn();
+    echo render('wrapper.php', [
+        'content' => render('new-room-page.php', [
+
+        ]),
+        'activeLink' => '/szallasok',
+        'isAuthorized' => isLoggedIn(),
+        'isAdmin' => isAdmin() ?? NULL,
+        'title' => "Új szállás",
         'unreadMessages' => countUnreadMessages(),
         'playChatSound' => playChatSound()
     ]);

@@ -4,7 +4,7 @@
         <form class="form-inline" action="/update-discounts/<?= $params['accm']['id'] ?>" method="POST">
             <div class="form-check" style="max-width: 15rem;">
                 <label class="form-check-label" for="childrenDiscount">
-                <input class="form-check-input" type="checkbox"  name="childrenDiscount" value="YES" <?= @$params['discounts']['childrenDiscount'] === "YES" ? "checked" : "" ?>>
+                <input class="form-check-input" type="checkbox"  name="childrenDiscount" value="YES" <?= $params['accm']['children_discount'] === "YES" ? "checked" : "" ?>>
                     Gyermekkedvezmények
                 </label>
             </div>
@@ -20,7 +20,7 @@
                         <td>
                             <div class="row">
                                 <div class="col-sm-4">
-                                    <input class="form-control form-control-sm" type="text" name="childrenDiscountPercent" value="<?= @$params['discounts']['childrenDiscountPercent'] ?>"/>
+                                    <input class="form-control form-control-sm" type="text" name="childrenDiscountPercent" value="<?= $params['accm']['children_discount_percent'] ?>"/>
                                 </div>
                                 <label for="childrenDiscountPercent" class="col-sm-1 col-form-label">%</label>
                             </div>
@@ -29,23 +29,23 @@
                         <td style="width: 35rem;">
                             <div class="container row">
                                 <div class="form-check" style="max-width: 10rem;">
-                                    <label class="form-check-label" for="discountFor">
-                                    <input class="form-check-input" type="checkbox"  name="childrenDiscountFor[]" value="accomodation" <?= (isset($params['discounts']['childrenDiscountFor']) AND in_array("accomodation", $params['discounts']['childrenDiscountFor'])) ? "checked" : "" ?>>
+                                    <label class="form-check-label" for="childrenDiscountForAccm">
+                                    <input class="form-check-input" type="checkbox"  name="childrenDiscountForAccm" value="YES" <?= $params['accm']['children_discount_for_accm'] === "YES" ? "checked" : "" ?>>
                                         szállás
                                     </label>
                                 </div>
                                 <?php if($params['accm']['meal_offered'] === "YES"): ?>
                                     <div class="form-check" style="max-width: 10rem;">
-                                        <label class="form-check-label" for="discountFor">
-                                        <input class="form-check-input" type="checkbox"  name="childrenDiscountFor[]" value="meals" <?= (isset($params['discounts']['childrenDiscountFor']) AND in_array("meals", $params['discounts']['childrenDiscountFor'])) ? "checked" : "" ?>>
+                                        <label class="form-check-label" for="childrenDiscountForMeals">
+                                        <input class="form-check-input" type="checkbox"  name="childrenDiscountForMeals" value="YES" <?= $params['accm']['children_discount_for_meals'] === "YES" ? "checked" : "" ?>>
                                             étkezés
                                         </label>
                                     </div>
                                 <?php endif; ?>
                                 <?php if($params['accm']['wellness_offered'] === "YES"): ?>
                                     <div class="form-check" style="max-width: 10rem;">
-                                        <label class="form-check-label" for="discountFor">
-                                        <input class="form-check-input" type="checkbox"  name="childrenDiscountFor[]" value="wellness" <?= (isset($params['discounts']['childrenDiscountFor']) AND in_array("wellness", $params['discounts']['childrenDiscountFor'])) ? "checked" : "" ?>>
+                                        <label class="form-check-label" for="childrenDiscountForWellness">
+                                        <input class="form-check-input" type="checkbox"  name="childrenDiscountForWellness" value="YES" <?= $params['accm']['children_discount_for_wellness'] === "YES" ? "checked" : "" ?>>
                                             wellness
                                         </label>
                                     </div>
@@ -58,7 +58,7 @@
             <hr style="border: 1px dashed white">
             <div class="form-check" style="max-width: 15rem;">
                 <label class="form-check-label" for="groupDiscount">
-                <input class="form-check-input" type="checkbox"  name="groupDiscount" value="YES" <?= @$params['discounts']['groupDiscount'] === "YES" ? "checked" : "" ?>>
+                <input class="form-check-input" type="checkbox"  name="groupDiscount" value="YES" <?= $params['accm']['group_discount'] === "YES" ? "checked" : "" ?>>
                     Csoportkedvezmény
                 </label>
             </div>
@@ -74,7 +74,7 @@
                         <td>
                             <div class="row">
                                 <div class="col-sm-4">
-                                    <input class="form-control form-control-sm" type="text" name="groupDiscountPercent" value="<?= @$params['discounts']['groupDiscountPercent'] ?>"/>
+                                    <input class="form-control form-control-sm" type="text" name="groupDiscountPercent" value="<?= $params['accm']['group_discount_percent'] ?>"/>
                                 </div>
                                 <label for="groupDiscountPercent" class="col-sm-1 col-form-label">%</label>
                             </div>
@@ -83,7 +83,7 @@
                         <td>
                             <div class="row">
                                 <div class="col-sm-4">
-                                    <input class="form-control form-control-sm" type="text" name="groupPersonNumber" value="<?= @$params['discounts']['groupPersonNumber'] ?>"/>
+                                    <input class="form-control form-control-sm" type="text" name="groupPersonNumber" value="<?= $params['accm']['group_person_number'] ?>"/>
                                 </div>
                                 <label for="groupPersonNumber" class="col-sm-2 col-form-label">fő</label>
                             </div>
@@ -94,7 +94,7 @@
             <hr style="border: 1px dashed white">
             <div class="form-check" style="max-width: 15rem;">
                 <label class="form-check-label" for="earlyBookingDiscount">
-                <input class="form-check-input" type="checkbox"  name="earlyBookingDiscount" value="YES" <?= @$params['discounts']['earlyBookingDiscount'] === "YES" ? "checked" : "" ?>>
+                <input class="form-check-input" type="checkbox"  name="earlyBookingDiscount" value="YES" <?= $params['accm']['early_booking_discount'] === "YES" ? "checked" : "" ?>>
                     Early Booking
                 </label>
             </div>
@@ -110,7 +110,7 @@
                         <td>
                             <div class="row">
                                 <div class="col-sm-4">
-                                    <input class="form-control form-control-sm" type="text" name="earlyBookingDiscountPercent" value="<?= @$params['discounts']['earlyBookingDiscountPercent'] ?>"/>
+                                    <input class="form-control form-control-sm" type="text" name="earlyBookingDiscountPercent" value="<?= $params['accm']['early_booking_discount_percent'] ?>"/>
                                 </div>
                                 <label for="earlyBookingDiscountPercent" class="col-sm-1 col-form-label">%</label>
                             </div>
@@ -119,7 +119,7 @@
                         <td>
                             <div class="row">
                                 <div class="col-sm-3">
-                                    <input class="form-control form-control-sm" type="text" name="earlyBookingDays" value="<?= @$params['discounts']['earlyBookingDays'] ?>"/>
+                                    <input class="form-control form-control-sm" type="text" name="earlyBookingDays" value="<?= $params['accm']['early_booking_days'] ?>"/>
                                 </div>
                                 <label for="earlyBookingDays" class="col-sm-3 col-form-label">nap</label>
                             </div>
@@ -130,7 +130,7 @@
             <hr style="border: 1px dashed white">
             <div class="form-check" style="max-width: 15rem;">
                 <label class="form-check-label" for="lastMinuteDiscount">
-                <input class="form-check-input" type="checkbox"  name="lastMinuteDiscount" value="YES" <?= @$params['discounts']['lastMinuteDiscount'] === "YES" ? "checked" : "" ?>>
+                <input class="form-check-input" type="checkbox"  name="lastMinuteDiscount" value="YES" <?= @$params['accm']['last_minute_discount'] === "YES" ? "checked" : "" ?>>
                     Last Minute kedvezmény
                 </label>
             </div>
@@ -146,7 +146,7 @@
                         <td>
                             <div class="row">
                                 <div class="col-sm-4">
-                                    <input class="form-control form-control-sm" type="text" name="lastMinuteDiscountPercent" value="<?= @$params['discounts']['lastMinuteDiscountPercent'] ?>"/>
+                                    <input class="form-control form-control-sm" type="text" name="lastMinuteDiscountPercent" value="<?= $params['accm']['last_minute_discount_percent'] ?>"/>
                                 </div>
                                 <label for="lastMinuteDiscountPercent" class="col-sm-1 col-form-label">%</label>
                             </div>
@@ -155,7 +155,7 @@
                         <td>
                             <div class="row">
                                 <div class="col-sm-3">
-                                    <input class="form-control form-control-sm" type="text" name="lastMinuteDays" value="<?= @$params['discounts']['lastMinuteDays'] ?>"/>
+                                    <input class="form-control form-control-sm" type="text" name="lastMinuteDays" value="<?= $params['accm']['last_minute_days'] ?>"/>
                                 </div>
                                 <label for="lastMinuteDays" class="col-sm-3 col-form-label">nap</label>
                             </div>

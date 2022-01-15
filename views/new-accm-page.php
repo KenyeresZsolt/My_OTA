@@ -70,17 +70,6 @@
                     </div>
                     <br><hr><br>
                     <div class="container">
-                        <h5>Kedvezmények</h5>
-                        <div class="row">
-                            <label for="discount" class="col-sm-2 col-form-label">Szállás kedvezmény</label>
-                            <div class="col-sm-1">
-                                <input class="form-control form-control-sm" type="text" name="discount" autocomplete="off"/>
-                            </div>
-                            <label for="discount" class="col-sm-1 col-form-label">%</label>                                
-                        </div>
-                    </div>
-                    <br><hr><br>
-                    <div class="container">
                         <h5>Felszereltség</h5>
                         <br>
                         <div class="row">
