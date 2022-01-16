@@ -17,8 +17,9 @@ $routes = [
     ['GET', '/szallasok/{accmSlug}/beallitasok/adatok' , 'editAccmHandler'],
     ['GET', '/szallasok/{accmSlug}/beallitasok/szolgaltatasok' , 'editServicesHandler'],
     ['GET', '/szallasok/{accmSlug}/beallitasok/kedvezmenyek' , 'editDiscountsHandler'],
-    ['GET', '/szallasok/{accmSlug}/beallitasok/szobak' , 'editRoomsHandler'],
-    ['GET', '/szallasok/{accmSlug}/beallitasok/szobak/uj-szoba' , 'newRoomHandler'],
+    ['GET', '/szallasok/{accmSlug}/beallitasok/szobak' , 'unitListHandler'],
+    ['GET', '/szallasok/{accmSlug}/beallitasok/szobak/uj-szoba' , 'newUnitHandler'],
+    ['GET', '/szallasok/{accmSlug}/beallitasok/szobak/szoba-szerkesztese/{unitId}' , 'editUnitHandler'],
     ['GET', '/foglalasok' , 'reservationListHandler'],
     ['GET', '/chat' , 'chatPageHandler'],
     ['GET', '/profil' , 'profilHandler'],
@@ -36,6 +37,9 @@ $routes = [
     ['POST', '/update-meals/{accmId}' , 'updateMealsHandler'],
     ['POST', '/update-wellness/{accmId}' , 'updateWellnessHandler'],
     ['POST', '/update-discounts/{accmId}' , 'updateDiscountsHandler'],
+    ['POST', '/add-unit/{accmId}' , 'createUnitHandler'],
+    ['POST', '/update-unit/{unitId}' , 'updateUnitHandler'],
+    ['POST', '/delete-unit/{unitId}' , 'deleteUnitHandler'],
     ['POST', '/update-reservation' , 'updateReservationHandler'],
     ['POST', '/cancel-reservation' , 'cancelReservationHandler'],
     ['POST', '/delete-reservation' , 'deleteReservationHandler'],
@@ -49,6 +53,7 @@ $routes = [
     ['POST', '/add-member' , 'addMemberHandler'],
     ['POST', '/delete-member' , 'deleteMemberHandler'],
     ['POST', '/submit-mail' , 'submitMailHandler'],
+    ['POST', '/send-mails' , 'sendMailsHandler'],
 ];
 
 $dispatch = registerRoutes($routes);

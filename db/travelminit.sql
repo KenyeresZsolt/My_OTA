@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Gép: 127.0.0.1
--- Létrehozás ideje: 2022. Jan 15. 14:55
+-- Létrehozás ideje: 2022. Jan 16. 18:17
 -- Kiszolgáló verziója: 10.4.21-MariaDB
 -- PHP verzió: 7.4.24
 
@@ -55,14 +55,14 @@ CREATE TABLE `accms` (
 --
 
 INSERT INTO `accms` (`id`, `name`, `location`, `slug`, `address`, `accm_type`, `price`, `capacity`, `description`, `languages`, `rooms`, `bathrooms`, `facilities`, `image`, `contact_name`, `email`, `phone`, `webpage`, `last_modified`, `last_modified_by_user_id`) VALUES
-(1, 'Szeifert Hotel', 'Szováta', 'szeifert-hotel-szovata', '{\"postalCode\":\"\",\"street\":\"Bradului\",\"number\":\"28\",\"building\":\"\",\"floor\":\"\",\"door\":\"\"}', 'HOT', 120, 100, 'A szálloda Szovátán, a jól ismert Medve-tó-tól 260 méterre, a Fekete-tó partján helyezkedik el. A Hotel Szeifert szaunával, pezsgőfürdővel, (fizetős szolgáltatás - előzetes bejelentkezéssel a recepción) valamint ingyenes Wi-Fi-hozzáféréssel és vezetékes i', '[\"HUN\",\"ROM\",\"ENG\"]', 40, 40, '[\"MEA\",\"INT\",\"PRK\",\"HEA\",\"WEL\"]', 'public/uploads/hotel-szeifert-szovata-800x416.jpg', 'Kenyeres Zsolt', 'kenyereszsolt920210+szeifert@gmail.com', '0726185563', 'https://hotelszeifert.ro/hu/', 1642248972, 1),
+(1, 'Szeifert Hotel', 'Szováta', 'szeifert-hotel-szovata', '{\"postalCode\":\"\",\"street\":\"Bradului\",\"number\":\"28\",\"building\":\"\",\"floor\":\"\",\"door\":\"\"}', 'HOT', 120, 100, 'A szálloda Szovátán, a jól ismert Medve-tó-tól 260 méterre, a Fekete-tó partján helyezkedik el. A Hotel Szeifert szaunával, pezsgőfürdővel, (fizetős szolgáltatás - előzetes bejelentkezéssel a recepción) valamint ingyenes Wi-Fi-hozzáféréssel és vezetékes i', '[\"HUN\",\"ROM\",\"ENG\"]', 40, 40, '[\"MEA\",\"INT\",\"PRK\",\"HEA\",\"WEL\"]', 'public/uploads/hotel-szeifert-szovata-800x416.jpg', 'Kenyeres Zsolt', 'kenyereszsolt920210+szeifert@gmail.com', '0726185563', 'https://hotelszeifert.ro/hu/', 1642347079, 1),
 (2, 'Csatári Panzió', 'Parajd', 'csatari-panzio-parajd', '{\"postalCode\":\"\",\"street\":\"Tanorok\",\"number\":\"1145\",\"building\":\"\",\"floor\":\"\",\"door\":\"\"}', 'PNS', 70, 52, 'Az üdülés idejére vendégeink, igényeik szerint, két- három- és négyágyas, tusolóval és mosdóval ellátott szobákban szállhatnak meg. Ugyanakkor igénybe vehetik éttermünket is, tágas teraszunkat és nyári kertünket is.', '[\"HUN\",\"ROM\",\"ENG\"]', 17, 17, '[\"MEA\",\"INT\",\"PRK\",\"HEA\"]', 'public/uploads/csatari-panzio-es-etterem-parajd-676x439.jpg', 'Jakab Mózes', 'kenyereszsolt920210+csatari@gmail.com', '0726185563', 'csatari.ro', 1641738425, 1),
 (4, 'Septimia Resort & SPA', 'Székelyudvarhely', 'septimia-resort-spa-szekelyudvarhely', '{\"postalCode\":\"\",\"street\":\"Orb\\u00e1n Bal\\u00e1zs\",\"number\":\"106\",\"building\":\"\",\"floor\":\"\",\"door\":\"\"}', 'HOT', 300, 82, 'Septimia - Hotels & SPA Resort ideális hely a kellemes kikapcsolódáshoz, pihenéshez vagy akár üzleti találkozókhoz!\r\n\r\nA szabadidőközpont Erdély keleti részén, a Hargita hegység lábánál, Székelyudvarhelyen található.', '[\"HUN\",\"ROM\",\"ENG\"]', 33, 0, '[\"MEA\",\"INT\",\"PRK\",\"AIR\",\"HEA\",\"WEL\",\"POL\"]', 'public/uploads/septimia-resort-hotel-wellness-spa-szekelyudvarhely-676x439.jpg', 'Geréb István', 'kenyereszsolt920210+septimia@gmail.com', '0726185563', 'septimiaresort.ro', 1642173734, 1),
 (9, 'Lobogó Resort', 'Homoródfürdő', 'lobogo-resort-homorodfurdo', '{\"postalCode\":\"\",\"street\":\"F\\u0151\",\"number\":\"39\",\"building\":\"A\",\"floor\":\"\",\"door\":\"\"}', 'HOT', 300, 100, 'Éttermünk, panziónk és a szabadidőközpont is a helyiek körében legkedveltebb, Lobogó forrásról kapta a nevét.\r\n\r\nA Lobogó forrás vize szénsavas, nátriumkloridos, alkaikus, vasas ásványvíz. Ivókúraképpen javasolt idült, savszegény vagy savhiányos gyomorhártya gyulladásra, valamint idült máj és epebántalmakra, fürdővízképpen szív és érrendszeri betegségekben szenvedőknek ajánlott.\r\n\r\nA Lobogó panzió, étterem és szabadidő központ a Hargita hegység lábánál, fenyvesekkel körülölelt, gyógyhatású ásványvízforrásokban bővelkedő völgyben terül el. A komplexum területén őrzött parkoló áll a vendégeink rendelkezésére.', '[\"HUN\",\"ROM\",\"ENG\"]', 35, 0, '[\"MEA\",\"INT\",\"PRK\",\"HEA\",\"WEL\",\"POL\"]', 'public/uploads/lobogo-resort-homorodfurdo-676x439.jpg', 'Recepció', 'kenyereszsolt920210+lobogo@gmail.com', '0726185563', 'lobogo.ro', 1642173761, 1),
 (10, 'Hotel O3zone', 'Tusnádfürdő', 'hotel-o3zone-tusnadfurdo', '{\"postalCode\":\"\",\"street\":\"Szent Anna s\\u00e9t\\u00e1ny\",\"number\":\"2\",\"building\":\"\",\"floor\":\"\",\"door\":\"\"}', 'HOT', 300, 234, 'Az O3zone szállodai komplexum a nemzetközileg elismert Tusnádfürdőn található, mely hírnevét az itt található ásványvizek gyógyhatásának, oxigéndús levegőjének, és kiváló természeti adottságainak köszönheti. A fürdőhelység az ország középpontjában, Sepsiszentgyörgytől 30, Brassótól 60, Csíkszeredától, pedig 30 km-re terül el, a vulkanikus Csomád hegység lejtőjén, a Szent Anna tó közelében.\r\n\r\nMivel szállodánk Tusnádfürdő központjában helyezkedik el, a Solyóm szikla közelében, ezért az O3zone komplexum kiemelkedő pozíciót foglal el, nem csupán elhelyezkedése, hanem kimagasló szolgáltatásainak is köszönhetően. Úgy gondoljuk, hogy az általunk nyújtott szolgáltatások, és mindazon pozitív élmények, amelyekekkel az itt töltött idő alatt gazdagodnak, szállodánkat az önök által eddig látogatott helyek toplistájára fogják juttatni.', '[\"HUN\",\"ROM\",\"ENG\",\"GER\",\"ITA\"]', 117, 0, '[\"MEA\",\"INT\",\"PRK\",\"AIR\",\"HEA\",\"WEL\",\"POL\"]', 'public/uploads/hotel-o3zone-tusnadfurdo-676x439.jpg', 'O3zone Recepció', 'kenyereszsolt920210+o3zone@gmail.com', '0726185563', 'o3zone.ro', 1642173778, 1),
 (11, 'Hétvezér Panzió', 'Zeteváralja', 'hetvezer-panzio-zetevaralja', '{\"postalCode\":\"\",\"street\":\"F\\u0151\",\"number\":\"73\",\"building\":\"B\",\"floor\":\"\",\"door\":\"\"}', 'PNS', 115, 24, 'Utazzon Székelyföld szívébe, a Hétvezér Panzió várja Önt. Ha meg szeretné látogatni Székelyföld nevezetességeit, szálláshelyül válassza a Hétvezér Panziót, ahol minőségi szolgáltatások közül válogathat Ön és a kedves családja. Egy panzió és két kulcsosház áll a vendégeink rendelkezésére. A panzióban 8 szoba, 2-3-4 ágyasak, minden szobában külön fürdőszoba található. A kulcsosházakban 4-4 szoba és 2-2 fürdőszoba áll a vendégeink rendelkezésére. A területen különböző kikapcsolódási lehetőségek közül válogathat, úgy, mint a medence, szauna, kosárlabda, foci, asztalitenisz, horgászat, tollaslabda, gyerek játszótér, kerti sütők, billiárd, darts. Ezeken kívül igény szerint biztosítunk lehetőséget lovaglásra,medvelesre szánozásra, vadas-park látogatásra, mesterségek bemutató, ATV használatra. Ingyenes WIFI-t is igénybe vehetik.', '[\"HUN\",\"ROM\",\"ENG\"]', 8, 0, '[\"MEA\",\"INT\",\"PRK\",\"HEA\",\"POL\"]', 'public/uploads/hetvezer-panzio-zetevaralja-800x600.jpg', 'Lőrincz Magor', 'kenyereszsolt920210+hetvezer@gmail.com', '0726185563', 'hetvezerpanzio.ro', 1642173789, 1),
 (12, 'Sugó Panzió', 'Ivó', 'sugo-panzio-ivo', '{\"postalCode\":\"\",\"street\":\"Madarasi Hargita\",\"number\":\"\",\"building\":\"\",\"floor\":\"\",\"door\":\"\"}', 'PNS', 160, 59, 'Erdély egyik legszebb területén, a székelyek szent hegyén, a Madarasi Hargitán (Székelyudvarhelytől 36 km) 2006-ban nyitottuk meg panziónkat. A ház egész évben nyitva tart és az évszaknak megfelelő szabadidős programokkal áll a pihenésre, kikapcsolódásra, feltöltődésre vágyó vendégek rendelkezésére.\r\n\r\nA földszinten található 72 fős éttermünkben bőséges büféreggelivel kezdhetik a napot kedves vendégeink. Igény esetén félpanziós és teljes panziós ellátást is tudunk biztosítani, de lehetőség van á la carte fogyasztásra is a nemzetközi, magyaros és erdélyi ételeket tartalmazó étlapról.\r\n\r\nLehetőség van síelésre, túrázásra, paintballozásra, valamint – előzetes bejelentkezés alapján –masszázsra, lovaglásra, terepjárós kalandtúrára. Tarthatnak nálunk kisebb konferenciákat, csapatépítő tréningeket, továbbképzéseket, melyekhez a szükséges technikai hátteret mi biztosítjuk.\r\n\r\nSzeretettel várjuk minden évszakban úgy a felnőtt, mint az iskolás csoportokat e festői szépségű helyen, amely ideális kiindulópontja úgy a gyalogos, mint az autós csillagtúráknak.', '[\"HUN\",\"ROM\",\"ENG\"]', 14, 0, '[\"INT\",\"PRK\",\"HEA\"]', 'public/uploads/sugo-panzio-ivo-676x439.jpg', 'Antal Sándor', 'kenyereszsolt920210+sugo@gmail.com', '0726185563', 'sugopanzio.ro', 1641491125, 1),
-(13, 'Enikő Kulcsosház', 'Güdüctelep', 'eniko-kulcsoshaz-guductelep', '{\"postalCode\":\"\",\"street\":\"\\u00c9g\\u00e9s patak\",\"number\":\"1470\",\"building\":\"\",\"floor\":\"\",\"door\":\"\"}', 'CHA', 50, 20, '', '[\"HUN\",\"ROM\"]', 5, 0, '[\"PRK\",\"HEA\"]', 'public/uploads/eniko-kulcsoshaz-guductelep-676x439.jpg', 'Incze Enikő', 'kenyereszsolt920210+eniko@gmail.com', '0726185563', '', 1641534284, 1),
+(13, 'Enikő Kulcsosház', 'Güdüctelep', 'eniko-kulcsoshaz-guductelep', '{\"postalCode\":\"\",\"street\":\"\\u00c9g\\u00e9s patak\",\"number\":\"1470\",\"building\":\"\",\"floor\":\"\",\"door\":\"\"}', 'CHA', 50, 20, '', '[\"HUN\",\"ROM\"]', 5, 0, '[\"PRK\",\"HEA\"]', 'public/uploads/eniko-kulcsoshaz-guductelep-676x439.jpg', 'Incze Enikő', 'kenyereszsolt920210+eniko@gmail.com', '0726185563', '', 1642353357, 1),
 (14, 'Páva Panzió & Wellness', 'Székelyudvarhely', 'pava-panzio-wellness-szekelyudvarhely', '{\"postalCode\":\"\",\"street\":\"Templom\",\"number\":\"15\",\"building\":\"\",\"floor\":\"\",\"door\":\"\"}', 'PNS', 220, 44, 'KEZDETEK\r\n\r\nA Páva története egészen 2008-ig nyúlik vissza, amikor a Villa Vitae wellnessközpont és Pávakert étterem megnyitotta kapuit, majd közel tíz évig gyakorlatilag változatlan formában működött. Gazdát többször is cserélt, és a hely szelleme mindig különleges, egyedi volt, ám az utóbbi időben kissé már elhanyagolttá vált.\r\n\r\nÚJ IDŐK\r\n\r\nAztán 2018 elején vette gondozásába egy család, így azóta az ő vigyázó szemeik mellett bontogatja újra szárnyait. Tervekben bővelkedik a csapat – az út nem lesz rövid, de bővülni fog a szálloda, szépül és új funkciókat kap a hatalmas kert, megújul a wellness, és teljesen újragondolt étterem várja azokat, akik nem csak enni akarnak, hanem az ízekben is szeretik a változatosságot.', '[\"HUN\",\"ROM\"]', 15, 0, '[\"MEA\",\"INT\",\"PRK\",\"HEA\",\"WEL\"]', 'public/uploads/pava-panzio-wellness-szekelyudvarhely-676x439.jpg', 'Szász Attila', 'kenyereszsolt920210+pava@gmail.com', '0726185563', 'pava.ro', 1642173812, 1),
 (15, 'Tip-Top Panzió', 'Kalotaszentkirály', 'tip-top-panzio-kalotaszentkiraly', '{\"postalCode\":\"407515\",\"street\":\"Templom\",\"number\":\"304\",\"building\":\"\",\"floor\":\"\",\"door\":\"\"}', 'PNS', 60, 18, 'Ha a kedves vendeg pihenni akar akkor a panzionkba erre megvan minden lehetosege. Nagyon kenyelmes es oszkonfortos a panzionk. Szeretunk finom erdelyi eteleket fozni. S ami meg nagyon fontos : mi tenyleg szeretettel fogadjuk a vendegeket!\r\n\r\nSzilveszterre, Karácsonyra, Húsvétra és Pünkösdre magasabbak az árak, megegyezés alapján történnek a foglalasok, és ilyenkor 25% eloleget kerunk.', '[\"HUN\",\"ROM\",\"ENG\",\"GER\"]', 6, 0, '[\"MEA\",\"INT\",\"PRK\",\"HEA\"]', 'public/uploads/tip-top-panzio-kalotaszentkiraly-676x439.jpg', 'Kispál Edit', 'kenyereszsolt920210+tiptop@gmail.com', '0726185563', '', 1641541968, 1),
 (16, 'Szentkirály Panzió', 'Kalotaszentkirály', 'szentkiraly-panzio-kalotaszentkiraly', '{\"postalCode\":\"\",\"street\":\"F\\u0151\",\"number\":\"304\",\"building\":\"\",\"floor\":\"\",\"door\":\"\"}', 'PNS', 100, 22, '', '[\"HUN\",\"ROM\",\"ENG\"]', 7, 0, '[\"MEA\",\"INT\",\"PRK\",\"HEA\"]', 'public/uploads/szentkiraly-panzio-kalotaszentkiraly-676x439.jpg', 'Kispál Edit', 'kenyereszsolt920210+szentkiraly@gmail.com', '+40726185563', '', 1641542155, 1),
@@ -180,7 +180,7 @@ CREATE TABLE `accm_meals` (
 --
 
 INSERT INTO `accm_meals` (`accm_id`, `meal_offered`, `breakfast`, `breakfast_price`, `lunch`, `lunch_price`, `dinner`, `dinner_price`) VALUES
-(1, 'NO', 'NOTPROVIDED', NULL, 'NOTPROVIDED', NULL, 'NOTPROVIDED', NULL),
+(1, 'YES', 'PAYABLE', 40, 'PAYABLE', 60, 'PAYABLE', 80),
 (2, 'YES', 'PAYABLE', 25, 'NOTPROVIDED', NULL, 'PAYABLE', 30),
 (4, 'YES', 'INPRICE', NULL, 'NOTPROVIDED', NULL, 'PAYABLE', 25),
 (9, 'YES', 'INPRICE', NULL, 'NOTPROVIDED', NULL, 'INPRICE', NULL),
@@ -220,23 +220,6 @@ INSERT INTO `accm_meals` (`accm_id`, `meal_offered`, `breakfast`, `breakfast_pri
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `accm_rooms`
---
-
-CREATE TABLE `accm_rooms` (
-  `id` int(11) NOT NULL,
-  `accm_id` int(11) DEFAULT NULL,
-  `room_type` varchar(255) DEFAULT NULL,
-  `bed_type` varchar(255) DEFAULT NULL,
-  `bed_number` int(11) DEFAULT NULL,
-  `bathroom_type` varchar(255) DEFAULT NULL,
-  `price` int(11) DEFAULT NULL,
-  `count` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- --------------------------------------------------------
-
---
 -- Tábla szerkezet ehhez a táblához `accm_types`
 --
 
@@ -264,6 +247,70 @@ INSERT INTO `accm_types` (`type_code`, `name`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Tábla szerkezet ehhez a táblához `accm_units`
+--
+
+CREATE TABLE `accm_units` (
+  `id` int(11) NOT NULL,
+  `accm_id` int(11) DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `unit_type` varchar(255) DEFAULT NULL,
+  `rooms_count` int(11) DEFAULT NULL,
+  `bed_types` varchar(255) DEFAULT NULL,
+  `bathroom_type` varchar(255) DEFAULT NULL,
+  `bathrooms_count` int(11) DEFAULT NULL,
+  `price` int(11) DEFAULT NULL,
+  `count` int(11) DEFAULT NULL,
+  `capacity_per_unit` int(11) DEFAULT NULL,
+  `total_capacity` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- A tábla adatainak kiíratása `accm_units`
+--
+
+INSERT INTO `accm_units` (`id`, `accm_id`, `name`, `unit_type`, `rooms_count`, `bed_types`, `bathroom_type`, `bathrooms_count`, `price`, `count`, `capacity_per_unit`, `total_capacity`) VALUES
+(8, 1, 'Franciaágyas földszinti szoba', 'room', NULL, '{\"SINGLE\":\"0\",\"DOUBLE\":\"1\",\"SINGLECOUCH\":\"0\",\"DOUBLECOUCH\":\"0\",\"ARMCHAIR\":\"0\",\"BUNKBED\":\"0\"}', 'OWN', NULL, 240, 2, 2, 4),
+(9, 1, '2 fős szoba', 'room', NULL, '{\"SINGLE\":\"0\",\"DOUBLE\":\"1\",\"SINGLECOUCH\":\"0\",\"DOUBLECOUCH\":\"0\",\"ARMCHAIR\":\"0\",\"BUNKBED\":\"0\"}', 'OWN', NULL, 260, 3, 2, 6),
+(10, 1, '2 fős Manzárd emeleti szoba', 'room', NULL, '{\"SINGLE\":\"0\",\"DOUBLE\":\"1\",\"SINGLECOUCH\":\"0\",\"DOUBLECOUCH\":\"0\",\"ARMCHAIR\":\"0\",\"BUNKBED\":\"0\"}', 'OWN', NULL, 260, 2, 2, 4),
+(11, 1, '3 fős földszinti szoba', 'room', NULL, '{\"SINGLE\":\"0\",\"DOUBLE\":\"1\",\"SINGLECOUCH\":\"0\",\"DOUBLECOUCH\":\"0\",\"ARMCHAIR\":\"1\",\"BUNKBED\":\"0\"}', 'OWN', NULL, 280, 3, 3, 9),
+(12, 1, '3 fős franciaágyas földszinti szoba', 'room', NULL, '{\"SINGLE\":\"0\",\"DOUBLE\":\"1\",\"SINGLECOUCH\":\"0\",\"DOUBLECOUCH\":\"0\",\"ARMCHAIR\":\"1\",\"BUNKBED\":\"0\"}', 'OWN', NULL, 280, 3, 3, 9),
+(13, 1, 'Franciaágyas emeleti szoba', 'room', NULL, '{\"SINGLE\":\"0\",\"DOUBLE\":\"1\",\"SINGLECOUCH\":\"0\",\"DOUBLECOUCH\":\"0\",\"ARMCHAIR\":\"0\",\"BUNKBED\":\"0\"}', 'OWN', NULL, 285, 2, 2, 4),
+(14, 1, 'Franciaágyas tóra néző szoba', 'room', NULL, '{\"SINGLE\":\"0\",\"DOUBLE\":\"1\",\"SINGLECOUCH\":\"0\",\"DOUBLECOUCH\":\"0\",\"ARMCHAIR\":\"0\",\"BUNKBED\":\"0\"}', 'OWN', NULL, 310, 1, 2, 2),
+(15, 1, 'Art tóra néző szoba', 'room', NULL, '{\"SINGLE\":\"0\",\"DOUBLE\":\"1\",\"SINGLECOUCH\":\"0\",\"DOUBLECOUCH\":\"0\",\"ARMCHAIR\":\"0\",\"BUNKBED\":\"0\"}', 'OWN', NULL, 310, 1, 2, 2),
+(16, 1, 'Franciaágyas szoba légkondicionálással', 'room', NULL, '{\"SINGLE\":\"0\",\"DOUBLE\":\"1\",\"SINGLECOUCH\":\"0\",\"DOUBLECOUCH\":\"0\",\"ARMCHAIR\":\"0\",\"BUNKBED\":\"0\"}', 'OWN', NULL, 320, 2, 2, 4),
+(17, 1, '3 fős emeleti szoba', 'room', NULL, '{\"SINGLE\":\"0\",\"DOUBLE\":\"1\",\"SINGLECOUCH\":\"0\",\"DOUBLECOUCH\":\"0\",\"ARMCHAIR\":\"1\",\"BUNKBED\":\"0\"}', 'OWN', NULL, 325, 3, 3, 9),
+(18, 1, '3 fős franciaágyas emeleti szoba', 'room', NULL, '{\"SINGLE\":\"0\",\"DOUBLE\":\"1\",\"SINGLECOUCH\":\"0\",\"DOUBLECOUCH\":\"0\",\"ARMCHAIR\":\"1\",\"BUNKBED\":\"0\"}', 'OWN', NULL, 325, 3, 3, 9),
+(19, 1, '3 fős franciaágyas szoba', 'room', NULL, '{\"SINGLE\":\"0\",\"DOUBLE\":\"1\",\"SINGLECOUCH\":\"0\",\"DOUBLECOUCH\":\"0\",\"ARMCHAIR\":\"1\",\"BUNKBED\":\"0\"}', 'OWN', NULL, 325, 3, 3, 9),
+(20, 1, 'Romantic tóra néző szoba', 'room', NULL, '{\"SINGLE\":\"0\",\"DOUBLE\":\"1\",\"SINGLECOUCH\":\"0\",\"DOUBLECOUCH\":\"0\",\"ARMCHAIR\":\"0\",\"BUNKBED\":\"0\"}', 'OWN', NULL, 340, 1, 2, 2),
+(21, 1, '2 fős tóra néző szoba', 'room', NULL, '{\"SINGLE\":\"0\",\"DOUBLE\":\"1\",\"SINGLECOUCH\":\"0\",\"DOUBLECOUCH\":\"0\",\"ARMCHAIR\":\"0\",\"BUNKBED\":\"0\"}', 'OWN', NULL, 340, 1, 2, 2),
+(22, 1, '3 fős emeleti szoba légkondicionálással', 'room', NULL, '{\"SINGLE\":\"0\",\"DOUBLE\":\"1\",\"SINGLECOUCH\":\"0\",\"DOUBLECOUCH\":\"0\",\"ARMCHAIR\":\"1\",\"BUNKBED\":\"0\"}', 'OWN', NULL, 350, 3, 3, 9),
+(23, 1, 'Business apartman erkéllyel', 'apartment', 2, '{\"SINGLE\":\"0\",\"DOUBLE\":\"2\",\"SINGLECOUCH\":\"0\",\"DOUBLECOUCH\":\"0\",\"ARMCHAIR\":\"0\",\"BUNKBED\":\"0\"}', 'OWN', 1, 380, 1, 4, 4),
+(24, 1, '4 fős Manzárd emeleti apartman', 'apartment', 2, '{\"SINGLE\":\"2\",\"DOUBLE\":\"1\",\"SINGLECOUCH\":\"0\",\"DOUBLECOUCH\":\"0\",\"ARMCHAIR\":\"0\",\"BUNKBED\":\"0\"}', 'OWN', 1, 380, 1, 4, 4),
+(25, 1, '4 fős tetőtéri apartman erkéllyel', 'apartment', 2, '{\"SINGLE\":\"0\",\"DOUBLE\":\"2\",\"SINGLECOUCH\":\"0\",\"DOUBLECOUCH\":\"0\",\"ARMCHAIR\":\"0\",\"BUNKBED\":\"0\"}', 'OWN', 1, 380, 1, 4, 4),
+(26, 1, '4 fős Standard tetőtéri apartman', 'apartment', 1, '{\"SINGLE\":\"0\",\"DOUBLE\":\"2\",\"SINGLECOUCH\":\"0\",\"DOUBLECOUCH\":\"0\",\"ARMCHAIR\":\"0\",\"BUNKBED\":\"0\"}', 'OWN', 1, 380, 1, 4, 4),
+(27, 1, 'Presidential tóra néző apartman', 'apartment', 2, '{\"SINGLE\":\"0\",\"DOUBLE\":\"2\",\"SINGLECOUCH\":\"0\",\"DOUBLECOUCH\":\"0\",\"ARMCHAIR\":\"0\",\"BUNKBED\":\"0\"}', 'OWN', 1, 400, 1, 4, 4),
+(28, 1, '6 fős Manzárd lakosztály galériával', 'apartment', 3, '{\"SINGLE\":\"2\",\"DOUBLE\":\"0\",\"SINGLECOUCH\":\"0\",\"DOUBLECOUCH\":\"2\",\"ARMCHAIR\":\"0\",\"BUNKBED\":\"0\"}', 'OWN', 1, 430, 1, 6, 6),
+(29, 1, '8 fős Manzárd lakosztály galériával', 'apartment', 4, '{\"SINGLE\":\"2\",\"DOUBLE\":\"1\",\"SINGLECOUCH\":\"0\",\"DOUBLECOUCH\":\"2\",\"ARMCHAIR\":\"0\",\"BUNKBED\":\"0\"}', 'OWN', 1, 500, 1, 8, 8),
+(30, 2, '1 fős szoba', 'room', NULL, '{\"SINGLE\":\"1\",\"DOUBLE\":\"0\",\"SINGLECOUCH\":\"0\",\"DOUBLECOUCH\":\"0\",\"ARMCHAIR\":\"0\",\"BUNKBED\":\"0\"}', 'OWN', NULL, 110, 2, 1, 2),
+(31, 2, 'Franciaágyas szoba', 'room', NULL, '{\"SINGLE\":\"0\",\"DOUBLE\":\"1\",\"SINGLECOUCH\":\"0\",\"DOUBLECOUCH\":\"0\",\"ARMCHAIR\":\"0\",\"BUNKBED\":\"0\"}', 'OWN', NULL, 140, 5, 2, 10),
+(32, 2, '3 fős szoba', 'room', NULL, '{\"SINGLE\":\"1\",\"DOUBLE\":\"1\",\"SINGLECOUCH\":\"0\",\"DOUBLECOUCH\":\"0\",\"ARMCHAIR\":\"0\",\"BUNKBED\":\"0\"}', 'OWN', NULL, 150, 1, 3, 3),
+(33, 2, '4 fős szoba', 'room', NULL, '{\"SINGLE\":\"0\",\"DOUBLE\":\"1\",\"SINGLECOUCH\":\"0\",\"DOUBLECOUCH\":\"1\",\"ARMCHAIR\":\"0\",\"BUNKBED\":\"0\"}', 'OWN', NULL, 160, 2, 4, 8),
+(34, 2, '2 szobás faház', 'apartment', 2, '{\"SINGLE\":\"4\",\"DOUBLE\":\"0\",\"SINGLECOUCH\":\"0\",\"DOUBLECOUCH\":\"0\",\"ARMCHAIR\":\"0\",\"BUNKBED\":\"0\"}', 'OWN', 1, 170, 1, 4, 4),
+(35, 2, '4 fős faház', 'apartment', 1, '{\"SINGLE\":\"0\",\"DOUBLE\":\"2\",\"SINGLECOUCH\":\"0\",\"DOUBLECOUCH\":\"0\",\"ARMCHAIR\":\"0\",\"BUNKBED\":\"0\"}', 'OWN', 1, 180, 4, 4, 16),
+(36, 2, '2 szobás apartman', 'apartment', 2, '{\"SINGLE\":\"0\",\"DOUBLE\":\"1\",\"SINGLECOUCH\":\"0\",\"DOUBLECOUCH\":\"1\",\"ARMCHAIR\":\"0\",\"BUNKBED\":\"0\"}', 'OWN', 1, 200, 2, 4, 8),
+(37, 4, '2 fős Standard szoba', 'room', NULL, '{\"SINGLE\":\"0\",\"DOUBLE\":\"1\",\"SINGLECOUCH\":\"0\",\"DOUBLECOUCH\":\"0\",\"ARMCHAIR\":\"0\",\"BUNKBED\":\"0\"}', 'OWN', NULL, 520, 6, 2, 12),
+(38, 4, '2 fős Superior szoba', 'room', NULL, '{\"SINGLE\":\"0\",\"DOUBLE\":\"1\",\"SINGLECOUCH\":\"0\",\"DOUBLECOUCH\":\"0\",\"ARMCHAIR\":\"0\",\"BUNKBED\":\"0\"}', 'OWN', NULL, 565, 13, 2, 26),
+(39, 4, '2 fős Twin szoba', 'room', NULL, '{\"SINGLE\":\"2\",\"DOUBLE\":\"0\",\"SINGLECOUCH\":\"0\",\"DOUBLECOUCH\":\"0\",\"ARMCHAIR\":\"0\",\"BUNKBED\":\"0\"}', 'OWN', NULL, 565, 6, 2, 12),
+(40, 4, 'Standard lakosztály', 'apartment', 1, '{\"SINGLE\":\"0\",\"DOUBLE\":\"1\",\"SINGLECOUCH\":\"0\",\"DOUBLECOUCH\":\"1\",\"ARMCHAIR\":\"0\",\"BUNKBED\":\"0\"}', 'OWN', 1, 1040, 2, 4, 8),
+(41, 4, 'Junior lakosztály', 'apartment', 2, '{\"SINGLE\":\"0\",\"DOUBLE\":\"1\",\"SINGLECOUCH\":\"1\",\"DOUBLECOUCH\":\"0\",\"ARMCHAIR\":\"0\",\"BUNKBED\":\"0\"}', 'OWN', 2, 1220, 1, 3, 3),
+(42, 4, 'Superior lakosztály', 'apartment', 1, '{\"SINGLE\":\"0\",\"DOUBLE\":\"1\",\"SINGLECOUCH\":\"1\",\"DOUBLECOUCH\":\"0\",\"ARMCHAIR\":\"0\",\"BUNKBED\":\"0\"}', 'OWN', 1, 1165, 5, 3, 15),
+(43, 9, 'Standard szoba', 'room', NULL, '{\"SINGLE\":\"2\",\"DOUBLE\":\"0\",\"SINGLECOUCH\":\"0\",\"DOUBLECOUCH\":\"0\",\"ARMCHAIR\":\"0\",\"BUNKBED\":\"0\"}', 'OWN', NULL, 600, 2, 2, 4),
+(44, 13, 'Teljes Kulcsosház', 'complete', 5, '{\"SINGLE\":\"17\",\"DOUBLE\":\"0\",\"SINGLECOUCH\":\"0\",\"DOUBLECOUCH\":\"0\",\"ARMCHAIR\":\"0\",\"BUNKBED\":\"0\"}', NULL, 2, 650, 1, 17, 17);
+
+-- --------------------------------------------------------
+
+--
 -- Tábla szerkezet ehhez a táblához `accm_wellness`
 --
 
@@ -284,7 +331,7 @@ CREATE TABLE `accm_wellness` (
 --
 
 INSERT INTO `accm_wellness` (`accm_id`, `wellness_offered`, `pool`, `sauna`, `jacuzzi`, `tub`, `fitness`, `wellness_status`, `wellness_price`) VALUES
-(1, 'YES', NULL, 'YES', 'YES', NULL, NULL, 'INPRICE', NULL),
+(1, 'YES', NULL, 'YES', 'YES', NULL, NULL, 'PAYABLE', '20'),
 (2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 (4, 'YES', 'YES', 'YES', 'YES', 'YES', 'YES', 'INPRICE', NULL),
 (9, 'YES', 'YES', 'YES', 'YES', NULL, NULL, 'INPRICE', NULL),
@@ -320,6 +367,31 @@ INSERT INTO `accm_wellness` (`accm_id`, `wellness_offered`, `pool`, `sauna`, `ja
 (52, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 (53, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 (54, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Tábla szerkezet ehhez a táblához `bed_types`
+--
+
+CREATE TABLE `bed_types` (
+  `id` int(11) NOT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `value` varchar(255) DEFAULT NULL,
+  `places` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- A tábla adatainak kiíratása `bed_types`
+--
+
+INSERT INTO `bed_types` (`id`, `name`, `value`, `places`) VALUES
+(1, 'Egyszemélyes ágy', 'SINGLE', 1),
+(2, 'Franciaágy', 'DOUBLE', 2),
+(3, 'Kanapé', 'SINGLECOUCH', 1),
+(4, 'Kanapé', 'DOUBLECOUCH', 2),
+(5, 'Fotelágy', 'ARMCHAIR', 1),
+(6, 'Emeletes ágy', 'BUNKBED', 2);
 
 -- --------------------------------------------------------
 
@@ -543,23 +615,29 @@ ALTER TABLE `accm_meals`
   ADD PRIMARY KEY (`accm_id`);
 
 --
--- A tábla indexei `accm_rooms`
---
-ALTER TABLE `accm_rooms`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `accm_id` (`accm_id`);
-
---
 -- A tábla indexei `accm_types`
 --
 ALTER TABLE `accm_types`
   ADD PRIMARY KEY (`type_code`);
 
 --
+-- A tábla indexei `accm_units`
+--
+ALTER TABLE `accm_units`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `accm_id` (`accm_id`);
+
+--
 -- A tábla indexei `accm_wellness`
 --
 ALTER TABLE `accm_wellness`
   ADD PRIMARY KEY (`accm_id`);
+
+--
+-- A tábla indexei `bed_types`
+--
+ALTER TABLE `bed_types`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- A tábla indexei `chat_messages`
@@ -636,10 +714,16 @@ ALTER TABLE `accms`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=69;
 
 --
--- AUTO_INCREMENT a táblához `accm_rooms`
+-- AUTO_INCREMENT a táblához `accm_units`
 --
-ALTER TABLE `accm_rooms`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `accm_units`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
+
+--
+-- AUTO_INCREMENT a táblához `bed_types`
+--
+ALTER TABLE `bed_types`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT a táblához `chat_messages`
@@ -718,10 +802,10 @@ ALTER TABLE `accm_meals`
   ADD CONSTRAINT `accm_meals_ibfk_1` FOREIGN KEY (`accm_id`) REFERENCES `accms` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Megkötések a táblához `accm_rooms`
+-- Megkötések a táblához `accm_units`
 --
-ALTER TABLE `accm_rooms`
-  ADD CONSTRAINT `accm_rooms_ibfk_1` FOREIGN KEY (`accm_id`) REFERENCES `accms` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `accm_units`
+  ADD CONSTRAINT `accm_units_ibfk_1` FOREIGN KEY (`accm_id`) REFERENCES `accms` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Megkötések a táblához `accm_wellness`

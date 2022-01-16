@@ -1,3 +1,10 @@
+<?php if($params["info"] === "updated"): ?>
+    <a href="/szallasok/<?= $params['accm']['slug']?>/beallitasok/kedvezmenyek" style="text-decoration:none">
+        <div class="alert alert-success text-center mb-3 m-5">
+            Kedvezmények frissítve!
+        </div>
+    </a>
+<?php endif ?>
 <div class="card border-success mb-3 m-5">
     <div class="card-header">Kedvezmények szerkesztése</div>
     <div class="card-body">

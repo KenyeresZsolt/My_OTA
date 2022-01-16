@@ -321,7 +321,7 @@ function deleteAccmHandler($urlParams)
     ]);
 }
 
-function accmPageHandler($slug)
+function accmPageHandler($urlParams)
 {   
     $pdo = getConnection();
     $statement = $pdo->prepare(
@@ -333,8 +333,16 @@ function accmPageHandler($slug)
         LEFT JOIN accm_wellness aw ON aw.accm_id = a.id
         WHERE a.slug = ?"
     );
-    $statement->execute([$slug['accmSlug']]);
+    $statement->execute([$urlParams['accmSlug']]);
     $accm = $statement->fetch(PDO::FETCH_ASSOC);
+
+    $statement = $pdo->prepare(
+        'SELECT *
+        FROM accm_units
+        WHERE accm_id = ?'
+    );
+    $statement->execute([$accm['id']]);
+    $units = $statement->fetchAll(PDO::FETCH_ASSOC);
 
     $wellnessFacilities = getServicesByCategory("wellness");
     $wellnessFacilityNames=[];
@@ -347,6 +355,7 @@ function accmPageHandler($slug)
     echo render("wrapper.php", [
         "content" => render("accm-page.php", [
             "accm" => $accm,
+            "units" => $units,
             "address" => json_decode($accm['address'], true),
             "languages" => json_decode($accm['languages'], true),
             "facilities" => json_decode($accm['facilities'], true),

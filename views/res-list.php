@@ -23,9 +23,9 @@
                     <div class="accordion-body">
                         <h4 class="card-text">Lefoglalt szállás:
                             <?php
-                                foreach($params['packages'] as $package)
-                                    if($package['id'] === $reservation['reserved_package_id']){
-                                        echo $package['name'] . " " . $package['location'];
+                                foreach($params['accms'] as $accm)
+                                    if($accm['id'] === $reservation['reserved_accm_id']){
+                                        echo $accm['name'] . " " . $accm['location'];
                                     }
                             ?>
                         </h4>

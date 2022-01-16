@@ -6,22 +6,22 @@ function dateDifference($checkout, $checkin)
     return ceil(abs($diff/86400));
 }
 
-function reservePackageHandler($urlParams)
+function reserveAccmHandler($urlParams)
 {
-    $reservedPackageId = $urlParams['pckId'];
+    $reservedAccmId = $urlParams['accmId'];
 
     $nights = dateDifference($_POST["checkout"], $_POST["checkin"]);
        
     $pdo = getConnection();
     $statement = $pdo->prepare(
         'SELECT *
-        FROM packages p
-        WHERE p.id = ?'
+        FROM accms a
+        WHERE a.id = ?'
     );
-    $statement->execute([$reservedPackageId]);
-    $package = $statement->fetch(PDO::FETCH_ASSOC);
+    $statement->execute([$reservedAccmId]);
+    $accm = $statement->fetch(PDO::FETCH_ASSOC);
 
-    $totalPrice = ($_POST["guests"]*$nights* ($package['disc_price'] === "0" ? $package['price'] : $package['disc_price']));
+    $totalPrice = ($_POST["guests"]*$nights*$accm['price']);
 
     if (empty($_POST["name"]) 
         OR empty($_POST["email"]) 
@@ -30,7 +30,7 @@ function reservePackageHandler($urlParams)
         OR empty($_POST["checkin"])
         OR empty($_POST["checkout"])
         OR empty($_POST["phone"])) {
-        urlRedirect('csomagok/' . $package['slug'], [
+        urlRedirect('szallasok/' . $accm['slug'], [
             'res' => "1",
             'info' => "emptyValue",
             'values' => base64_encode(json_encode($_POST)),
@@ -40,8 +40,8 @@ function reservePackageHandler($urlParams)
     }
 
     $statement = $pdo->prepare(
-        'INSERT INTO reservations (name, email, phone, status, reserved, guests, checkin, checkout, nights, total_price, reserved_package_id)
-        VALUES (:name, :email, :phone, :status, :reserved, :guests, :checkin, :checkout, :nights, :total_price, :reserved_package_id)'
+        'INSERT INTO reservations (name, email, phone, status, reserved, guests, checkin, checkout, nights, total_price, reserved_accm_id)
+        VALUES (:name, :email, :phone, :status, :reserved, :guests, :checkin, :checkout, :nights, :total_price, :reserved_accm_id)'
     );
     $statement->execute([
         'name' => $_POST['name'],
@@ -54,7 +54,7 @@ function reservePackageHandler($urlParams)
         'checkout' => $_POST['checkout'],
         'nights' => $nights,
         'total_price' => $totalPrice,
-        'reserved_package_id' => $reservedPackageId
+        'reserved_accm_id' => $reservedAccmId
     ]);
 
     //email
@@ -68,23 +68,25 @@ function reservePackageHandler($urlParams)
         'checkout' => $_POST['checkout'],
         'nights' => $nights,
         'total_price' => $totalPrice,
-        'package' => $package
+        'accm' => $accm
     ]);
 
     $statement->execute([
         $_POST['email'],
-        "Foglalási igazolás - " . $package['name'] . ", " . $package['location'],
+        "Foglalási igazolás - " . $accm['name'] . ", " . $accm['location'],
         $body,
         'notSent',
         0,
         time()
     ]);
 
-    urlRedirect('csomagok/' . $package['slug'], [
-        'info' => 'reserved'
-    ]);
+    header('Location: /szallasok/' . $accm['slug'] . '?info=reserved');
 
     sendMailsHandler();
+
+    /*urlRedirect('szallasok/' . $accm['slug'], [
+        'info' => 'reserved'
+    ]);*/   //ezzel nem küldi ki az emaileket
 }
 
 function reservationListHandler()
@@ -101,14 +103,14 @@ function reservationListHandler()
 
     $statement = $pdo->prepare(
         'SELECT *
-        FROM packages'
+        FROM accms'
     );
     $statement->execute();
-    $packages = $statement->fetchAll(PDO::FETCH_ASSOC);
+    $accms = $statement->fetchAll(PDO::FETCH_ASSOC);
 
     $heroListTemplate = render("res-list.php", [
         "reservations" => $reservations,
-        "packages" => $packages,
+        "accms" => $accms,
         "updateReservationId" => $_GET["edit"] ?? NULL,
         "info" => $_GET['info'] ?? NULL,
     ]);

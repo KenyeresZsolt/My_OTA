@@ -1,6 +1,3 @@
-<a href="/szallasok/<?= $params['accm']['slug']?>">
-    <button type="button" class="btn btn-sm btn-outline-secondary mr-2 float-end">Vissza</button>
-</a>
 <ul class="nav nav-tabs">
     <li class="nav-item">
         <a class="nav-link <?= $params['activeTab'] === "accmPage" ? "active" : "" ?>" data-bs-toggle="tab" href="/szallasok/<?= $params['accm']['slug']?>"><?= $params['accm']['name']?></a>

@@ -1,7 +1,7 @@
 <div class="card border-success mb-3 m-5">
     <div class="card-header">Új szállás</div>
         <div class="card-body">
-            <form class="form-inline" action="/add-accm" method="POST" enctype="multipart/form-data" id="newPck">
+            <form class="form-inline" action="/add-accm" method="POST" enctype="multipart/form-data" id="newAccm">
                 <div class="form-group">
                     <div class="container">
                         <h5>Alapadatok</h5>
@@ -87,7 +87,7 @@
                     <div class="container">
                         <h5>Szálláshely bemutatása</h5>
                         <label for="description" class="form-label mt-4">Leírás</label>
-                        <textarea class="form-control form-control-sm" id="description" name="description" form="newPck" rows="10"></textarea>
+                        <textarea class="form-control form-control-sm" id="description" name="description" form="newAccm" rows="10"></textarea>
                     </div>
                     <br>
                     <br><hr><br>

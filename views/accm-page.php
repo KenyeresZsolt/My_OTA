@@ -55,47 +55,55 @@
             <div class="card-header">Árak</div>
             <div class="card-body ms-3">
                 <table style="border-collapse:separate;border-spacing: 0 1rem;">
-                    <tr class="bg-light rounded">
-                        <td class="text-center" style="width: 5rem;">
-                            <input class="form-check-input" type="checkbox"  name="accm" value="">
-                        </td>
-                        <td style="width: 40rem;">
-                            Szállás
-                        </td>
-                        <td class="text-center" style="width: 40rem;">
-                            <?= $params['accm']['price']?> RON
-                        </td>
-                    </tr>
+                    <?php foreach($params['units'] as $unit): ?>
+                        <tr class="bg-light rounded">
+                            <td style="width: 5rem;">
+                                <input class="form-control m-1" type="number"  name="<?= $unit['id']?>" value="0">
+                            </td>
+                            <td style="width: 40rem;">
+                                <div class="ms-3"><?= $unit['name']?></div>
+                            </td>
+                            <td class="text-center" style="width: 20rem;">
+                                <?= $unit['price']?> RON
+                            </td>
+                            <td class="text-center small" style="width: 20rem;">
+                                <?= $unit['capacity_per_unit']?> főnek, 1 éjszakára
+                            </td>
+
+                        </tr>
+                    <?php endforeach; ?>
                     <?php foreach($params['meals'] as $meal): ?>
                         <?php if($params['accm']['meal_offered'] === "YES" AND $params['accm'][$meal['value']] !== "NOTPROVIDED"): ?>
                             <tr class="bg-light">
                                 <td class="text-center" style="width: 5rem;">
-                                    <input class="form-check-input" type="checkbox"  name="<?= $meal['value']?>" value="" <?= $params['accm'][$meal['value']] === "INPRICE" ? "checked disabled" : "" ?><?= $params['accm'][$meal['value']] === "ALACARTE" ? "disabled" : "" ?>>
+                                    <input class="form-check-input m-1" type="checkbox"  name="<?= $meal['value']?>" value="" <?= $params['accm'][$meal['value']] === "INPRICE" ? "checked disabled" : "" ?><?= $params['accm'][$meal['value']] === "ALACARTE" ? "disabled" : "" ?>>
                                 </td>
                                 <td style="width: 40rem;">
-                                <?= $meal['name']?>
+                                    <div class="ms-3"><?= $meal['name']?></div>
                                 </td>
-                                <td class="text-center" style="width: 40rem;">
+                                <td class="text-center" style="width: 20rem;">
                                     <?php if($params['accm'][$meal['value']] === 'PAYABLE'): ?>
                                         <?= $params['accm'][$meal['value'] . "_price"] . " RON"?>
                                     <?php else: ?>
                                         <?= $params['accm'][$meal['value'] . "_hu_status"]?>
                                     <?php endif; ?>
                                 </td>
+                                <td  class="text-center small" style="width: 20rem;">1 fő, 1 nap</td>
                             </tr>
                         <?php endif; ?>
                     <?php endforeach; ?>
                     <?php if($params['accm']['wellness_offered'] === "YES"): ?>
                         <tr class="bg-light rounded">
                         <td class="text-center" style="width: 5rem;">
-                            <input class="form-check-input" type="checkbox"  name="wellness" value="" <?= $params['accm']['wellness_status'] === "INPRICE" ? "checked disabled": "" ?>>
+                            <input class="form-check-input m-1" type="checkbox"  name="wellness" value="" <?= $params['accm']['wellness_status'] === "INPRICE" ? "checked disabled": "" ?>>
                         </td>
                         <td style="width: 40rem;">
-                            Wellness: <?= implode(" + ", $params['wellnessFacilityNames']) ?>
+                            <div class="ms-3">Wellness: <?= implode(" + ", $params['wellnessFacilityNames']) ?></div>
                         </td>
-                        <td class="text-center" style="width: 40rem;">
+                        <td class="text-center" style="width: 20rem;">
                             <?= $params['accm']['wellness_status'] === "INPRICE"? "Benne van az árban" : $params['accm']['wellness_price'] . " RON"?>
                         </td>
+                        <td  class="text-center small" style="width: 20rem;">1 fő, 1 nap</td>
                     </tr>
                     <?php endif; ?>
                 </table>

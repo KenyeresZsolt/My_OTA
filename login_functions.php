@@ -80,9 +80,10 @@ function registrationHandler()
         time()
     ]);
 
-    urlRedirect('bejelentkezes', [
+    header('Location: /bejelentkezes?info=registrationSuccessfull');
+    /*urlRedirect('bejelentkezes', [
         'info' => 'registrationSuccessfull'
-    ]);
+    ]);*/ //ezzel nem küldi ki az emaileket
 
     sendMailsHandler();
 }
