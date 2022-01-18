@@ -6,9 +6,39 @@ function dateDifference($checkout, $checkin)
     return ceil(abs($diff/86400));
 }
 
+function calculatePrice($input, $accmId)
+{   
+    $pdo = getConnection();
+    $statement = $pdo->prepare(
+        'SELECT *
+        FROM accm_units au
+        WHERE au.accm_id = ?');
+    $statement->execute([$accmId]);
+    $units = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+    $roomPrice = 0;
+
+    foreach($input['rooms'] as $k => $roomsCount){
+        foreach($units as $unit){
+            if($unit['id'] = $k){
+                $roomPrice += $unit['price']*$roomsCount;
+            }
+        }
+    }
+    
+    $totalRooms = array_sum($_POST['rooms']);
+    echo "<pre>";
+    echo $totalRooms . "<br>";
+    echo $roomPrice . "<br>";
+    var_dump($_POST);
+}
+
 function reserveAccmHandler($urlParams)
 {
     $reservedAccmId = $urlParams['accmId'];
+
+    calculatePrice($_POST, $urlParams['accmId']);
+    exit;
 
     $nights = dateDifference($_POST["checkout"], $_POST["checkin"]);
        
