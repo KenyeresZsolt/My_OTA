@@ -93,7 +93,7 @@ function updateAccmHandler($urlParams)
         json_encode($_POST['facilities'] ?? NULL , true) ?? NULL,
         $_POST['description'] ?? NULL,
         json_encode($_POST['languages'] ?? NULL, true) ?? NULL,
-        imageUpload() ?? $accm['image'],
+        imageUpload($accm['slug']) ?? $accm['image'],
         $_POST["contactName"] ?? NULL,
         $_POST["contactEmail"] ?? NULL,
         $_POST["contactPhone"] ?? NULL,

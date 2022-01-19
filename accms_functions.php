@@ -247,7 +247,7 @@ function createAccmHandler()
         'facilities', 
         'description', 
         'languages', 
-        'image', 
+        //'image', 
         'contact_name', 
         'email', 
         'phone', 
@@ -266,7 +266,7 @@ function createAccmHandler()
         json_encode($_POST['facilities'], true) ?? NULL,
         $_POST['description'] ?? NULL,
         json_encode($_POST['languages'], true) ?? NULL,
-        imageUpload() ?? NULL,
+        //imageUpload() ?? NULL,
         $_POST["contactName"] ?? NULL,
         $_POST["contactEmail"] ?? NULL,
         $_POST["contactPhone"] ?? NULL,
@@ -274,6 +274,21 @@ function createAccmHandler()
     ];
 
     $id = generateInsertSql($table, $columns, $execute);
+
+    if(!empty($_FILES["fileToUpload"]["name"])){
+        $table = "accm_images";
+        $columns = [
+            'accm_id',
+            'path',
+            'uploaded'
+        ];
+        $execute = [
+            $id,
+            imageUpload(),
+            time(),
+        ];
+        generateInsertSql($table, $columns, $execute);
+    }
 
     $table = "accm_meals";
     $columns = [
@@ -344,6 +359,14 @@ function accmPageHandler($urlParams)
     $statement->execute([$accm['id']]);
     $units = $statement->fetchAll(PDO::FETCH_ASSOC);
 
+    $statement = $pdo->prepare(
+        'SELECT *
+        FROM accm_discounts ad
+        WHERE ad.accm_id = ?'
+    );
+    $statement->execute([$accm['id']]);
+    $discounts = $statement->fetch(PDO::FETCH_ASSOC);
+
     $wellnessFacilities = getServicesByCategory("wellness");
     $wellnessFacilityNames=[];
     foreach($wellnessFacilities as $wellnessFacility){
@@ -361,6 +384,7 @@ function accmPageHandler($urlParams)
             "facilities" => json_decode($accm['facilities'], true),
             "meals" => getServicesByCategory("meal"),
             "wellnessFacilityNames" => $wellnessFacilityNames,
+            "discounts" => $discounts,
             "accmLangs" => getAccmLangs(),
             "accmTypes" => getAccmTypes(),
             "accmFacilities" => getAccmFacilities(),

@@ -8,6 +8,13 @@ function dateDifference($checkout, $checkin)
 
 function calculatePrice($input, $accmId)
 {   
+    $roomPrice = 0;
+    $mealPrice = 0;
+    $wellnessPrice = 0;
+
+    $nights = dateDifference($input['checkout'], $input['checkin']);
+    $guests = $input['adults']+$input['children'];
+    
     $pdo = getConnection();
     $statement = $pdo->prepare(
         'SELECT *
@@ -16,30 +23,54 @@ function calculatePrice($input, $accmId)
     $statement->execute([$accmId]);
     $units = $statement->fetchAll(PDO::FETCH_ASSOC);
 
-    $roomPrice = 0;
+    foreach($units as $unit){
+        $roomPrice += $unit['price']*$input['rooms'][$unit['id']];
+    }
 
-    foreach($input['rooms'] as $k => $roomsCount){
-        foreach($units as $unit){
-            if($unit['id'] = $k){
-                $roomPrice += $unit['price']*$roomsCount;
-            }
+    if(isset($input['meals'])){
+        $statement = $pdo->prepare(
+            'SELECT *
+            FROM accm_meals am
+            WHERE am.accm_id = ?'
+        );
+        $statement->execute([$accmId]);
+        $meals = $statement->fetch(PDO::FETCH_ASSOC);
+
+        foreach($input['meals'] as $meal){
+            $mealPrice += $meals[$meal . "_price"]*$guests;
         }
     }
-    
-    $totalRooms = array_sum($_POST['rooms']);
+
+    if(isset($input['wellness'])){
+        $statement = $pdo->prepare(
+            'SELECT *
+            FROM accm_wellness aw
+            WHERE aw.accm_id = ?'
+        );
+        $statement->execute([$accmId]);
+        $wellness = $statement->fetch(PDO::FETCH_ASSOC);
+        
+        $wellnessPrice = $guests*$wellness['wellness_price'];
+    }
+
+    $totalPricePerNight = $roomPrice+$mealPrice+$wellnessPrice;
+    $totalPrice = $totalPricePerNight*$nights;
+       
     echo "<pre>";
-    echo $totalRooms . "<br>";
-    echo $roomPrice . "<br>";
+    echo "Szoba ára: " . $roomPrice . "<br>";
+    echo "Étkezés ára: " . $mealPrice . "<br>";
+    echo "Wellness ára: " . $wellnessPrice . "<br>";
+    echo "Teljes ár egy éjszakára: " . $totalPricePerNight . "<br>";
+    echo "Teljes ár: " . $totalPrice . "<br>";
     var_dump($_POST);
+    
 }
 
 function reserveAccmHandler($urlParams)
 {
     $reservedAccmId = $urlParams['accmId'];
 
-    calculatePrice($_POST, $urlParams['accmId']);
-    exit;
-
+    $totalRooms = array_sum($_POST['rooms']);
     $nights = dateDifference($_POST["checkout"], $_POST["checkin"]);
        
     $pdo = getConnection();
@@ -51,23 +82,40 @@ function reserveAccmHandler($urlParams)
     $statement->execute([$reservedAccmId]);
     $accm = $statement->fetch(PDO::FETCH_ASSOC);
 
-    $totalPrice = ($_POST["guests"]*$nights*$accm['price']);
-
-    if (empty($_POST["name"]) 
-        OR empty($_POST["email"]) 
-        OR empty($_POST["phone"]) 
-        OR empty($_POST["guests"]) 
-        OR empty($_POST["checkin"])
+    if (empty($_POST["checkin"])
         OR empty($_POST["checkout"])
-        OR empty($_POST["phone"])) {
+        OR empty($_POST["adults"])
+        OR $_POST["adults"] < 1) {
         urlRedirect('szallasok/' . $accm['slug'], [
             'res' => "1",
-            'info' => "emptyValue",
+            'info' => "emptyData",
             'values' => base64_encode(json_encode($_POST)),
             'href' => '#infoMessage'
         ]);
-        return ;
     }
+    
+    if ($totalRooms === 0){
+        urlRedirect('szallasok/' . $accm['slug'], [
+            'res' => "1",
+            'info' => "emptyRooms",
+            'values' => base64_encode(json_encode($_POST)),
+            'href' => '#infoMessage'
+        ]);
+    }
+    
+    if (empty($_POST["name"]) 
+        OR empty($_POST["email"]) 
+        OR empty($_POST["phone"])) {
+        urlRedirect('szallasok/' . $accm['slug'], [
+            'res' => "1",
+            'info' => "emptyContact",
+            'values' => base64_encode(json_encode($_POST)),
+            'href' => '#infoMessage'
+        ]);
+    }
+
+    calculatePrice($_POST, $urlParams['accmId']);
+    exit;
 
     $statement = $pdo->prepare(
         'INSERT INTO reservations (name, email, phone, status, reserved, guests, checkin, checkout, nights, total_price, reserved_accm_id)

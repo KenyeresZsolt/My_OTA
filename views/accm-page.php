@@ -50,16 +50,49 @@
                 </div>
             </div>
         </div>
-        <br>       
+        <br>
+        <?php if($params['info'] === "emptyData"): ?>
+            <div class="alert alert-danger mb-3 text-center" id="infoMessage">
+            Tölts ki minden mezőt!
+            </div>
+        <?php endif; ?>
+        <div class="card border-primary mb-3">
+            <div class="card-header">Utazás részletei</div>
+            <div class="card-body ms-3">
+            <form class="form-inline" action="/reserve-accm/<?= $params['accm']["id"] ?>" method="POST" id="resForm">
+                <div class="row">
+                    <div style="max-width: 15rem;">
+                        <label for="checkin">Érkezés dátuma</label>
+                        <input class="form-control" type="date" name="checkin" min="<?= date("Y-m-d"); ?>" value="<?= $params['values']['checkin'] ?? '' ?>" autocomplete="off"/>
+                    </div>
+                    <div style="max-width: 15rem;">
+                        <label for="checkout">Távozás dátuma</label>
+                        <input class="form-control" type="date" name="checkout" min="<?= date("Y-m-d"); ?>" value="<?= $params['values']['checkout'] ?? '' ?>" autocomplete="off"/>
+                    </div>
+                    <div style="max-width: 15rem;">
+                        <label for="guests">Felnőttek</label>
+                        <input class="form-control" type="number" name="adults" min="1" value="<?= $params['values']['adults'] ?? 1 ?>" autocomplete="off"/>
+                    </div>
+                    <div style="max-width: 15rem;">
+                        <label for="guests">Gyerekek</label>
+                        <input class="form-control" type="number" name="children" min="0" value="<?= $params['values']['children'] ?? 0 ?>" autocomplete="off"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <?php if($params['info'] === "emptyRooms"): ?>
+            <div class="alert alert-danger mb-3 text-center" id="infoMessage">
+                Válassz ki legalább egy szobát!
+            </div>
+        <?php endif; ?>
         <div class="card border-primary mb-3">
             <div class="card-header">Árak</div>
             <div class="card-body ms-3">
-                <form class="form-inline" action="/reserve-accm/<?= $params['accm']["id"] ?>" method="POST" id="resForm">
                 <table style="border-collapse:separate;border-spacing: 0 1rem;">
                     <?php foreach($params['units'] as $unit): ?>
                         <tr class="bg-light rounded">
                             <td style="width: 5rem;">
-                                <input class="form-control m-1" type="number"  name="rooms[<?= $unit['id']?>]" value="0" min="0" max="<?= $unit['count']?>">
+                                <input class="form-control m-1" type="number"  name="rooms[<?= $unit['id']?>]" value="<?= $params['values']['rooms'][$unit['id']] ?? 0 ?>" min="0" max="<?= $unit['count']?>">
                             </td>
                             <td style="width: 40rem;">
                                 <div class="ms-3"><?= $unit['name']?></div>
@@ -77,7 +110,7 @@
                         <?php if($params['accm']['meal_offered'] === "YES" AND $params['accm'][$meal['value']] !== "NOTPROVIDED"): ?>
                             <tr class="bg-light">
                                 <td class="text-center" style="width: 5rem;">
-                                    <input class="form-check-input m-1" type="checkbox"  name="meals[]" value="<?= $meal['value']?>" <?= $params['accm'][$meal['value']] === "INPRICE" ? "checked disabled" : "" ?><?= $params['accm'][$meal['value']] === "ALACARTE" ? "disabled" : "" ?>>
+                                    <input class="form-check-input m-1" type="checkbox"  name="meals[]" value="<?= $meal['value']?>" <?= ($params['accm'][$meal['value']] === "INPRICE" ? "checked disabled" : ($params['accm'][$meal['value']] === "ALACARTE" ? "disabled" : (@in_array($meal['value'], $params['values']['meals']) ? "checked" : ''))) ?>>
                                 </td>
                                 <td style="width: 40rem;">
                                     <div class="ms-3"><?= $meal['name']?></div>
@@ -96,7 +129,7 @@
                     <?php if($params['accm']['wellness_offered'] === "YES"): ?>
                         <tr class="bg-light rounded">
                         <td class="text-center" style="width: 5rem;">
-                            <input class="form-check-input m-1" type="checkbox"  name="wellness" value="YES" <?= $params['accm']['wellness_status'] === "INPRICE" ? "checked disabled": "" ?>>
+                            <input class="form-check-input m-1" type="checkbox"  name="wellness" value="YES" <?= ($params['accm']['wellness_status'] === "INPRICE" ? "checked disabled": (isset($params['values']['wellness']) ? "checked" : "")) ?>>
                         </td>
                         <td style="width: 40rem;">
                             <div class="ms-3">Wellness: <?= implode(" + ", $params['wellnessFacilityNames']) ?></div>
@@ -111,9 +144,9 @@
             </div>
         </div>
         <hr>
-        <?php if($params['info'] === "emptyValue"): ?>
-            <div class="alert alert-danger mb-3" style="max-width: 20rem;" id="infoMessage">
-                Tölts ki minden mezőt!
+        <?php if($params['info'] === "emptyContact"): ?>
+            <div class="alert alert-danger mb-3 text-center" id="infoMessage">
+                Add meg az adataidat!
             </div>
         <?php endif; ?>
         <div class="card border-success bg-light mb-3">
@@ -134,22 +167,8 @@
                                 <label for="phone">Telefonszám</label>
                                 <input class="form-control" type="text" name="phone" value="<?= $params['values']['phone'] ?? '' ?>" autocomplete="off"/>                                        
                             </div>
-                            <div style="max-width: 15rem;">
-                                <label for="guests">Személyek száma</label>
-                                <input class="form-control" type="number" name="guests" min="1" value="<?= $params['values']['guests'] ?? '' ?>" autocomplete="off"/>
-                            </div>
                         </div>
                         <br>
-                        <div class="row">
-                            <div style="max-width: 15rem;">
-                                <label for="checkin">Érkezés dátuma</label>
-                                <input class="form-control" type="date" name="checkin" min="<?= date("Y-m-d"); ?>" value="<?= $params['values']['checkin'] ?? '' ?>" autocomplete="off"/>
-                            </div>
-                            <div style="max-width: 15rem;">
-                                <label for="checkout">Távozás dátuma</label>
-                                <input class="form-control" type="date" name="checkout" min="<?= date("Y-m-d"); ?>" value="<?= $params['values']['checkout'] ?? '' ?>" autocomplete="off"/>
-                            </div>
-                        </div>
                     </div>
                     <br>
                     <br>
@@ -177,6 +196,48 @@
                     }?>
 
                 </div>
+            </div>
+        </div>
+        <hr>
+        <div class="card border-primary mb-3">
+            <div class="card-header">Kedvezmények</div>
+            <div class="card-body ms-3">
+                <?php if($params['discounts']['children_discount'] === "YES"): ?>
+                    Gyermekkedvezmény: 
+                    <ul>
+                        <li><?= $params['discounts']['children_discount_percent'] . "%"?></li>
+                    </ul>
+                    Erre alkalmazható: 
+                    <ul>
+                        <?= $params['discounts']['children_discount_for_accm'] === "YES" ? "<li>szállás</li>" : "" ?>
+                        <?= $params['discounts']['children_discount_for_meals'] === "YES" ? "<li>étkezés</li>" : "" ?>
+                        <?= $params['discounts']['children_discount_for_wellness'] === "YES" ? "<li>wellness</li>" : "" ?>
+                    </ul>               
+                <?php endif; ?>
+                <?php if($params['discounts']['group_discount'] === "YES"): ?>
+                    <hr style="border: 1px dashed white;width:15rem">
+                    Csoportkedvezmény:
+                    <ul>
+                        <li><?= $params['discounts']['group_discount_percent'] . "%" ?></li>
+                        <li><?= $params['discounts']['group_person_number'] . " fő felett" ?></li>
+                    </ul>
+                <?php endif; ?>
+                <?php if($params['discounts']['early_booking_discount'] === "YES"): ?>
+                    <hr style="border: 1px dashed white;width:15rem">
+                    Early Booking kedvezmény:
+                    <ul>
+                        <li><?= $params['discounts']['early_booking_discount_percent'] . "%" ?></li>
+                        <li><?= "Érkezés előtt min. " . $params['discounts']['early_booking_days'] . " nappal történő foglalás esetén" ?></li>
+                    </ul>
+                <?php endif; ?>
+                <?php if($params['discounts']['last_minute_discount'] === "YES"): ?>
+                    <hr style="border: 1px dashed white;width:15rem">
+                    Last Minute kedvezmény:
+                    <ul>
+                        <li><?= $params['discounts']['last_minute_discount_percent'] . "%" ?></li>
+                        <li><?= "Érkezés előtt max. " . $params['discounts']['last_minute_days'] . " nappal történő foglalás esetén" ?></li>
+                    </ul>
+                <?php endif; ?>
             </div>
         </div>
         <hr>
