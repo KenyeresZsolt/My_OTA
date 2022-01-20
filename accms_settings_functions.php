@@ -71,7 +71,6 @@ function updateAccmHandler($urlParams)
         'facilities',
         'description',
         'languages',
-        'image',
         'contact_name',
         'email',
         'phone',
@@ -93,7 +92,6 @@ function updateAccmHandler($urlParams)
         json_encode($_POST['facilities'] ?? NULL , true) ?? NULL,
         $_POST['description'] ?? NULL,
         json_encode($_POST['languages'] ?? NULL, true) ?? NULL,
-        imageUpload($accm['slug']) ?? $accm['image'],
         $_POST["contactName"] ?? NULL,
         $_POST["contactEmail"] ?? NULL,
         $_POST["contactPhone"] ?? NULL,
@@ -104,6 +102,7 @@ function updateAccmHandler($urlParams)
     ];
 
     generateUpdateSql($table, $columns, $conditions, $execute);
+    imageUploadHandler($urlParams['accmId']);
 
     urlRedirect('szallasok/' . $slug . "/beallitasok/adatok", [
         'info'=> 'updated'

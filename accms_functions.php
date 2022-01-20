@@ -209,7 +209,65 @@ function createAddressJson()
     ), true);
 }
 
-function imageUpload()
+function transformToSingleImages($rawFiles)
+{
+    $ret = [];
+    for($i = 0; $i < count($rawFiles['name']); $i++){
+        $ret[] = [
+            'name' => $rawFiles['name'][$i],
+            'type' => $rawFiles['type'][$i],
+            'tmp_name' => $rawFiles['tmp_name'][$i],
+            'size' => $rawFiles['size'][$i],
+            'error' => $rawFiles['error'][$i],
+        ];
+    }
+
+    return $ret;
+}
+
+function saveImage($image)
+{
+    $whitelist = [IMAGETYPE_PNG, IMAGETYPE_JPEG, IMAGETYPE_GIF];
+    if(!in_array(exif_imagetype($image['tmp_name']), $whitelist)){
+        return false;
+    }
+
+    $targetDir = "public/uploads/";
+    $targetFile = $targetDir . basename($image["name"]);
+    $imageFileType = strtolower(pathinfo($targetFile,PATHINFO_EXTENSION));
+    
+    move_uploaded_file($image["tmp_name"],$targetFile);
+    return $targetFile;
+
+}
+
+function imageUploadHandler($accmId)
+{
+    if(!empty($_FILES["image"]["name"])){
+        $images = transformToSingleImages($_FILES["image"]);
+        $targetFiles = [];
+        foreach($images as $image){
+            $targetFiles[] = saveImage($image);
+        }
+
+        foreach($targetFiles as $targetFile){
+            $table = "accm_images";
+            $columns = [
+                'accm_id',
+                'path',
+                'uploaded',
+            ];
+            $execute = [
+                $accmId,
+                $targetFile,
+                time(),
+            ];
+            generateInsertSql($table, $columns, $execute);
+        }
+    }    
+}
+
+/*function imageUpload()
 {
     if(!empty($_FILES["fileToUpload"]["name"])){
         $targetDir = "public/uploads/";
@@ -219,7 +277,7 @@ function imageUpload()
         move_uploaded_file($_FILES["fileToUpload"]["tmp_name"],$targetFile);
         return $targetFile;
     }
-}
+}*/ //régi
 
 function createAccmHandler()
 {

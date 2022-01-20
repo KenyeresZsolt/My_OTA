@@ -61,7 +61,7 @@
                         <h5>Képek a szállásról</h5>
                         <br>
                         <div class="row">
-                            <input class="form-control" style="max-width:25rem;" type="file" name="fileToUpload" id="fileToUpload">
+                            <input class="form-control" style="max-width:25rem;" type="file" name="image[]" id="fileToUpload" multiple>
                         </div>                   
                     </div>
                     <br><hr><br>
