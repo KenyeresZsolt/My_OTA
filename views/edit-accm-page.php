@@ -30,15 +30,15 @@
                             <?php endforeach; ?>
                         </div>
                         <div class="row">
-                            <div style="max-width: 10rem;">
+                            <div style="max-width: 12rem;">
                                 <label for="capacity" class="form-label mt-4">Férőhelyek száma</label>
                                 <input class="form-control form-control-sm" type="text" name="capacity" value="<?= $params['accm']['capacity']?>" autocomplete="off"/>                                        
                             </div>
-                            <div style="max-width: 10rem;">
+                            <div style="max-width: 12rem;">
                                 <label for="rooms" class="form-label mt-4">Szobák száma</label>
                                 <input class="form-control form-control-sm" type="text" name="rooms" value="<?= $params['accm']['rooms']?>" autocomplete="off"/>                                        
                             </div>
-                            <div style="max-width: 11rem;">
+                            <div style="max-width: 12rem;">
                                 <label for="bathrooms" class="form-label mt-4">Fürdőszobák száma</label>
                                 <input class="form-control form-control-sm" type="text" name="bathrooms" value="<?= $params['accm']['bathrooms']?>" autocomplete="off"/>                                        
                             </div>
@@ -59,9 +59,24 @@
                     <br><hr><br>
                     <div class="container">
                         <h5>Képek a szállásról</h5>
+                        <table>
+                            <?php foreach($params['images'] as $image): ?>
+                                <tr>
+                                    <td>
+                                        <div class="img-thumbnail" style="max-width:10vw">
+                                            <img src="<?=$image['path']?>" style="width:100%;vertical-align:middle">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <input class="form-check-input text-center" type="radio"  name="isPrimary" value="<?=$image['id']?>" <?=$image['is_primary'] === "YES" ? "checked" : "" ?>>
+                                    </td>
+                                </tr>
+                                <br>
+                            <?php endforeach; ?>
+                        </table>
                         <br>
                         <div class="row">
-                            <input class="form-control" style="max-width:25rem;" type="file" name="image[]" id="fileToUpload" multiple>
+                            <input class="form-control" style="max-width:25rem;" type="file" name="image[]" id="image" multiple>
                         </div>                   
                     </div>
                     <br><hr><br>

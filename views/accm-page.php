@@ -25,11 +25,43 @@
     </div>
     <div class="card-body">
         <div class="row">
-            <div class="p-3" style="max-width:50vw">
-                <?php if(isset($params['accm']['image'])): ?>
-                    <img class="img-thumbnail" src="<?= $params['accm']['image']?>" alt="<?= $params['accm']['name'] ?>" style="width:100%">
-                <?php endif; ?>
+            <div class="m-3 slideshow-container" style="max-width:50vw;height:35vw">
+                <?php foreach($params['images'] as $image): ?>
+                    <div class="mySlides" style="position:absolute">
+                        <img src="<?=$image['path']?>" class="img-thumbnail" style="width:100%;vertical-align:middle">
+                    </div>
+                <?php endforeach; ?>
+                <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+                <a class="next" onclick="plusSlides(1)">&#10095;</a>
             </div>
+            <script>
+                var slideIndex = 1;
+                showSlides(slideIndex);
+
+                function plusSlides(n) {
+                showSlides(slideIndex += n);
+                }
+
+                function currentSlide(n) {
+                showSlides(slideIndex = n);
+                }
+
+                function showSlides(n) {
+                var i;
+                var slides = document.getElementsByClassName("mySlides");
+                var dots = document.getElementsByClassName("dot");
+                if (n > slides.length) {slideIndex = 1}    
+                if (n < 1) {slideIndex = slides.length}
+                for (i = 0; i < slides.length; i++) {
+                    slides[i].style.display = "none";  
+                }
+                for (i = 0; i < dots.length; i++) {
+                    dots[i].className = dots[i].className.replace(" active", "");
+                }
+                slides[slideIndex-1].style.display = "block";  
+                dots[slideIndex-1].className += " active";
+                }
+            </script>
             <div class="p-3 col-md-4">
                 <div class="card border-primary mb-3">
                     <div class="card-header">Cím</div>

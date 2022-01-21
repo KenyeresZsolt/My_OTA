@@ -6,23 +6,32 @@ function editAccmHandler($urlParams)
 
     $pdo = getConnection();
     $statement = $pdo->prepare(
-        'SELECT p.*, at.name type, u.name modified_by_user_name
-        FROM accms p
-        LEFT JOIN accm_types at ON at.type_code = p.accm_type
-        LEFT JOIN users u ON u.id = p.last_modified_by_user_id
-        WHERE p.slug = ?'
+        'SELECT a.*, at.name type, u.name modified_by_user_name
+        FROM accms a
+        LEFT JOIN accm_types at ON at.type_code = a.accm_type
+        LEFT JOIN users u ON u.id = a.last_modified_by_user_id
+        WHERE a.slug = ?'
     );
     $statement->execute([$urlParams['accmSlug']]);
     $accm = $statement->fetch(PDO::FETCH_ASSOC);
     $address = json_decode($accm['address'], true);
     $languages = json_decode($accm['languages'], true);
     $facilities = json_decode($accm['facilities'], true);
+
+    $statement = $pdo->prepare(
+        'SELECT *
+        FROM accm_images ai
+        WHERE ai.accm_id = ?'
+    );
+    $statement->execute([$accm['id']]);
+    $images = $statement->fetchAll(PDO::FETCH_ASSOC);
     
     echo render("wrapper.php", [
         'content' => render('accm-settings-page.php', [
             'settingsContent' => render('edit-accm-page.php', [
                 'info' => $_GET['info'] ?? NULL,
                 'accm' => $accm,
+                'images' => $images ?? NULL,
                 'address' => $address,
                 'languages' => $languages,
                 'facilities' => $facilities,
@@ -103,6 +112,35 @@ function updateAccmHandler($urlParams)
 
     generateUpdateSql($table, $columns, $conditions, $execute);
     imageUploadHandler($urlParams['accmId']);
+
+    $primaryImageId = $_POST['isPrimary'];
+    $table = 'accm_images';
+    $columns = [
+        'is_primary',
+    ];
+    $conditions = ['id ='];
+    $execute = [
+        "YES",
+        $primaryImageId,
+    ];
+    generateUpdateSql($table, $columns, $conditions, $execute);
+
+    $table = 'accm_images';
+    $columns = [
+        'is_primary',
+    ];
+    $conditions = [
+        'id <>',
+        'accm_id ='
+    ];
+    $execute = [
+        NULL,
+        $primaryImageId,
+        $urlParams['accmId']
+    ];
+    generateUpdateSql($table, $columns, $conditions, $execute);
+
+
 
     urlRedirect('szallasok/' . $slug . "/beallitasok/adatok", [
         'info'=> 'updated'

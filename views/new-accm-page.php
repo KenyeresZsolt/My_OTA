@@ -23,15 +23,15 @@
                             <?php endforeach; ?>
                         </div>
                         <div class="row">
-                            <div style="max-width: 10rem;">
+                            <div style="max-width: 12rem;">
                                 <label for="capacity" class="form-label mt-4">Férőhelyek száma</label>
                                 <input class="form-control form-control-sm" type="text" name="capacity" autocomplete="off"/>                                        
                             </div>
-                            <div style="max-width: 10rem;">
+                            <div style="max-width: 12rem;">
                                 <label for="rooms" class="form-label mt-4">Szobák száma</label>
                                 <input class="form-control form-control-sm" type="text" name="rooms" autocomplete="off"/>                                        
                             </div>
-                            <div style="max-width: 11rem;">
+                            <div style="max-width: 12rem;">
                                 <label for="bathrooms" class="form-label mt-4">Fördőszobák száma</label>
                                 <input class="form-control form-control-sm" type="text" name="bathrooms" autocomplete="off"/>                                        
                             </div>
@@ -54,7 +54,7 @@
                         <h5>Képek a szállásról</h5>
                         <br>
                         <div class="row">
-                            <input class="form-control" style="max-width:25rem;" type="file" name="fileToUpload" id="fileToUpload">
+                            <input class="form-control" style="max-width:25rem;" type="file" name="image[]" id="image" multiple>
                         </div>             
                     </div>
                     <br><hr><br>

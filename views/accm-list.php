@@ -39,9 +39,11 @@
                 <hr>
                 <div>
                     <label for="price" class="form-label">Ár</label><br>
-                    <input class="form-control-sm" style="max-width: 3.5rem" type="text" name="minPrice" placeholder="min" value="<?= $params['minPriceFilter']?>" autocomplete="off">
-                    -
-                    <input class="form-control-sm" style="max-width: 3.5rem" type="text" name="maxPrice" placeholder="max" value="<?= $params['maxPriceFilter']?>" autocomplete="off">
+                    <div class="row">
+                        <input class="form-control" style="max-width: 4rem" type="text" name="minPrice" placeholder="min" value="<?= $params['minPriceFilter']?>" autocomplete="off">
+                         - 
+                        <input class="form-control" style="max-width: 4rem" type="text" name="maxPrice" placeholder="max" value="<?= $params['maxPriceFilter']?>" autocomplete="off">
+                    </div>
                 </div>
                 <hr>
                 <p>Szolgáltatások</p>
@@ -82,10 +84,15 @@
                 <?php echo $accm['name'] . " " . $accm['location'];?>
             </div>
             <div class="card-body container-fluid">
-                <div class="align-middle">    
-                    <?php if(isset($accm['image'])): ?>
-                        <img class="img-fluid img-thumbnail" src="<?php echo $accm['image']?>" alt="<?php echo $accm['name'] ?>" style="width:318px">
-                    <?php endif; ?>
+                <div class="align-middle">
+                    <img class="img-fluid img-thumbnail" src="
+                    <?php foreach($params['images'] as $image){
+                        if($image['accm_id'] === $accm['id']){
+                            echo $image['path'];
+                        }
+                        }
+                    ?>" 
+                    alt="<?php echo $accm['name'] ?>" style="width:318px">
                 </div>
                 <br>
                 <br>

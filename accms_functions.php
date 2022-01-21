@@ -101,9 +101,18 @@ function accmListHandler()
     $statement->execute($param);
     $accms = $statement->fetchAll(PDO::FETCH_ASSOC);
 
+    $statement = $pdo->prepare(
+        "SELECT *
+        FROM accm_images ai
+        WHERE ai.is_primary = 'YES'"
+    );
+    $statement->execute();
+    $images = $statement->fetchAll(PDO::FETCH_ASSOC);
+
     echo render('wrapper.php', [
         'content' => render("accm-list.php", [
             'accms' => $accms,
+            'images' => $images,
             'accmTypes' => getAccmTypes(),
             'accmFacilities' => getAccmFacilities(),
             'accmLangs' => getAccmLangs(),
@@ -243,7 +252,7 @@ function saveImage($image)
 
 function imageUploadHandler($accmId)
 {
-    if(!empty($_FILES["image"]["name"])){
+    if(!empty($_FILES["image"]["name"]['0'])){
         $images = transformToSingleImages($_FILES["image"]);
         $targetFiles = [];
         foreach($images as $image){
@@ -289,6 +298,10 @@ function createAccmHandler()
         ]);
     }
 
+    /*echo "<pre>";
+    var_dump($_FILES["image"]);
+    exit;*/
+
     $slug = strtolower(slugify($_POST["name"] . "-" . $_POST["location"]));
 
     $table = "accms";
@@ -305,7 +318,6 @@ function createAccmHandler()
         'facilities', 
         'description', 
         'languages', 
-        //'image', 
         'contact_name', 
         'email', 
         'phone', 
@@ -324,7 +336,6 @@ function createAccmHandler()
         json_encode($_POST['facilities'], true) ?? NULL,
         $_POST['description'] ?? NULL,
         json_encode($_POST['languages'], true) ?? NULL,
-        //imageUpload() ?? NULL,
         $_POST["contactName"] ?? NULL,
         $_POST["contactEmail"] ?? NULL,
         $_POST["contactPhone"] ?? NULL,
@@ -333,7 +344,7 @@ function createAccmHandler()
 
     $id = generateInsertSql($table, $columns, $execute);
 
-    if(!empty($_FILES["fileToUpload"]["name"])){
+    if(!empty($_FILES["image"]["name"]['0'])){
         $table = "accm_images";
         $columns = [
             'accm_id',
@@ -342,7 +353,7 @@ function createAccmHandler()
         ];
         $execute = [
             $id,
-            imageUpload(),
+            imageUploadHandler($id),
             time(),
         ];
         generateInsertSql($table, $columns, $execute);
@@ -411,6 +422,18 @@ function accmPageHandler($urlParams)
 
     $statement = $pdo->prepare(
         'SELECT *
+        FROM accm_images ai
+        WHERE ai.accm_id = ?'
+    );
+    $statement->execute([$accm['id']]);
+    $images = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+    /*echo "<pre>";
+    var_dump($images);
+    exit;*/
+
+    $statement = $pdo->prepare(
+        'SELECT *
         FROM accm_units
         WHERE accm_id = ?'
     );
@@ -436,6 +459,7 @@ function accmPageHandler($urlParams)
     echo render("wrapper.php", [
         "content" => render("accm-page.php", [
             "accm" => $accm,
+            "images" =>$images,
             "units" => $units,
             "address" => json_decode($accm['address'], true),
             "languages" => json_decode($accm['languages'], true),
