@@ -71,7 +71,6 @@
                                         <input class="form-check-input text-center" type="radio"  name="isPrimary" value="<?=$image['id']?>" <?=$image['is_primary'] === "YES" ? "checked" : "" ?>>
                                     </td>
                                 </tr>
-                                <br>
                             <?php endforeach; ?>
                         </table>
                         <br>
