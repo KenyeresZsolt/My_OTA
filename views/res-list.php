@@ -43,9 +43,8 @@
                         <div class="btn-group">
                             <a href="/foglalasok/<?= $reservation['id'] ?>">
                                 <button class="btn btn-sm btn-warning">Megnyit</button>
-                            </a>
-                        
-                            <form action="/delete-reservation?id=<?php echo $user["id"] ?>" method="post">
+                            </a>                        
+                            <form action="/delete-reservation/<?= $reservation["id"] ?>" method="post">
                                 <button type="submit" class="btn btn-sm btn-danger">X</button>
                             </form>
                         </div>

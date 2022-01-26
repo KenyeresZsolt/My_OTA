@@ -104,7 +104,7 @@ function reservedMeals($accmId, $resMeals, $nights, $totalGuests)
         if($accmMeals[$meal['value']] !== "PAYABLE"){
             $reservedMeals[$meal['value']] = $accmMeals[$meal['value']];
         }
-        elseif($accmMeals[$meal['value']] === "PAYABLE" AND @in_array($meal['value'], @$resMeals)){
+        elseif($accmMeals[$meal['value']] === "PAYABLE" AND in_array($meal['value'], $resMeals)){
             $reservedMeals[$meal['value']] = $accmMeals[$meal['value'] . "_price"]*$nights*$totalGuests;
         }
     }
@@ -375,6 +375,11 @@ function reservationPageHandler($urlParams)
         $reservedWellnessDescription = reservedWellnessDescription($reservation['reserved_accm_id'], $fullConfig['wellness'], $reservation['nights'], $totalGuests);
     }
 
+    echo "<pre>";
+    var_dump($reservedMealsDescription);
+    var_dump($fullConfig['meals']);
+    exit;
+
     echo render("wrapper.php", [
         'content' => render('res-page.php', [
             'reservation' => $reservation,
@@ -438,7 +443,7 @@ function cancelReservationHandler()
     ]);
 }
 
-function deleteReservationHandler()
+function deleteReservationHandler($urlParams)
 {
     redirectToLoginIfNotLoggedIn();
 
@@ -447,7 +452,7 @@ function deleteReservationHandler()
         'DELETE FROM reservations
         WHERE id = ?'
     );
-    $statement->execute([$_GET['id']]);
+    $statement->execute([$urlParams['resId']]);
 
     urlRedirect('foglalasok', [
         'info' => 'deleted'
