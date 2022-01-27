@@ -50,26 +50,55 @@
                     <li><?= $params['reservation']['adults'] . " felnőtt"?><?= $params['reservation']['children']>0 ? " és " . $params['reservation']['children'] . " gyerek" : ""?></li>
                     <li><?= $params['reservation']['nights'] ?> éjszaka</li>
                 </ul>
-                <p>Lefoglalt szobák:</p>
+                <hr style="border: 1px dashed white">
+                <h4>Lefoglalt szobák:</h4>
                 <ul>
                     <?php foreach($params['unitsDescription'] as $unitDescription): ?>
                         <li><?= $unitDescription ?></li>
                     <?php endforeach;?>
                 </ul>
+                <?php if($params['priceDetails']['originalRoomPrice'] !== $params['priceDetails']['finalRoomPrice']): ?>
+                    <p>Kedvezmények:</p>
+                    <ul>
+                        <?= $params['priceDetails']['childrenRoomDiscountValue']>0 ? "<li>Gyerekkedvezmény: <span class='badge rounded-pill bg-success'>-" . $params['priceDetails']['childrenRoomDiscountValue'] . " lej</span></li>" : "" ?>
+                        <?= $params['priceDetails']['groupDiscountValue']>0 ? "<li>Csoportkedvezmény: <span class='badge rounded-pill bg-success'>-" . $params['priceDetails']['groupDiscountValue'] . " lej</span></li>" : "" ?>
+                        <?= $params['priceDetails']['earlyBookingDiscountValue']>0 ? "<li>Early Booking kedvezmény: <span class='badge rounded-pill bg-success'>-" . $params['priceDetails']['earlyBookingDiscountValue'] . " lej</span></li>" : "" ?>
+                        <?= $params['priceDetails']['lastMinuteDiscountValue']>0 ? "<li>Last Minute kedvezmény: <span class='badge rounded-pill bg-success'>-" . $params['priceDetails']['lastMinuteDiscountValue'] . " lej</span></li>" : "" ?>
+                    </ul>
+                <?php endif; ?>
+                <h5>Összesen: <?=$params['priceDetails']['originalRoomPrice'] !== $params['priceDetails']['finalRoomPrice'] ? "<span class='badge rounded-pill bg-secondary'><s>" . $params['priceDetails']['originalRoomPrice'] . " lej</s></span> <span class='badge rounded-pill bg-primary'>" . $params['priceDetails']['finalRoomPrice'] . " lej</span>" : "<span class='badge rounded-pill bg-primary'>" . $params['priceDetails']['finalRoomPrice'] . " lej</span>" ?></h5>
+                <hr style="border: 1px dashed white">
                 <?php if(!empty($params['mealsDescription'])): ?>
-                    <p>Étkezés:</p>
+                    <h4>Étkezés:</h4>
                     <ul>
                         <?php foreach($params['mealsDescription'] as $mealDescription): ?>
                             <li><?=$mealDescription?></li>
                         <?php endforeach;?>
                     </ul>
+                    <?php if($params['priceDetails']['originalMealPrice'] !== $params['priceDetails']['finalMealPrice']): ?>
+                    <p>Kedvezmények:</p>
+                    <ul>
+                        <?= $params['priceDetails']['childrenMealDiscountValue']>0 ? "<li>Gyerekkedvezmény: <span class='badge rounded-pill bg-success'>-" . $params['priceDetails']['childrenMealDiscountValue'] . " lej</span></li>" : "" ?>
+                    </ul>
+                <?php endif; ?>
+                    <h5>Összesen: <?=$params['priceDetails']['originalMealPrice'] !== $params['priceDetails']['finalMealPrice'] ? "<span class='badge rounded-pill bg-secondary'><s>" . $params['priceDetails']['originalMealPrice'] . " lej</s></span> <span class='badge rounded-pill bg-primary'>" . $params['priceDetails']['finalMealPrice'] . " lej</span>" : "<span class='badge rounded-pill bg-primary'>" . $params['priceDetails']['finalMealPrice'] . " lej</span>" ?></h5>
+                    <hr style="border: 1px dashed white">
                 <?php endif; ?>
                 <?php if(!is_null($params['wellnessDescription']) OR !empty($params['wellnessDescription'])): ?>
-                    <p>Wellness:</p>
+                    <h4>Wellness:</h4>
                     <ul>
                         <li><?=$params['wellnessDescription']?></li>
                     </ul>
+                    <?php if($params['priceDetails']['originalWellnessPrice'] !== $params['priceDetails']['finalWellnessPrice']): ?>
+                    <p>Kedvezmények:</p>
+                    <ul>
+                        <?= $params['priceDetails']['childrenWellnessDiscountValue']>0 ? "<li>Gyerekkedvezmény: <span class='badge rounded-pill bg-success'>-" . $params['priceDetails']['childrenWellnessDiscountValue'] . " lej</span></li>" : "" ?>
+                    </ul>
                 <?php endif; ?>
+                    <h5>Összesen: <?=$params['priceDetails']['originalWellnessPrice'] !== $params['priceDetails']['finalWellnessPrice'] ? "<span class='badge rounded-pill bg-secondary'><s>" . $params['priceDetails']['originalWellnessPrice'] . " lej</s></span> <span class='badge rounded-pill bg-primary'>" . $params['priceDetails']['finalWellnessPrice'] . " lej</span>" : "<span class='badge rounded-pill bg-primary'>" . $params['priceDetails']['finalWellnessPrice'] . " lej</span>" ?></h5>
+                    <hr style="border: 1px dashed white">
+                <?php endif; ?>
+                <h4>Fizetendő összeg: <?=$params['priceDetails']['totalOriginalPrice'] !== $params['priceDetails']['totalFinalPrice'] ? "<span class='badge rounded-pill bg-secondary'><s>" . $params['priceDetails']['totalOriginalPrice'] . " lej</s></span> <span class='badge rounded-pill bg-primary'>" . $params['priceDetails']['totalFinalPrice'] . " lej</span>" : "<span class='badge rounded-pill bg-primary'>" . $params['priceDetails']['totalFinalPrice'] . " lej</span>" ?></h4>
             </div>
         </div>
     </div>

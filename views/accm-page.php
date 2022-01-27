@@ -116,6 +116,14 @@
             <div class="alert alert-danger mb-3 text-center" id="infoMessage">
                 Válassz ki legalább egy szobát!
             </div>
+        <?php elseif($params['info'] === "tooMuchRooms"): ?>
+            <div class="alert alert-danger mb-3 text-center" id="infoMessage">
+                Túl sok szobát választottál ki!
+            </div>
+        <?php elseif($params['info'] === "lowCapacity"): ?>
+            <div class="alert alert-danger mb-3 text-center" id="infoMessage">
+                Kevés férőhely. Válassz ki több szobát vagy kevesebb személyt!
+            </div>
         <?php endif; ?>
         <div class="card border-primary mb-3">
             <div class="card-header">Árak</div>
@@ -135,7 +143,6 @@
                             <td class="text-center small" style="width: 20rem;">
                                 <?= $unit['capacity_per_unit']?> főnek, 1 éjszakára
                             </td>
-
                         </tr>
                     <?php endforeach; ?>
                     <?php foreach($params['meals'] as $meal): ?>
@@ -173,9 +180,71 @@
                     </tr>
                     <?php endif; ?>
                 </table>
+                <button type="submit" formaction="/calculate-price/<?= $params['accm']["id"] ?>" class="btn btn-sm btn-secondary float-end">Ár számítása</button>
             </div>
         </div>
         <hr>
+        <?php if($params['info'] === "calculatePrice"): ?>
+            <div class="card border-success bg-light mb-3" id="calcPrice">
+                <div class="card-header">Ár becslése</div>
+                <div class="card-body">
+                    <h4>Szobák:</h4>
+                    <ul>
+                        <?php foreach($params['resDetails']['unitsDescription'] as $unitDescription): ?>
+                            <li><?= $unitDescription ?></li>
+                        <?php endforeach;?>
+                    </ul>
+                    <?php if($params['resDetails']['priceDetails']['originalRoomPrice'] !== $params['resDetails']['priceDetails']['finalRoomPrice']): ?>
+                        <p>Kedvezmények:</p>
+                        <ul>
+                            <?= $params['resDetails']['priceDetails']['childrenRoomDiscountValue']>0 ? "<li>Gyerekkedvezmény: <span class='badge rounded-pill bg-success'>-" . $params['resDetails']['priceDetails']['childrenRoomDiscountValue'] . " lej</span></li>" : "" ?>
+                            <?= $params['resDetails']['priceDetails']['groupDiscountValue']>0 ? "<li>Csoportkedvezmény: <span class='badge rounded-pill bg-success'>-" . $params['resDetails']['priceDetails']['groupDiscountValue'] . " lej</span></li>" : "" ?>
+                            <?= $params['resDetails']['priceDetails']['earlyBookingDiscountValue']>0 ? "<li>Early Booking kedvezmény: <span class='badge rounded-pill bg-success'>-" . $params['resDetails']['priceDetails']['earlyBookingDiscountValue'] . " lej</span></li>" : "" ?>
+                            <?= $params['resDetails']['priceDetails']['lastMinuteDiscountValue']>0 ? "<li>Last Minute kedvezmény: <span class='badge rounded-pill bg-success'>-" . $params['resDetails']['priceDetails']['lastMinuteDiscountValue'] . " lej</span></li>" : "" ?>
+                        </ul>
+                    <?php endif; ?>
+                    <h5>Összesen: <?=$params['resDetails']['priceDetails']['originalRoomPrice'] !== $params['resDetails']['priceDetails']['finalRoomPrice'] ? "<span class='badge rounded-pill bg-secondary'><s>" . $params['resDetails']['priceDetails']['originalRoomPrice'] . " lej</s></span> <span class='badge rounded-pill bg-primary'>" . $params['resDetails']['priceDetails']['finalRoomPrice'] . " lej</span>" : "<span class='badge rounded-pill bg-primary'>" . $params['resDetails']['priceDetails']['finalRoomPrice'] . " lej</span>" ?></h5>
+                    <hr style="border: 1px dashed white">
+                    <?php if(!empty($params['resDetails']['mealsDescription'])): ?>
+                        <h4>Étkezés:</h4>
+                        <ul>
+                            <?php foreach($params['resDetails']['mealsDescription'] as $mealDescription): ?>
+                                <li><?=$mealDescription?></li>
+                            <?php endforeach;?>
+                        </ul>
+                        <?php if($params['resDetails']['priceDetails']['originalMealPrice'] !== $params['resDetails']['priceDetails']['finalMealPrice']): ?>
+                            <p>Kedvezmények:</p>
+                            <ul>
+                                <?= $params['resDetails']['priceDetails']['childrenMealDiscountValue']>0 ? "<li>Gyerekkedvezmény: <span class='badge rounded-pill bg-success'>-" . $params['resDetails']['priceDetails']['childrenMealDiscountValue'] . " lej</span></li>" : "" ?>
+                            </ul>
+                        <?php endif; ?>
+                        <h5>Összesen: <?=$params['resDetails']['priceDetails']['originalMealPrice'] !== $params['resDetails']['priceDetails']['finalMealPrice'] ? "<span class='badge rounded-pill bg-secondary'><s>" . $params['resDetails']['priceDetails']['originalMealPrice'] . " lej</s></span> <span class='badge rounded-pill bg-primary'>" . $params['resDetails']['priceDetails']['finalMealPrice'] . " lej</span>" : "<span class='badge rounded-pill bg-primary'>" . $params['resDetails']['priceDetails']['finalMealPrice'] . " lej</span>" ?></h5>
+                        <hr style="border: 1px dashed white">
+                    <?php endif; ?>
+                    <?php if(!is_null($params['resDetails']['wellnessDescription']) OR !empty($params['resDetails']['wellnessDescription'])): ?>
+                        <h4>Wellness:</h4>
+                        <ul>
+                            <li><?=$params['resDetails']['wellnessDescription']?></li>
+                        </ul>
+                        <?php if($params['resDetails']['priceDetails']['originalWellnessPrice'] !== $params['resDetails']['priceDetails']['finalWellnessPrice']): ?>
+                        <p>Kedvezmények:</p>
+                        <ul>
+                            <?= $params['resDetails']['priceDetails']['childrenWellnessDiscountValue']>0 ? "<li>Gyerekkedvezmény: <span class='badge rounded-pill bg-success'>-" . $params['resDetails']['priceDetails']['childrenWellnessDiscountValue'] . " lej</span></li>" : "" ?>
+                        </ul>
+                    <?php endif; ?>
+                        <h5>Összesen: <?=$params['resDetails']['priceDetails']['originalWellnessPrice'] !== $params['resDetails']['priceDetails']['finalWellnessPrice'] ? "<span class='badge rounded-pill bg-secondary'><s>" . $params['resDetails']['priceDetails']['originalWellnessPrice'] . " lej</s></span> <span class='badge rounded-pill bg-primary'>" . $params['resDetails']['priceDetails']['finalWellnessPrice'] . " lej</span>" : "<span class='badge rounded-pill bg-primary'>" . $params['resDetails']['priceDetails']['finalWellnessPrice'] . " lej</span>" ?></h5>
+                        <hr style="border: 1px dashed white">
+                    <?php endif; ?>
+                    <h4>Végösszeg: <?=$params['resDetails']['priceDetails']['totalOriginalPrice'] !== $params['resDetails']['priceDetails']['totalFinalPrice'] ? "<span class='badge rounded-pill bg-secondary'><s>" . $params['resDetails']['priceDetails']['totalOriginalPrice'] . " lej</s></span> <span class='badge rounded-pill bg-primary'>" . $params['resDetails']['priceDetails']['totalFinalPrice'] . " lej</span>" : "<span class='badge rounded-pill bg-primary'>" . $params['resDetails']['priceDetails']['totalFinalPrice'] . " lej</span>" ?></h4>
+                    <a href="/szallasok/<?=$params['accm']['slug'] ?>">
+                        <button type="button" class="btn btn-sm btn-outline-danger float-end">Mégse</button>
+                    </a>
+                    <br>
+                    <h6 class="text-center">&darr; Megfelel? Foglald le most! &darr;</h6>
+                </div>
+            </div>
+            <hr>
+        <?php endif; ?>
         <?php if($params['info'] === "emptyContact"): ?>
             <div class="alert alert-danger mb-3 text-center" id="infoMessage">
                 Add meg az adataidat!

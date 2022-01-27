@@ -155,7 +155,7 @@
                                 <label for="rooms" class="form-label mt-4">Szobák száma</label>
                                 <input class="form-control form-control-sm" type="text" name="roomsCount" autocomplete="off"/>                                        
                             </div>
-                            <div style="max-width: 11rem;">
+                            <div style="max-width: 12rem;">
                                 <label for="bathrooms" class="form-label mt-4">Fördőszobák száma</label>
                                 <input class="form-control form-control-sm" type="text" name="bathroomsCount" autocomplete="off"/>                                        
                             </div>

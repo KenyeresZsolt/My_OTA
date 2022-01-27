@@ -6,12 +6,30 @@ function dateDifference($checkout, $checkin)
     return ceil(abs($diff/86400));
 }
 
+function getCapacity($input, $accmId)
+{
+    $pdo = getConnection();
+    $statement = $pdo->prepare(
+        'SELECT *
+        FROM accm_units au
+        WHERE au.accm_id = ?');
+    $statement->execute([$accmId]);
+    $units = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+    $capacity = 0;
+    foreach($units as $unit){
+        $capacity += $unit['capacity_per_unit']*$input[$unit['id']];
+    }
+    return $capacity;
+}
+
 function calculatePrice($input, $accmId)
 {   
     $roomPrice = 0;
     $mealPrice = 0;
     $wellnessPrice = 0;
 
+    $daysTillCheckin = dateDifference($input['checkin'], date("Y-m-d"));
     $nights = dateDifference($input['checkout'], $input['checkin']);
     $guests = $input['adults']+$input['children'];
     
@@ -23,9 +41,69 @@ function calculatePrice($input, $accmId)
     $statement->execute([$accmId]);
     $units = $statement->fetchAll(PDO::FETCH_ASSOC);
 
+    $statement = $pdo->prepare(
+        'SELECT *
+        FROM accm_discounts ad
+        WHERE ad.accm_id = ?');
+    $statement->execute([$accmId]);
+    $discounts = $statement->fetch(PDO::FETCH_ASSOC);
+
     foreach($units as $unit){
-        $roomPrice += $unit['price']*$input['rooms'][$unit['id']];
+        $roomPrice += $unit['price']*$input['rooms'][$unit['id']]*$nights;
     }
+
+    $priceDetails = [
+        'originalRoomPrice' => 0,
+        'childrenRoomDiscountValue' => 0,
+        'groupDiscountValue' => 0,
+        'earlyBookingDiscountValue' => 0,
+        'lastMinuteDiscountValue' => 0,
+        'finalRoomPrice' => 0,
+        'originalMealPrice' => 0,
+        'childrenMealDiscountValue'=> 0,
+        'finalMealPrice' => 0,
+        'originalWellnessPrice' => 0,
+        'childrenWellnessDiscountValue' => 0,
+        'finalWellnessPrice' => 0,
+        'totalOriginalPrice' => 0,
+        'totalFinalPrice' => 0,
+    ];
+
+    $originalRoomPrice = $roomPrice;
+    $priceDetails['originalRoomPrice'] = $originalRoomPrice;
+
+    if($discounts['children_discount'] === "YES" AND $discounts['children_discount_for_accm'] === "YES"){
+        $adultRoomPrice = $roomPrice/$guests*$input['adults'];
+        $childrenRoomPrice = $roomPrice/$guests*$input['children'];
+        $childrenRoomPrice = $childrenRoomPrice*(100-$discounts['children_discount_percent'])/100;
+        $original = $roomPrice;
+        $roomPrice = $adultRoomPrice+$childrenRoomPrice;
+        $childrenDiscount = $original-$roomPrice;
+        $priceDetails['childrenRoomDiscountValue'] = $childrenDiscount;
+    }
+
+    if($discounts['group_discount'] === "YES" AND $guests >= $discounts['group_person_number']){
+        $original = $roomPrice;
+        $roomPrice = $roomPrice*(100-$discounts['group_discount_percent'])/100;
+        $groupDiscount = $original-$roomPrice;
+        $priceDetails['groupDiscountValue'] = $groupDiscount;
+    }
+
+    if($discounts['early_booking_discount'] === "YES" AND $daysTillCheckin >= $discounts['early_booking_days']){
+        $original = $roomPrice;
+        $roomPrice = $roomPrice*(100-$discounts['early_booking_discount_percent'])/100;
+        $earlyBookingDiscount = $original-$roomPrice;
+        $priceDetails['earlyBookingDiscountValue'] = $earlyBookingDiscount;
+    }
+
+    if($discounts['last_minute_discount'] === "YES" AND $daysTillCheckin <= $discounts['last_minute_days']){
+        $original = $roomPrice;
+        $roomPrice = $roomPrice*(100-$discounts['last_minute_discount_percent'])/100;
+        $lastMinuteDiscount = $original-$roomPrice;
+        $priceDetails['lastMinuteDiscountValue'] = $lastMinuteDiscount;
+    }
+
+    $priceDetails['finalRoomPrice'] = $roomPrice;
 
     if(isset($input['meals'])){
         $statement = $pdo->prepare(
@@ -37,8 +115,21 @@ function calculatePrice($input, $accmId)
         $meals = $statement->fetch(PDO::FETCH_ASSOC);
 
         foreach($input['meals'] as $meal){
-            $mealPrice += $meals[$meal . "_price"]*$guests;
+            $mealPrice += $meals[$meal . "_price"]*$guests*$nights;
         }
+
+        $originalMealPrice = $mealPrice;
+        $priceDetails['originalMealPrice'] = $originalMealPrice;
+
+        if($discounts['children_discount'] === "YES" AND $discounts['children_discount_for_meals'] === "YES"){
+            $adultMealPrice = $mealPrice/$guests*$input['adults'];
+            $childrenMealPrice = $mealPrice/$guests*$input['children'];
+            $childrenMealPrice = $childrenMealPrice*(100-$discounts['children_discount_percent'])/100;
+            $mealPrice = $adultMealPrice+$childrenMealPrice;
+            $mealDiscount = $originalMealPrice-$mealPrice;
+            $priceDetails['childrenMealDiscountValue'] = $mealDiscount;
+        }
+        $priceDetails['finalMealPrice'] = $mealPrice;
     }
 
     if(isset($input['wellness'])){
@@ -50,11 +141,30 @@ function calculatePrice($input, $accmId)
         $statement->execute([$accmId]);
         $wellness = $statement->fetch(PDO::FETCH_ASSOC);
         
-        $wellnessPrice = $guests*$wellness['wellness_price'];
+        $wellnessPrice = $wellness['wellness_price']*$guests*$nights;
+
+        $originalWellnessPrice = $wellnessPrice;
+        $priceDetails['originalWellnessPrice'] = $originalWellnessPrice;
+
+        if($discounts['children_discount'] === "YES" AND $discounts['children_discount_for_wellness'] === "YES"){
+            $adultWellnessPrice = $wellnessPrice/$guests*$input['adults'];
+            $childrenWellnessPrice = $wellnessPrice/$guests*$input['children'];
+    
+            $childrenWellnessPrice = $childrenWellnessPrice*(100-$discounts['children_discount_percent'])/100;
+            $wellnessPrice = $adultWellnessPrice+$childrenWellnessPrice;
+            $wellnessDiscount = $originalWellnessPrice-$wellnessPrice;
+            $priceDetails['childrenWellnessDiscountValue'] = $wellnessDiscount;
+        }
+        $priceDetails['finalWellnessPrice'] = $wellnessPrice;
     }
 
-    $totalPricePerNight = $roomPrice+$mealPrice+$wellnessPrice;
-    return $totalPricePerNight*$nights;    
+    $totalOriginalPrice = $originalRoomPrice+($originalMealPrice ?? 0)+($originalWellnessPrice ?? 0);
+    $totalFinalPrice = $roomPrice+$mealPrice+$wellnessPrice;
+
+    $priceDetails['totalOriginalPrice'] = $totalOriginalPrice;
+    $priceDetails['totalFinalPrice'] = $totalFinalPrice;
+
+    return $priceDetails;    
 }
 
 function reservedRoomsDescription($accmId, $resRooms, $nights)
@@ -115,9 +225,8 @@ function reservedMeals($accmId, $resMeals, $nights, $totalGuests)
 function reservedMealsDescription($accmId, $resMeals, $nights, $totalGuests)
 {
     $meals = getServicesByCategory('meal');
-    $reservedMeals = reservedMeals($accmId, $resMeals, $nights, $totalGuests);
     $reservedMealsDescription = [];
-    foreach($reservedMeals as $reservedMeal => $status){
+    foreach($resMeals as $reservedMeal => $status){
         foreach($meals as $meal){
             if($status === "INPRICE"){
                 if($meal['value'] === $reservedMeal){
@@ -167,23 +276,21 @@ function reservedWellness($accmId, $resWellness, $nights, $totalGuests)
 function reservedWellnessDescription($accmId, $resWellness, $nights, $totalGuests)
 
 {
-    $reservedWellness = reservedWellness($accmId, $resWellness, $nights, $totalGuests);
-
     $reservedWellnessDescription = NULL;
-    if($reservedWellness === "INPRICE"){
+    if($resWellness === "INPRICE"){
         $reservedWellnessDescription = "Wellness: Benne van az árban.";
     }
-    elseif(!is_null($reservedWellness)){
-        $reservedWellnessDescription = "Wellness x $totalGuests fő x $nights éj = " . $reservedWellness . " lej";
+    elseif(!is_null($resWellness)){
+        $reservedWellnessDescription = "Wellness x $totalGuests fő x $nights éj = " . $resWellness . " lej";
     }
     return $reservedWellnessDescription;
 }
 
-function reserveAccmHandler($urlParams)
+function generateReservationDetails($input, $accmId)
 {
-    $reservedAccmId = $urlParams['accmId'];
-
-    $totalRooms = array_sum($_POST['rooms']);
+    $totalRooms = array_sum($input['rooms']);
+    $totalGuests = $input['adults'] + $input['children'];
+    $capacity = getCapacity($input['rooms'], $accmId);
            
     $pdo = getConnection();
     $statement = $pdo->prepare(
@@ -191,66 +298,119 @@ function reserveAccmHandler($urlParams)
         FROM accms a
         WHERE a.id = ?'
     );
-    $statement->execute([$reservedAccmId]);
+    $statement->execute([$accmId]);
     $accm = $statement->fetch(PDO::FETCH_ASSOC);
 
-    if (empty($_POST["checkin"])
-        OR empty($_POST["checkout"])
-        OR empty($_POST["adults"])
-        OR $_POST["adults"] < 1) {
+    if(empty($input["checkin"])
+        OR empty($input["checkout"])
+        OR empty($input["adults"])
+        OR $input["adults"] < 1) {
         urlRedirect('szallasok/' . $accm['slug'], [
-            'res' => "1",
             'info' => "emptyData",
-            'values' => base64_encode(json_encode($_POST)),
+            'values' => base64_encode(json_encode($input)),
             'href' => '#infoMessage'
         ]);
     }
     
-    if ($totalRooms === 0){
+    if($totalRooms === 0){
         urlRedirect('szallasok/' . $accm['slug'], [
-            'res' => "1",
             'info' => "emptyRooms",
-            'values' => base64_encode(json_encode($_POST)),
+            'values' => base64_encode(json_encode($input)),
             'href' => '#infoMessage'
         ]);
     }
+
+    if($totalRooms>$totalGuests){
+        urlRedirect('szallasok/' . $accm['slug'], [
+            'info' => "tooMuchRooms",
+            'values' => base64_encode(json_encode($input)),
+            'href' => '#infoMessage'
+        ]);
+    }
+
+    if($capacity<$totalGuests){
+        urlRedirect('szallasok/' . $accm['slug'], [
+            'info' => "lowCapacity",
+            'values' => base64_encode(json_encode($input)),
+            'href' => '#infoMessage'
+        ]);
+    }
+
+    $nights = dateDifference($input["checkout"], $input["checkin"]);
+    $priceDetails = calculatePrice($input, $accmId);
+    $totalPrice = $priceDetails['totalFinalPrice'];
+
+    $reservedUnitsDescription = reservedRoomsDescription($accmId, $input['rooms'], $nights);
     
-    if (empty($_POST["name"]) 
+    $accmMeals = getAccmMeals($accmId);
+    if($accmMeals['meal_offered'] === "YES"){
+        $reservedMeals = reservedMeals($accmId, $input['meals'] ?? NULL, $nights, $totalGuests);
+        $reservedMealsDescription = reservedMealsDescription($accmId, $reservedMeals, $nights, $totalGuests);
+    }
+
+    $accmWellness = getAccmWellness($accmId);
+    if($accmWellness['wellness_offered'] === "YES"){
+        $reservedWellness = reservedWellness($accmId, $input['wellness'] ?? NULL, $nights, $totalGuests);
+        $reservedWellnessDescription = reservedWellnessDescription($accmId, $reservedWellness, $nights, $totalGuests);
+    }
+
+    $resDetails = [
+        'nights' => $nights,
+        'accm' => $accm,
+        'meals' => $reservedMeals ?? NULL,
+        'wellness' => $reservedWellness ?? NULL,
+        'priceDetails' => $priceDetails,
+        'unitsDescription' => $reservedUnitsDescription ?? NULL,
+        'mealsDescription' => $reservedMealsDescription ?? NULL,
+        'wellnessDescription' => $reservedWellnessDescription ?? NULL,
+        'totalPrice' => $totalPrice,
+    ];
+
+    return $resDetails;
+}
+
+function calculatePriceHandler($urlParams)
+{
+    $accmId = $urlParams['accmId'];
+    $resDetails = generateReservationDetails($_POST, $accmId);
+    $accm = $resDetails['accm'];
+
+    /*echo "<pre>";
+    var_dump($resDetails);
+    exit;*/
+
+    urlRedirect('szallasok/' . $accm['slug'], [
+        'info' => "calculatePrice",
+        'values' => base64_encode(json_encode($_POST)),
+        'details' => base64_encode(json_encode($resDetails)),
+        'href' => '#calcPrice'
+    ]);
+}
+
+function reserveAccmHandler($urlParams)
+{
+    $reservedAccmId = $urlParams['accmId'];
+    $resDetails = generateReservationDetails($_POST, $reservedAccmId);
+    $accm = $resDetails['accm'];
+    
+    if(empty($_POST["name"]) 
         OR empty($_POST["email"]) 
         OR empty($_POST["phone"])) {
         urlRedirect('szallasok/' . $accm['slug'], [
-            'res' => "1",
             'info' => "emptyContact",
             'values' => base64_encode(json_encode($_POST)),
             'href' => '#infoMessage'
         ]);
     }
 
-    $nights = dateDifference($_POST["checkout"], $_POST["checkin"]);
-    $totalPrice = calculatePrice($_POST, $urlParams['accmId']);
-    $totalGuests = $_POST['adults'] + $_POST['children'];
-
-    $reservedUnitsDescription = reservedRoomsDescription($reservedAccmId, $_POST['rooms'], $nights);
-    
-    $accmMeals = getAccmMeals($reservedAccmId);
-    if($accmMeals['meal_offered'] === "YES"){
-        $reservedMeals = reservedMeals($reservedAccmId, $_POST['meals'] ?? NULL, $nights, $totalGuests);
-        $reservedMealsDescription = reservedMealsDescription($reservedAccmId, $_POST['meals'] ?? NULL, $nights, $totalGuests);
-    }
-
-    $accmWellness = getAccmWellness($reservedAccmId);
-    if($accmWellness['wellness_offered'] === "YES"){
-        $reservedWellness = reservedWellness($reservedAccmId, $_POST['wellness'] ?? NULL, $nights, $totalGuests);
-        $reservedWellnessDescription = reservedWellnessDescription($reservedAccmId, $_POST['wellness'] ?? NULL, $nights, $totalGuests);
-    }
-
     $fullConfig = [
         'rooms' => $_POST['rooms'],
-        'meals' => $reservedMeals ?? NULL,
-        'wellness' => $reservedWellness ?? NULL,
+        'meals' => $resDetails['meals'],
+        'wellness' => $resDetails['wellness'],
+        'priceDetails' => $resDetails['priceDetails'],
     ];
-      
 
+    $pdo = getConnection();
     $statement = $pdo->prepare(
         'INSERT INTO reservations (name, email, phone, status, reserved, adults, children, checkin, checkout, nights, total_price, reserved_accm_id, full_config)
         VALUES (:name, :email, :phone, :status, :reserved, :adults, :children, :checkin, :checkout, :nights, :total_price, :reserved_accm_id, :full_config)'
@@ -265,8 +425,8 @@ function reserveAccmHandler($urlParams)
         'children' => $_POST['children'],
         'checkin' => $_POST['checkin'],
         'checkout' => $_POST['checkout'],
-        'nights' => $nights,
-        'total_price' => $totalPrice,
+        'nights' => $resDetails['nights'],
+        'total_price' => $resDetails['totalPrice'],
         'reserved_accm_id' => $reservedAccmId,
         'full_config' => json_encode($fullConfig, true) ?? NULL,
     ]);
@@ -282,10 +442,10 @@ function reserveAccmHandler($urlParams)
         'checkin' => $_POST['checkin'],
         'checkout' => $_POST['checkout'],
         'nights' => $nights,
-        'unitsDescription' => $reservedUnitsDescription ?? NULL,
-        'mealsDescription' => $reservedMealsDescription ?? NULL,
-        'wellnessDescription' => $reservedWellnessDescription ?? NULL,
-        'total_price' => $totalPrice,
+        'unitsDescription' => $resDetails['unitsDescription'],
+        'mealsDescription' => $resDetails['mealsDescription'],
+        'wellnessDescription' => $resDetails['wellnessDescription'],
+        'total_price' => $resDetails['totalPrice'],
         'accm' => $accm
     ]);
 
@@ -369,23 +529,20 @@ function reservationPageHandler($urlParams)
     $totalGuests = $reservation['adults']+$reservation['children'];
 
     $reservedUnitsDescription = reservedRoomsDescription($reservation['reserved_accm_id'], $fullConfig['rooms'], $reservation['nights']);
+    if(!is_null($fullConfig['meals'])){
     $reservedMealsDescription = reservedMealsDescription($reservation['reserved_accm_id'], $fullConfig['meals'], $reservation['nights'], $totalGuests);
-    
+    }
     if(!is_null($fullConfig['wellness'])){
         $reservedWellnessDescription = reservedWellnessDescription($reservation['reserved_accm_id'], $fullConfig['wellness'], $reservation['nights'], $totalGuests);
     }
-
-    echo "<pre>";
-    var_dump($reservedMealsDescription);
-    var_dump($fullConfig['meals']);
-    exit;
 
     echo render("wrapper.php", [
         'content' => render('res-page.php', [
             'reservation' => $reservation,
             'unitsDescription' => $reservedUnitsDescription,
-            'mealsDescription' => $reservedMealsDescription,
+            'mealsDescription' => $reservedMealsDescription ?? NULL,
             'wellnessDescription' => $reservedWellnessDescription ?? NULL,
+            'priceDetails' => $fullConfig['priceDetails'],
             'image' => $image,
             'address' => json_decode($reservation['address'], true) ?? NULL,
         ]),

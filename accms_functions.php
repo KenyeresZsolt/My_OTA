@@ -475,7 +475,8 @@ function accmPageHandler($urlParams)
             'isAuthorized' => isLoggedIn(),
             'isAdmin' => isAdmin() ?? NULL,
             'info' => $_GET['info'] ?? NULL,
-            'values' => json_decode(base64_decode($_GET['values'] ?? NULL), true)
+            'values' => json_decode(base64_decode($_GET['values'] ?? NULL), true),
+            'resDetails' => json_decode(base64_decode($_GET['details'] ?? NULL), true)
         ]),
         "isAuthorized" => isLoggedIn(),
         "isAdmin" => isAdmin(),
