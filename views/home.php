@@ -1,11 +1,3 @@
-<input list="brow">
-<datalist id="brow">
-  <option value="Internet Explorer">
-  <option value="Firefox">
-  <option value="Chrome">
-  <option value="Opera">
-  <option value="Safari">
-</datalist> 
 <div class="TM_anim">
     <br>
     <br>

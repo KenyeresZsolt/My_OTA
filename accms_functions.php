@@ -37,6 +37,11 @@ function accmListHandler()
 {
     //szűrő forrása: https://phpdelusions.net/pdo_examples/dynamical_where
 
+    $destFilter = $_GET['destination'] ?? NULL;
+    $checkinFilter = $_GET['ci'] ?? NULL;
+    $checkoutFilter = $_GET['co'] ?? NULL;
+    $adultsFilter = $_GET['adults'] ?? NULL;
+    $childrenFilter = $_GET['children'] ?? NULL;
     $typeFilter = $_GET['t'] ?? NULL;
     $minPriceFilter = $_GET['minPrice'] ?? NULL;
     $maxPriceFilter = $_GET['maxPrice'] ?? NULL;
@@ -55,27 +60,32 @@ function accmListHandler()
     $cond = [];
     $param = [];
 
+    if(!empty($destFilter)){
+        $cond[] = 'a.name = ?';
+        $param[] = $destFilter;
+    }
+
     if(!empty($typeFilter)){
         for($i=0; $i<$cntTypes; $i++){
-            $tcond[] = 'p.accm_type = ?';
+            $tcond[] = 'a.accm_type = ?';
             $param[] = $types[$i];
         }
-        $cond[] = implode(" OR ", $tcond);
+        $cond[] = "(" . implode(" OR ", $tcond) . ")";
     }
 
     if(!empty($minPriceFilter)){
-        $cond[] = 'p.price > ?';
+        $cond[] = 'a.price > ?';
         $param[] = $minPriceFilter;
     }
 
     if(!empty($maxPriceFilter)){
-        $cond[] = 'p.price < ?';
+        $cond[] = 'a.price < ?';
         $param[] = $maxPriceFilter;
     }
 
     if(!empty($facilityFilter)){
         for($i=0; $i<$cntFacilities; $i++){
-            $fcond[] = 'p.facilities LIKE ?';
+            $fcond[] = 'a.facilities LIKE ?';
             $param[] = "%" . $facilities[$i] . "%";
         }
         $cond[] = "(" . implode(" OR ", $fcond) . ")";
@@ -83,18 +93,24 @@ function accmListHandler()
 
     if(!empty($langFilter)){
         for($i=0; $i<$cntLangs; $i++){
-            $lcond[] = 'p.languages LIKE ?';
+            $lcond[] = 'a.languages LIKE ?';
             $param[] = "%" . $langs[$i] . "%";
         }
         $cond[] = "(" . implode(" OR ", $lcond) . ")";
     }
 
-    $sql = "SELECT * from accms p";
+    $sql = "SELECT * from accms a";
 
     if($cond)
     {
         $sql .= " WHERE " . implode(" AND ", $cond);
     }
+
+    /*echo "<pre>";
+    echo $sql . "<br>";
+    var_dump($param);
+    exit;*/
+
 
     $pdo = getConnection();
     $statement = $pdo->prepare($sql);
@@ -116,6 +132,11 @@ function accmListHandler()
             'accmTypes' => getAccmTypes(),
             'accmFacilities' => getAccmFacilities(),
             'accmLangs' => getAccmLangs(),
+            'destFilter' => $destFilter,
+            'checkinFilter' => $checkinFilter,
+            'checkoutFilter' => $checkoutFilter,
+            'adultsFilter'=> $adultsFilter,
+            'childrenFilter' => $childrenFilter,
             'typeFilter' => $typeFilter,
             'minPriceFilter' => $minPriceFilter,
             'maxPriceFilter' => $maxPriceFilter,
@@ -137,6 +158,36 @@ function accmListHandler()
 
 function accmFilterHandler()
 {
+    $destination = $_POST['destination'] ?? NULL;
+
+    if(!empty($destination)){
+        $destUrl = "destination=" . $_POST['destination'] . "&";
+    }
+
+    $checkin = $_POST['checkin'] ?? NULL;
+
+    if(!empty($checkin)){
+        $checkinUrl = "ci=" . $_POST['checkin'] . "&";
+    }
+
+    $checkout = $_POST['checkout'] ?? NULL;
+
+    if(!empty($checkout)){
+        $checkoutUrl = "co=" . $_POST['checkout'] . "&";
+    }
+
+    $adults = $_POST['adults'] ?? NULL;
+
+    if(!empty($adults)){
+        $adultsUrl = "adults=" . $_POST['adults'] . "&";
+    }
+
+    $children = $_POST['children'] ?? NULL;
+
+    if(!empty($children)){
+        $childrenUrl = "children=" . $_POST['children'] . "&";
+    }
+    
     $types = $_POST['type'] ?? NULL;
 
     if(!empty($types)){
@@ -182,7 +233,7 @@ function accmFilterHandler()
     }
 
 
-    $finalUrl = ($typeUrl ?? "") . ($minPirceUrl ?? "") . ($maxPirceUrl ?? "") . ($facilityUrl ?? "") . ($langUrl ?? "");
+    $finalUrl = ($destUrl ?? "") . ($checkinUrl ?? "") . ($checkoutUrl ?? "") . ($adultsUrl ?? "") . ($childrenUrl ?? "") . ($typeUrl ?? "") . ($minPirceUrl ?? "") . ($maxPirceUrl ?? "") . ($facilityUrl ?? "") . ($langUrl ?? "");
     $finalUrl = substr_replace($finalUrl,"",-1);
 
     header('Location: /szallasok?' . $finalUrl);

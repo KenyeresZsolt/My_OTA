@@ -72,29 +72,58 @@
                     </a>
                     <button type="submit" class="btn btn-sm btn-success">Szűrés</button>
                 </div>
-            </form>
         </div>
     </div>
 </div> 
 <div class="row col-md-10">
+    <div class="card border-primary mb-5" style="max-height:6rem">
+        <div class="card-body d-inline-flex">
+            <div class="me-sm-2" style="width: 25rem;">
+                <label for="destination">Úti cél</label>
+                <input class="form-control me-sm-2" type="text" list="destination" name="destination" value="<?= $params['destFilter']?>">
+                    <datalist id="destination">
+                        <?php foreach($params['accms'] as $accm):?>
+                            <option value="<?= $accm['name'] ?>">
+                        <?php endforeach; ?>
+                    </datalist>
+            </div>
+            <div class="me-sm-2" style="max-width: 11rem;">
+                <label for="checkin">Érkezés</label>
+                <input class="form-control" type="date" name="checkin" min="<?= date("Y-m-d"); ?>" value="<?= $params['checkinFilter']?>" autocomplete="off"/>
+            </div>
+            <div class="me-sm-2" style="max-width: 11rem;">
+                <label for="checkout">Távozás</label>
+                <input class="form-control" type="date" name="checkout" min="<?= date("Y-m-d"); ?>" value="<?= $params['checkoutFilter']?>" autocomplete="off"/>
+            </div>
+            <div class="me-sm-2" style="max-width: 6rem;">
+                <label for="guests">Felnőttek</label>
+                <input class="form-control" type="number" name="adults" min="1" value="<?= !is_null($params['adultsFilter']) ? $params['adultsFilter'] : '1' ?>" autocomplete="off"/>
+            </div>
+            <div class="me-sm-2" style="max-width: 6rem;">
+                <label for="guests">Gyerekek</label>
+                <input class="form-control" type="number" name="children" min="0" value="<?= !is_null($params['childrenFilter']) ? $params['childrenFilter'] : '0' ?>" autocomplete="off"/>
+            </div>
+            <button class="btn btn-success mt-auto" type="submit">Keresés</button>
+        </form>
+        </div>
+    </div>
     <p style="max-height:1rem"><?= count($params['accms']) . " találat"?></p>
+    <br>
+    <br>
     <?php foreach($params['accms'] as $accm): ?>
-        <div class="card border-success mb-5 me-auto" id="<?php echo $accm['id']?>" style="width:20rem">
+        <div class="card border-success mb-5" id="<?php echo $accm['id']?>">
             <div class="card-header h4">
                 <?php echo $accm['name'] . " " . $accm['location'];?>
             </div>
             <div class="card-body container-fluid">
-                <div class="align-middle">
-                    <img class="img-fluid img-thumbnail" src="
-                    <?php foreach($params['images'] as $image){
-                        if($image['accm_id'] === $accm['id']){
-                            echo $image['path'];
-                        }
-                        }
-                    ?>" 
-                    alt="<?php echo $accm['name'] ?>" style="width:318px">
-                </div>
-                <br>
+                <img class="img-fluid img-thumbnail" src="
+                <?php foreach($params['images'] as $image){
+                    if($image['accm_id'] === $accm['id']){
+                        echo $image['path'];
+                    }
+                    }
+                ?>" 
+                alt="<?php echo $accm['name'] ?>" style="width:350px">
                 <br>
                 <a href="/szallasok/<?php echo $accm["slug"] ?>">
                     <button class="btn btn-sm btn-outline-success float-end">Részletek</button>

@@ -849,18 +849,20 @@ function deleteUnitHandler($urlParams)
     redirectToLoginIfNotLoggedIn();
     $pdo = getConnection();
     $statement = $pdo->prepare(
+        'SELECT au.*, a.slug
+        FROM accm_units au
+        LEFT JOIN accms a ON au.accm_id = a.id
+        WHERE au.id = ?'
+    );
+    $statement->execute([$urlParams['unitId']]);
+    $unit = $statement->fetch(PDO::FETCH_ASSOC);
+
+    $statement = $pdo->prepare(
         'DELETE FROM accm_units
         WHERE id = ?');
     $statement->execute([$urlParams['unitId']]);
 
-    $statement = $pdo->prepare(
-        'SELECT *
-        FROM accms a'
-    );
-    $statement->execute();
-    $accm = $statement->fetch(PDO::FETCH_ASSOC);
-
-    urlRedirect('szallasok/' . $accm['slug'] . "/beallitasok/szobak", [
+    urlRedirect('szallasok/' . $unit['slug'] . "/beallitasok/szobak", [
         'info' => 'deleted'
     ]);
 
