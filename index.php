@@ -40,6 +40,7 @@ $routes = [
     ['POST', '/add-unit/{accmId}' , 'createUnitHandler'],
     ['POST', '/update-unit/{unitId}' , 'updateUnitHandler'],
     ['POST', '/delete-unit/{unitId}' , 'deleteUnitHandler'],
+    ['POST', '/best-offer/{accmId}', 'calculateBestOfferHandler'],
     ['POST', '/calculate-price/{accmId}' , 'calculatePriceHandler'],
     ['POST', '/reserve-accm/{accmId}' , 'reserveAccmHandler'],
     ['POST', '/update-reservation' , 'updateReservationHandler'],

@@ -25,7 +25,7 @@
     </div>
     <div class="card-body">
         <div class="row">
-            <div class="m-3 slideshow-container" style="max-width:50vw;height:35vw">
+            <div class="m-3 slideshow-container" style="max-width:35rem;height:20rem">
                 <?php foreach($params['images'] as $image): ?>
                     <div class="mySlides" style="position:absolute">
                         <img src="<?=$image['path']?>" class="img-thumbnail" style="width:100%;vertical-align:middle">
@@ -62,7 +62,7 @@
                 dots[slideIndex-1].className += " active";
                 }
             </script>
-            <div class="p-3 col-md-4">
+            <div class="p-3 col-md-5">
                 <div class="card border-primary mb-3">
                     <div class="card-header">Cím</div>
                     <div class="card-body ms-3">
@@ -93,21 +93,24 @@
             <div class="card-body ms-3">
             <form class="form-inline" action="/reserve-accm/<?= $params['accm']["id"] ?>" method="POST" id="resForm">
                 <div class="row">
-                    <div style="max-width: 15rem;">
+                    <div style="max-width: 13rem;">
                         <label for="checkin">Érkezés dátuma</label>
                         <input class="form-control" type="date" name="checkin" min="<?= date("Y-m-d"); ?>" value="<?= $params['values']['checkin'] ?? '' ?>" autocomplete="off"/>
                     </div>
-                    <div style="max-width: 15rem;">
+                    <div style="max-width: 13rem;">
                         <label for="checkout">Távozás dátuma</label>
                         <input class="form-control" type="date" name="checkout" min="<?= date("Y-m-d"); ?>" value="<?= $params['values']['checkout'] ?? '' ?>" autocomplete="off"/>
                     </div>
-                    <div style="max-width: 15rem;">
+                    <div style="max-width: 10rem;">
                         <label for="guests">Felnőttek</label>
                         <input class="form-control" type="number" name="adults" min="1" value="<?= $params['values']['adults'] ?? 1 ?>" autocomplete="off"/>
                     </div>
-                    <div style="max-width: 15rem;">
+                    <div style="max-width: 10rem;">
                         <label for="guests">Gyerekek</label>
                         <input class="form-control" type="number" name="children" min="0" value="<?= $params['values']['children'] ?? 0 ?>" autocomplete="off"/>
+                    </div>
+                    <div class="col-2 align-self-center">
+                    <button type="submit" formaction="/best-offer/<?= $params['accm']["id"] ?>" class="btn btn-sm btn-secondary float-end">Legjobb ajánlat</button>
                     </div>
                 </div>
             </div>

@@ -375,16 +375,46 @@ function calculatePriceHandler($urlParams)
     $resDetails = generateReservationDetails($_POST, $accmId);
     $accm = $resDetails['accm'];
 
-    /*echo "<pre>";
-    var_dump($resDetails);
-    exit;*/
-
     urlRedirect('szallasok/' . $accm['slug'], [
         'info' => "calculatePrice",
         'values' => base64_encode(json_encode($_POST)),
         'details' => base64_encode(json_encode($resDetails)),
         'href' => '#calcPrice'
     ]);
+}
+
+function calculateBestOfferHandler($urlParams)
+{
+    $pdo = getConnection();
+    $statement = $pdo->prepare(
+        'SELECT *
+        FROM accm_units au
+        WHERE au.accm_id = ?'
+    );
+    $statement->execute([$urlParams['accmId']]);
+    $units = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+    $totalGuests = $_POST['adults']+$_POST['children'];
+    $unitsReserved = [];
+
+    foreach($units as $unit){
+        $unitsReserved[$unit['id']]['selected'] = 0;
+        $unitsReserved[$unit['id']]['available'] = $unit['count'];
+        $unitsReserved[$unit['id']]['capacity'] = $unit['capacity_per_unit'];
+        $unitsReserved[$unit['id']]['price'] = $unit['price'];
+    }
+
+    foreach($unitsReserved as $id => $unitReserved){
+        $prices[$id] = $unitReserved['price'];
+    }
+    $min = array_keys($prices, min($prices));
+    
+    echo "<pre>";
+    var_dump($_POST);
+    var_dump($unitsReserved);
+    var_dump($prices);
+    var_dump($min);
+    exit;
 }
 
 function reserveAccmHandler($urlParams)

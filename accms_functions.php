@@ -61,8 +61,12 @@ function accmListHandler()
     $param = [];
 
     if(!empty($destFilter)){
-        $cond[] = 'a.name = ?';
-        $param[] = $destFilter;
+        $dcond[] = 'a.name LIKE ?';
+        $dcond[] = 'a.location LIKE ?';
+        $param[] = "%" . $destFilter . "%";
+        $param[] = "%" . $destFilter . "%";
+
+        $cond[] = "(" . implode(" OR ", $dcond) . ")";
     }
 
     if(!empty($typeFilter)){
@@ -478,10 +482,6 @@ function accmPageHandler($urlParams)
     );
     $statement->execute([$accm['id']]);
     $images = $statement->fetchAll(PDO::FETCH_ASSOC);
-
-    /*echo "<pre>";
-    var_dump($images);
-    exit;*/
 
     $statement = $pdo->prepare(
         'SELECT *

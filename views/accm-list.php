@@ -80,7 +80,7 @@
         <div class="card-body d-inline-flex">
             <div class="me-sm-2" style="width: 25rem;">
                 <label for="destination">Úti cél</label>
-                <input class="form-control me-sm-2" type="text" list="destination" name="destination" value="<?= $params['destFilter']?>">
+                <input class="form-control me-sm-2" type="text" list="destination" name="destination" value="<?= $params['destFilter']?>" autocomplete="off">
                     <datalist id="destination">
                         <?php foreach($params['accms'] as $accm):?>
                             <option value="<?= $accm['name'] ?>">
@@ -110,7 +110,7 @@
     <p style="max-height:1rem"><?= count($params['accms']) . " találat"?></p>
     <br>
     <?php foreach($params['accms'] as $accm): ?>
-        <div class="card border-success mb-5" id="<?php echo $accm['id']?>">
+        <div class="card border-success mb-5" style="height:18rem" id="<?php echo $accm['id']?>">
             <div class="card-header h4">
                 <?php echo $accm['name'] . " " . $accm['location'];?>
             </div>
