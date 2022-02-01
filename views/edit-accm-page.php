@@ -170,7 +170,7 @@
                         </div>
                     </div>
                     <br><hr><br>
-                        <button type="submit" class="btn btn-sm btn-success">Lementem</button>
+                        <button type="submit" class="btn btn-sm btn-success float-end">Lementem</button>
                 </div>
             </form>
         </div>
