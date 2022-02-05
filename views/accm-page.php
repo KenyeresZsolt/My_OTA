@@ -187,7 +187,12 @@
             </div>
         </div>
         <hr>
-        <?php if($params['info'] === "calculatePrice"): ?>
+        <?php if($params['info'] === "calculatePrice" OR $params['info'] === "bestOffer"): ?>
+            <?php if($params['info'] === "bestOffer"): ?>
+                <div class="alert alert-success mb-3 text-center" id="infoMessage">
+                    Ez a legjobb ajánlat számodra!
+                </div>
+            <?php endif; ?>
             <div class="card border-success bg-light mb-3" id="calcPrice">
                 <div class="card-header">Ár becslése</div>
                 <div class="card-body">
@@ -200,13 +205,13 @@
                     <?php if($params['resDetails']['priceDetails']['originalRoomPrice'] !== $params['resDetails']['priceDetails']['finalRoomPrice']): ?>
                         <p>Kedvezmények:</p>
                         <ul>
-                            <?= $params['resDetails']['priceDetails']['childrenRoomDiscountValue']>0 ? "<li>Gyerekkedvezmény: <span class='badge rounded-pill bg-success'>-" . $params['resDetails']['priceDetails']['childrenRoomDiscountValue'] . " lej</span></li>" : "" ?>
-                            <?= $params['resDetails']['priceDetails']['groupDiscountValue']>0 ? "<li>Csoportkedvezmény: <span class='badge rounded-pill bg-success'>-" . $params['resDetails']['priceDetails']['groupDiscountValue'] . " lej</span></li>" : "" ?>
-                            <?= $params['resDetails']['priceDetails']['earlyBookingDiscountValue']>0 ? "<li>Early Booking kedvezmény: <span class='badge rounded-pill bg-success'>-" . $params['resDetails']['priceDetails']['earlyBookingDiscountValue'] . " lej</span></li>" : "" ?>
-                            <?= $params['resDetails']['priceDetails']['lastMinuteDiscountValue']>0 ? "<li>Last Minute kedvezmény: <span class='badge rounded-pill bg-success'>-" . $params['resDetails']['priceDetails']['lastMinuteDiscountValue'] . " lej</span></li>" : "" ?>
+                            <?= $params['resDetails']['priceDetails']['childrenRoomDiscountValue']>0 ? "<li>Gyerekkedvezmény: <span class='badge rounded-pill bg-success'>-" . round($params['resDetails']['priceDetails']['childrenRoomDiscountValue'], 2) . " lej</span></li>" : "" ?>
+                            <?= $params['resDetails']['priceDetails']['groupDiscountValue']>0 ? "<li>Csoportkedvezmény: <span class='badge rounded-pill bg-success'>-" . round($params['resDetails']['priceDetails']['groupDiscountValue'], 2) . " lej</span></li>" : "" ?>
+                            <?= $params['resDetails']['priceDetails']['earlyBookingDiscountValue']>0 ? "<li>Early Booking kedvezmény: <span class='badge rounded-pill bg-success'>-" . round($params['resDetails']['priceDetails']['earlyBookingDiscountValue'], 2) . " lej</span></li>" : "" ?>
+                            <?= $params['resDetails']['priceDetails']['lastMinuteDiscountValue']>0 ? "<li>Last Minute kedvezmény: <span class='badge rounded-pill bg-success'>-" . round($params['resDetails']['priceDetails']['lastMinuteDiscountValue'], 2) . " lej</span></li>" : "" ?>
                         </ul>
                     <?php endif; ?>
-                    <h5>Összesen: <?=$params['resDetails']['priceDetails']['originalRoomPrice'] !== $params['resDetails']['priceDetails']['finalRoomPrice'] ? "<span class='badge rounded-pill bg-secondary'><s>" . $params['resDetails']['priceDetails']['originalRoomPrice'] . " lej</s></span> <span class='badge rounded-pill bg-primary'>" . $params['resDetails']['priceDetails']['finalRoomPrice'] . " lej</span>" : "<span class='badge rounded-pill bg-primary'>" . $params['resDetails']['priceDetails']['finalRoomPrice'] . " lej</span>" ?></h5>
+                    <h5>Összesen: <?=$params['resDetails']['priceDetails']['originalRoomPrice'] !== $params['resDetails']['priceDetails']['finalRoomPrice'] ? "<span class='badge rounded-pill bg-secondary'><s>" . round($params['resDetails']['priceDetails']['originalRoomPrice'], 2) . " lej</s></span> <span class='badge rounded-pill bg-primary'>" . round($params['resDetails']['priceDetails']['finalRoomPrice'], 2) . " lej</span>" : "<span class='badge rounded-pill bg-primary'>" . $params['resDetails']['priceDetails']['finalRoomPrice'] . " lej</span>" ?></h5>
                     <hr style="border: 1px dashed white">
                     <?php if(!empty($params['resDetails']['mealsDescription'])): ?>
                         <h4>Étkezés:</h4>
@@ -218,10 +223,10 @@
                         <?php if($params['resDetails']['priceDetails']['originalMealPrice'] !== $params['resDetails']['priceDetails']['finalMealPrice']): ?>
                             <p>Kedvezmények:</p>
                             <ul>
-                                <?= $params['resDetails']['priceDetails']['childrenMealDiscountValue']>0 ? "<li>Gyerekkedvezmény: <span class='badge rounded-pill bg-success'>-" . $params['resDetails']['priceDetails']['childrenMealDiscountValue'] . " lej</span></li>" : "" ?>
+                                <?= $params['resDetails']['priceDetails']['childrenMealDiscountValue']>0 ? "<li>Gyerekkedvezmény: <span class='badge rounded-pill bg-success'>-" . round($params['resDetails']['priceDetails']['childrenMealDiscountValue'], 2) . " lej</span></li>" : "" ?>
                             </ul>
                         <?php endif; ?>
-                        <h5>Összesen: <?=$params['resDetails']['priceDetails']['originalMealPrice'] !== $params['resDetails']['priceDetails']['finalMealPrice'] ? "<span class='badge rounded-pill bg-secondary'><s>" . $params['resDetails']['priceDetails']['originalMealPrice'] . " lej</s></span> <span class='badge rounded-pill bg-primary'>" . $params['resDetails']['priceDetails']['finalMealPrice'] . " lej</span>" : "<span class='badge rounded-pill bg-primary'>" . $params['resDetails']['priceDetails']['finalMealPrice'] . " lej</span>" ?></h5>
+                        <h5>Összesen: <?=$params['resDetails']['priceDetails']['originalMealPrice'] !== $params['resDetails']['priceDetails']['finalMealPrice'] ? "<span class='badge rounded-pill bg-secondary'><s>" . round($params['resDetails']['priceDetails']['originalMealPrice'], 2) . " lej</s></span> <span class='badge rounded-pill bg-primary'>" . round($params['resDetails']['priceDetails']['finalMealPrice'], 2) . " lej</span>" : "<span class='badge rounded-pill bg-primary'>" . round($params['resDetails']['priceDetails']['finalMealPrice'], 2) . " lej</span>" ?></h5>
                         <hr style="border: 1px dashed white">
                     <?php endif; ?>
                     <?php if(!is_null($params['resDetails']['wellnessDescription']) OR !empty($params['resDetails']['wellnessDescription'])): ?>
@@ -232,13 +237,13 @@
                         <?php if($params['resDetails']['priceDetails']['originalWellnessPrice'] !== $params['resDetails']['priceDetails']['finalWellnessPrice']): ?>
                         <p>Kedvezmények:</p>
                         <ul>
-                            <?= $params['resDetails']['priceDetails']['childrenWellnessDiscountValue']>0 ? "<li>Gyerekkedvezmény: <span class='badge rounded-pill bg-success'>-" . $params['resDetails']['priceDetails']['childrenWellnessDiscountValue'] . " lej</span></li>" : "" ?>
+                            <?= $params['resDetails']['priceDetails']['childrenWellnessDiscountValue']>0 ? "<li>Gyerekkedvezmény: <span class='badge rounded-pill bg-success'>-" . round($params['resDetails']['priceDetails']['childrenWellnessDiscountValue'], 2) . " lej</span></li>" : "" ?>
                         </ul>
                     <?php endif; ?>
-                        <h5>Összesen: <?=$params['resDetails']['priceDetails']['originalWellnessPrice'] !== $params['resDetails']['priceDetails']['finalWellnessPrice'] ? "<span class='badge rounded-pill bg-secondary'><s>" . $params['resDetails']['priceDetails']['originalWellnessPrice'] . " lej</s></span> <span class='badge rounded-pill bg-primary'>" . $params['resDetails']['priceDetails']['finalWellnessPrice'] . " lej</span>" : "<span class='badge rounded-pill bg-primary'>" . $params['resDetails']['priceDetails']['finalWellnessPrice'] . " lej</span>" ?></h5>
+                        <h5>Összesen: <?=$params['resDetails']['priceDetails']['originalWellnessPrice'] !== $params['resDetails']['priceDetails']['finalWellnessPrice'] ? "<span class='badge rounded-pill bg-secondary'><s>" . round($params['resDetails']['priceDetails']['originalWellnessPrice'], 2) . " lej</s></span> <span class='badge rounded-pill bg-primary'>" . round($params['resDetails']['priceDetails']['finalWellnessPrice'], 2) . " lej</span>" : "<span class='badge rounded-pill bg-primary'>" . round($params['resDetails']['priceDetails']['finalWellnessPrice'], 2) . " lej</span>" ?></h5>
                         <hr style="border: 1px dashed white">
                     <?php endif; ?>
-                    <h4>Végösszeg: <?=$params['resDetails']['priceDetails']['totalOriginalPrice'] !== $params['resDetails']['priceDetails']['totalFinalPrice'] ? "<span class='badge rounded-pill bg-secondary'><s>" . $params['resDetails']['priceDetails']['totalOriginalPrice'] . " lej</s></span> <span class='badge rounded-pill bg-primary'>" . $params['resDetails']['priceDetails']['totalFinalPrice'] . " lej</span>" : "<span class='badge rounded-pill bg-primary'>" . $params['resDetails']['priceDetails']['totalFinalPrice'] . " lej</span>" ?></h4>
+                    <h4>Végösszeg: <?=$params['resDetails']['priceDetails']['totalOriginalPrice'] !== $params['resDetails']['priceDetails']['totalFinalPrice'] ? "<span class='badge rounded-pill bg-secondary'><s>" . round($params['resDetails']['priceDetails']['totalOriginalPrice'], 2) . " lej</s></span> <span class='badge rounded-pill bg-primary'>" . round($params['resDetails']['priceDetails']['totalFinalPrice'], 2) . " lej</span>" : "<span class='badge rounded-pill bg-primary'>" . round($params['resDetails']['priceDetails']['totalFinalPrice'], 2) . " lej</span>" ?></h4>
                     <a href="/szallasok/<?=$params['accm']['slug'] ?>">
                         <button type="button" class="btn btn-sm btn-outline-danger float-end">Mégse</button>
                     </a>

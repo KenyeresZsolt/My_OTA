@@ -79,7 +79,7 @@ function calculatePrice($input, $accmId)
         $original = $roomPrice;
         $roomPrice = $adultRoomPrice+$childrenRoomPrice;
         $childrenDiscount = $original-$roomPrice;
-        $priceDetails['childrenRoomDiscountValue'] = $childrenDiscount;
+        $priceDetails['childrenRoomDiscountValue'] = round($childrenDiscount, 2);
     }
 
     if($discounts['group_discount'] === "YES" AND $guests >= $discounts['group_person_number']){
@@ -103,7 +103,7 @@ function calculatePrice($input, $accmId)
         $priceDetails['lastMinuteDiscountValue'] = $lastMinuteDiscount;
     }
 
-    $priceDetails['finalRoomPrice'] = $roomPrice;
+    $priceDetails['finalRoomPrice'] = round($roomPrice, 2);
 
     if(isset($input['meals'])){
         $statement = $pdo->prepare(
@@ -311,6 +311,14 @@ function generateReservationDetails($input, $accmId)
             'href' => '#infoMessage'
         ]);
     }
+
+    if($capacity<$totalGuests){
+        urlRedirect('szallasok/' . $accm['slug'], [
+            'info' => "lowCapacity",
+            'values' => base64_encode(json_encode($input)),
+            'href' => '#infoMessage'
+        ]);
+    }
     
     if($totalRooms === 0){
         urlRedirect('szallasok/' . $accm['slug'], [
@@ -323,14 +331,6 @@ function generateReservationDetails($input, $accmId)
     if($totalRooms>$totalGuests){
         urlRedirect('szallasok/' . $accm['slug'], [
             'info' => "tooMuchRooms",
-            'values' => base64_encode(json_encode($input)),
-            'href' => '#infoMessage'
-        ]);
-    }
-
-    if($capacity<$totalGuests){
-        urlRedirect('szallasok/' . $accm['slug'], [
-            'info' => "lowCapacity",
             'values' => base64_encode(json_encode($input)),
             'href' => '#infoMessage'
         ]);
@@ -369,18 +369,92 @@ function generateReservationDetails($input, $accmId)
     return $resDetails;
 }
 
-function calculatePriceHandler($urlParams)
+function calculatePriceHandler($urlParams, $bestOffer = [])
 {
     $accmId = $urlParams['accmId'];
-    $resDetails = generateReservationDetails($_POST, $accmId);
+
+    if(empty($bestOffer)){
+        $resDetails = generateReservationDetails($_POST, $accmId);
+        $info = "calculatePrice";
+        $href = "#calcPrice";
+    }
+    else{
+        $resDetails = generateReservationDetails($bestOffer, $accmId);
+        $info = "bestOffer";
+        $href = "#infoMessage";
+    }
+
     $accm = $resDetails['accm'];
 
+
+
     urlRedirect('szallasok/' . $accm['slug'], [
-        'info' => "calculatePrice",
+        'info' => $info,
         'values' => base64_encode(json_encode($_POST)),
         'details' => base64_encode(json_encode($resDetails)),
-        'href' => '#calcPrice'
+        'href' => $href,
     ]);
+}
+
+// PHP program to find out all
+// combinations of positive
+// numbers that add upto given number
+ 
+/* arr - array to store the combination
+    index - next location in array
+    num - given number
+    reducedNum - reduced number */
+function findCombinationsUtil($arr, $index,
+    $num, $reducedNum, &$solutions)
+{
+    // Base condition
+    if ($reducedNum < 0)
+        return;
+
+    // If combination is
+    // found, print it
+    if ($reducedNum == 0)
+    {
+        for ($i = 0; $i < $index; $i++){
+            $solution[] = $arr[$i];
+        }
+        $solutions[] = $solution;
+        return;
+    }
+
+    // Find the previous number
+    // stored in arr[] It helps
+    // in maintaining increasing order
+    $prev = ($index == 0) ? 1 : $arr[$index - 1];
+
+    // note loop starts from previous
+    // number i.e. at array location
+    // index - 1
+    for ($k = $prev; $k <= $num ; $k++)
+    {
+        // next element of array is k
+        $arr[$index] = $k;
+
+        // call recursively with
+        // reduced number
+        findCombinationsUtil($arr, $index + 1,
+        $num, $reducedNum - $k, $solutions);
+    }
+}
+
+/* Function to find out all
+combinations of positive numbers
+that add upto given number.
+It uses findCombinationsUtil() */
+function findCombinations($n)
+{
+    // array to store the combinations
+    // It can contain max n elements
+    $arr = $solutions = array();
+
+    //find all combinations
+    findCombinationsUtil($arr, 0, $n, $n, $solutions);
+    return $solutions;
 }
 
 function calculateBestOfferHandler($urlParams)
@@ -404,17 +478,76 @@ function calculateBestOfferHandler($urlParams)
         $unitsReserved[$unit['id']]['price'] = $unit['price'];
     }
 
-    foreach($unitsReserved as $id => $unitReserved){
-        $prices[$id] = $unitReserved['price'];
+    $combs = findCombinations($totalGuests);
+    $possibilities = count($combs); //megszámolom, hogy hány lehetséges változat van
+    $i = 0;
+
+    for($i; $i<$possibilities; $i++){ 
+        $roomCount = count($combs[$i]); //megszámolom, hogy hány szoba kell
+        $r = 0;
+        $units = $unitsReserved; //azzért mentettem le külön változóba, hogy minden alábbi iteráció után újra az eredeti állapotot hozza vissza
+        for($r; $r < $roomCount; $r++){
+            foreach($units as $id => $unit){
+                if($unit['available']>0 AND $unit['capacity']>=$combs[$i][$r]){
+                    $prices[$id] = $unit['price'];
+                    // lementem azoknak a szobáknak az árait, amelyekből van még elérhető és be is fér annyi személy
+                }              
+            }
+            if(!empty($prices)){
+                $min = array_search(min($prices), $prices); // megkeresem a minimum árat
+                $dists[$i][$r]['persons'] = $combs[$i][$r]; // lementem az adott személyek számát
+                $dists[$i][$r]['roomId'] = $min; // lementem a hosszájuk tartozó minimum áras szoba ID-ját
+                $dists[$i][$r]['price'] = $units[$min]['price']; // lementem a minimum áru szoba árát
+                $units[$min]['available'] = $units[$min]['available']-1; // egyel csökkentem az adott szoba elérhető darabszámát, azért, hogy ne foglaljon le többet, mint amennyi van
+                $prices = []; // kiürítem az árakat tartalmazó array-t azért, hogy a következő iterrációban üresen kezdjen
+            }
+        }
     }
-    $min = array_keys($prices, min($prices));
-    
-    echo "<pre>";
-    var_dump($_POST);
+
+    // összegyűjtöm minden lehetséges elosztásnak az össz árát + a személyek számát, amire az ár vonatkozik
+    // azért kellett így, mert a fentebbi iterráció ha nem talált olyan szobát, amibe beleférne x ember, akkor azt már nem tette bele
+    // pl. 10 személy esetén, az 1+9-es kombinációnál csak az egy fős szoba marad, ha nincs 9személyes szoba
+    foreach($dists as $k => $dist){
+        $count = count($dist);
+        $i = 0;
+        $totalPricesWithPersons[$k]['price'] = 0;
+        $totalPricesWithPersons[$k]['pers'] = 0;
+        for($i; $i<$count; $i++){
+            $totalPricesWithPersons[$k]['price'] += $dist[$i]['price'];
+            $totalPricesWithPersons[$k]['pers'] += $dist[$i]['persons'];
+        }
+    }
+
+    // itt nézem meg, hogy tényleg csak azon esetek közül keresse meg a minimumot, ahol annyi személy van, amennyi beküldődött
+    foreach($totalPricesWithPersons as $k => $details){
+        if($details['pers'] === $totalGuests){
+            $totalPrices[$k] = $details['price'];
+        }
+    }
+
+    //legjobb elosztás
+    $bestDist = $dists[array_search(min($totalPrices), $totalPrices)];
+
+    foreach($bestDist as $room){
+        $unitsReserved[$room['roomId']]['selected'] += 1;
+        $unitsReserved[$room['roomId']]['available'] -= 1;
+    }
+
+    foreach($unitsReserved as $k => $unitReserved){
+        $_POST['rooms'][$k] = $unitReserved['selected'];
+    }
+
+    calculatePriceHandler($urlParams, $_POST);
+
+    /*echo "<pre>";
+    var_dump($combs);
+    var_dump($dists);
+    var_dump($totalPrices);
+    echo array_search(min($totalPrices), $totalPrices) . "<br>";
+    var_dump($bestDist);
     var_dump($unitsReserved);
-    var_dump($prices);
-    var_dump($min);
-    exit;
+    var_dump($_POST);
+    exit;*/
 }
 
 function reserveAccmHandler($urlParams)

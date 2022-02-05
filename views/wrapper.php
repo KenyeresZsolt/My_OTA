@@ -53,7 +53,7 @@
             <?php endif;?>
         </div>
     </nav>
-    <div class="card p-5 m-5">
+    <div class="card p-3 m-5">
         <?php echo $params['content'] ?>
     </div>
     <footer class="bg-secondary text-lg-start fixed-bottom container-fluid" style="font-size:1vw;">
