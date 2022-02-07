@@ -104,10 +104,20 @@
                 <input class="form-control" type="number" name="children" min="0" value="<?= !is_null($params['childrenFilter']) ? $params['childrenFilter'] : '0' ?>" autocomplete="off"/>
             </div>
             <button class="btn btn-success mt-auto" type="submit">Keresés</button>
-        </form>
         </div>
     </div>
-    <p style="max-height:1rem"><?= count($params['accms']) . " találat"?></p>
+    <div class="row">
+        <p class="col-md-9 style="max-height:1rem"><?= count($params['accms']) . " találat"?></p>
+        <div class=" col-md-3">
+            <select name="sort" class="form-control-sm" style="max-width:9rem;">
+                <option value="default">Alapértelmezett</option>
+                <option value="asc"> Ár szerint növekvő</option>
+                <option value="desc"> Ár szerint csökkenő</option>
+            </select>
+            <button class="btn btn-sm btn-success" type="submit">Rendezés</button>
+        </div>
+    </div>
+    </form>   
     <br>
     <?php foreach($params['accms'] as $accm): ?>
         <div class="card border-success mb-5" style="height:18rem" id="<?php echo $accm['id']?>">
@@ -126,12 +136,16 @@
                     alt="<?php echo $accm['name'] ?>" style="width:350px">
                 </div>
                 <div class="col-md-8">
-                    <div class="align-middle" style="height:65%">
-                        <ul class="mt-4">
+                    <div class="row align-middle ms-3 mb-4" style="height:65%">
+                        <ul class="mt-4 col-md-9">
                             <li><?= $accm['capacity'] . " férőhely" ?></li>
                             <li><?= $accm['rooms'] . " szoba" ?></li>
                             <li><?= $accm['bathrooms'] . " fürdőszoba" ?></li>
                         </ul>
+                        <div class="col-md-3">
+                            <span class="fw-bold float-end"><?= $accm['best_price'] . " RON" ?></span><br>
+                            <span class="small float-end"><?= $params['userInput']['nights'] . " éj, " . $params['userInput']['guests'] . " főnek "?></span>
+                        </div>
                     </div>
                     <div class="btn-group float-end">
                         <a href="/szallasok/<?php echo $accm["slug"] ?>">

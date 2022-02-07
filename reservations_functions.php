@@ -377,20 +377,22 @@ function calculatePriceHandler($urlParams, $bestOffer = [])
         $resDetails = generateReservationDetails($_POST, $accmId);
         $info = "calculatePrice";
         $href = "#calcPrice";
+        $input = $_POST;
     }
     else{
         $resDetails = generateReservationDetails($bestOffer, $accmId);
         $info = "bestOffer";
         $href = "#infoMessage";
+        $input = $bestOffer;
     }
 
     $accm = $resDetails['accm'];
 
-
+    
 
     urlRedirect('szallasok/' . $accm['slug'], [
         'info' => $info,
-        'values' => base64_encode(json_encode($_POST)),
+        'values' => base64_encode(json_encode($input)),
         'details' => base64_encode(json_encode($resDetails)),
         'href' => $href,
     ]);
@@ -457,7 +459,7 @@ function findCombinations($n)
     return $solutions;
 }
 
-function calculateBestOfferHandler($urlParams)
+function calculateBestOffer($accmId, $input)
 {
     $pdo = getConnection();
     $statement = $pdo->prepare(
@@ -465,10 +467,10 @@ function calculateBestOfferHandler($urlParams)
         FROM accm_units au
         WHERE au.accm_id = ?'
     );
-    $statement->execute([$urlParams['accmId']]);
+    $statement->execute([$accmId]);
     $units = $statement->fetchAll(PDO::FETCH_ASSOC);
 
-    $totalGuests = $_POST['adults']+$_POST['children'];
+    $totalGuests = $input['adults']+$input['children'];
     $unitsReserved = [];
 
     foreach($units as $unit){
@@ -534,20 +536,54 @@ function calculateBestOfferHandler($urlParams)
     }
 
     foreach($unitsReserved as $k => $unitReserved){
-        $_POST['rooms'][$k] = $unitReserved['selected'];
+        $input['rooms'][$k] = $unitReserved['selected'];
     }
 
-    calculatePriceHandler($urlParams, $_POST);
+    return $input;
+}
 
-    /*echo "<pre>";
-    var_dump($combs);
-    var_dump($dists);
-    var_dump($totalPrices);
-    echo array_search(min($totalPrices), $totalPrices) . "<br>";
-    var_dump($bestDist);
-    var_dump($unitsReserved);
-    var_dump($_POST);
-    exit;*/
+function calculateBestOfferHandler($urlParams)
+{
+    $accmId = $urlParams['accmId'];
+        
+    $input = calculateBestOffer($accmId, $_POST);
+
+    calculatePriceHandler($urlParams, $input);
+}
+
+function accmListPricesCalculation($accmId, $input)
+{
+    $days = dateDifference($input['checkout'], $input['checkin']);
+    $totalGuests = $input['adults']+$input['children'];
+    $accmCapacity = 0;
+    $pdo = getConnection();
+    $statement = $pdo->prepare(
+        'SELECT *
+        FROM accm_units au
+        WHERE au.accm_id = ?'
+    );
+    $statement->execute([$accmId]);
+    $units = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+    $input['rooms'] = NULL;
+    foreach($units as $unit){
+        $input['rooms'][$unit['id']] = 0;
+        $accmCapacity += $unit['total_capacity'];
+        $unitPrices[$unit['id']] = $unit['price'];
+    }
+
+    if($accmCapacity>=$totalGuests){
+        $input = calculateBestOffer($accmId, $input);
+    }
+
+    $totalPrice = 0;
+    if(array_sum($input['rooms'])>0){
+        foreach($input['rooms'] as $id => $count){
+            $totalPrice += $unitPrices[$id]*$count*$days;
+        }
+    }
+
+    return $totalPrice;
 }
 
 function reserveAccmHandler($urlParams)

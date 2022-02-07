@@ -110,16 +110,38 @@ function accmListHandler()
         $sql .= " WHERE " . implode(" AND ", $cond);
     }
 
-    /*echo "<pre>";
-    echo $sql . "<br>";
-    var_dump($param);
-    exit;*/
-
-
     $pdo = getConnection();
     $statement = $pdo->prepare($sql);
     $statement->execute($param);
     $accms = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+    $userInput = [
+        'checkin' => is_null($checkinFilter) ? date('Y-m-d', time()) : $checkinFilter,
+        'checkout' => is_null($checkoutFilter) ? date('Y-m-d', time()+86400) : $checkoutFilter,
+        'adults' => is_null($adultsFilter) ? 2 : $adultsFilter,
+        'children' => is_null($childrenFilter) ? 0 : $childrenFilter,
+    ];
+    $userInput['nights'] = dateDifference($userInput['checkout'], $userInput['checkin']);
+    $userInput['guests'] = $userInput['adults']+$userInput['children'];
+    
+    foreach ($accms as $accm){
+        $price = accmListPricesCalculation($accm['id'], $userInput);
+        $bestPrices[$accm['id']] = $price;        
+    }
+
+    $accmCount = count($accms);
+    $i = 0;
+    for($i; $i<$accmCount; $i++){
+        $accms[$i]['best_price'] = $bestPrices[$accms[$i]['id']];
+        if($accms[$i]['best_price']>0){
+            $filteredAccms[] = $accms[$i];
+        }
+    }
+
+
+    /*echo "<pre>";
+    var_dump($filteredAccms);
+    exit;*/
 
     $statement = $pdo->prepare(
         "SELECT *
@@ -131,7 +153,7 @@ function accmListHandler()
 
     echo render('wrapper.php', [
         'content' => render("accm-list.php", [
-            'accms' => $accms,
+            'accms' => $filteredAccms,
             'images' => $images,
             'accmTypes' => getAccmTypes(),
             'accmFacilities' => getAccmFacilities(),
@@ -146,6 +168,7 @@ function accmListHandler()
             'maxPriceFilter' => $maxPriceFilter,
             'facilityFilter' => $facilityFilter,
             'langFilter' => $langFilter,
+            'userInput' => $userInput,
             "info" => $_GET['info'] ?? NULL,
             'isAuthorized' => isLoggedIn(),
             'isAdmin' => isAdmin() ?? NULL,
