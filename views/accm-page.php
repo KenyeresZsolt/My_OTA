@@ -133,7 +133,7 @@
             <div class="card-body ms-3">
                 <table style="border-collapse:separate;border-spacing: 0 1rem;">
                     <?php foreach($params['units'] as $unit): ?>
-                        <tr class="bg-light rounded">
+                        <tr class="rounded <?= $params['values']['rooms'][$unit['id']]>0 ? "bg-success text-white" : "bg-light" ?> ">
                             <td style="width: 5rem;">
                                 <input class="form-control m-1" type="number"  name="rooms[<?= $unit['id']?>]" value="<?= $params['values']['rooms'][$unit['id']] ?? 0 ?>" min="0" max="<?= $unit['count']?>">
                             </td>
