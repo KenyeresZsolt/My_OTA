@@ -47,6 +47,7 @@ function accmListHandler()
     $maxPriceFilter = $_GET['maxPrice'] ?? NULL;
     $facilityFilter = $_GET['f'] ?? NULL;
     $langFilter = $_GET['l'] ?? NULL;
+    $sort = $_GET['sort'] ?? NULL;
 
     $types = explode(" ", $typeFilter);
     $cntTypes = count($types);
@@ -138,6 +139,17 @@ function accmListHandler()
         }
     }
 
+    if(!empty($sort)){
+        if($sort === 'asc'){
+            $sortPrice = array_column($filteredAccms, 'best_price');
+            array_multisort($sortPrice, SORT_ASC, $filteredAccms);
+        }
+        if($sort === 'desc'){
+            $sortPrice = array_column($filteredAccms, 'best_price');
+            array_multisort($sortPrice, SORT_DESC, $filteredAccms);
+        }
+    }
+
 
     /*echo "<pre>";
     var_dump($filteredAccms);
@@ -168,6 +180,7 @@ function accmListHandler()
             'maxPriceFilter' => $maxPriceFilter,
             'facilityFilter' => $facilityFilter,
             'langFilter' => $langFilter,
+            'sort' => $sort,
             'userInput' => $userInput,
             "info" => $_GET['info'] ?? NULL,
             'isAuthorized' => isLoggedIn(),
@@ -259,8 +272,14 @@ function accmFilterHandler()
     $langUrl = substr_replace($langUrl,"",-1) . "&";
     }
 
+    $sort = $_POST['sort'];
 
-    $finalUrl = ($destUrl ?? "") . ($checkinUrl ?? "") . ($checkoutUrl ?? "") . ($adultsUrl ?? "") . ($childrenUrl ?? "") . ($typeUrl ?? "") . ($minPirceUrl ?? "") . ($maxPirceUrl ?? "") . ($facilityUrl ?? "") . ($langUrl ?? "");
+    if($sort !== 'default'){
+        $sortUrl = "sort=$sort&";
+    }
+
+
+    $finalUrl = ($destUrl ?? "") . ($checkinUrl ?? "") . ($checkoutUrl ?? "") . ($adultsUrl ?? "") . ($childrenUrl ?? "") . ($typeUrl ?? "") . ($minPirceUrl ?? "") . ($maxPirceUrl ?? "") . ($facilityUrl ?? "") . ($langUrl ?? "") . ($sortUrl ?? "");
     $finalUrl = substr_replace($finalUrl,"",-1);
 
     header('Location: /szallasok?' . $finalUrl);

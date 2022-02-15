@@ -107,12 +107,12 @@
         </div>
     </div>
     <div class="row">
-        <p class="col-md-9 style="max-height:1rem"><?= count($params['accms']) . " találat"?></p>
-        <div class=" col-md-3">
-            <select name="sort" class="form-control-sm" style="max-width:9rem;">
+        <p class="col-md-8" style="max-height:1rem"><?= count($params['accms']) . " találat"?></p>
+        <div class="col-md-4">
+            <select name="sort" class="form-control-sm" style="max-width:11rem;">
                 <option value="default">Alapértelmezett</option>
-                <option value="asc"> Ár szerint növekvő</option>
-                <option value="desc"> Ár szerint csökkenő</option>
+                <option value="asc" <?= $params['sort'] === 'asc' ? 'selected' : '' ?>> Ár szerint növekvő</option>
+                <option value="desc" <?= $params['sort'] === 'desc' ? 'selected' : '' ?>> Ár szerint csökkenő</option>
             </select>
             <button class="btn btn-sm btn-success" type="submit">Rendezés</button>
         </div>
