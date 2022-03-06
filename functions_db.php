@@ -22,7 +22,7 @@ function getConnection()
 function render($filePath, $params = []): string
 {
     ob_start();
-    require __DIR__ . "/views/" . $filePath;
+    require __DIR__ . '/views/' . $filePath;
     return ob_get_clean();
 }
 
@@ -43,7 +43,7 @@ function homeHandler()
         'activeLink' => '/',
         'isAuthorized' => isLoggedIn(),
         'isAdmin' => isAdmin() ?? NULL,
-        'title' => "Főoldal",
+        'title' => 'Főoldal',
         'unreadMessages' => countUnreadMessages(),
         'playChatSound' => playChatSound()
     ]);
@@ -54,9 +54,9 @@ function notFoundHandler()
     echo render('wrapper.php', [
         'content' => render('not-found-page.php'),
         'activeLink' => '/oldal-nem-talalhato',
-        "isAuthorized" => isLoggedIn(),
+        'isAuthorized' => isLoggedIn(),
         'isAdmin' => isAdmin(),
-        'title' => "Oldal nem található",
+        'title' => 'Oldal nem található',
         'unreadMessages' => countUnreadMessages(),
         'playChatSound' => playChatSound()
     ]);
@@ -65,10 +65,10 @@ function notFoundHandler()
 function insertMailSql()
 {
     $pdo = getConnection();
-    return $statement = $pdo->prepare("INSERT INTO `email_messages` 
+    return $statement = $pdo->prepare('INSERT INTO `email_messages` 
     (`email`, `subject`, `body`, `status`, `number_of_attempts`, `created_at`) 
     VALUES 
-    (?, ?, ?, ?, ?, ?);");
+    (?, ?, ?, ?, ?, ?);');
 }
 
 function sendMailsHandler()

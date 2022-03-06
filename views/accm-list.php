@@ -1,17 +1,17 @@
-<?php if($params['info'] === "added"): ?>
+<?php if($params['info'] === 'added'): ?>
     <a href="/szallasok" style="text-decoration:none">
         <div class="alert alert-success text-center">
             Szállás létrehozva!
         </div>
     </a>
-<?php elseif($params['info'] === "deleted"): ?>
+<?php elseif($params['info'] === 'deleted'): ?>
     <a href="/szallasok" style="text-decoration:none">
         <div class="alert alert-danger text-center">
             Szállás sikeresen törölve!
         </div>
     </a>
 <?php endif ?>
-<?php if($params['isAuthorized'] AND $params['isAdmin'] === "1"): ?>
+<?php if($params['isAuthorized'] AND $params['isAdmin'] === '1'): ?>
     <div class="container">
         <a href="/uj-szallas">
             <button class="btn btn-sm btn-outline-success float-end">Új szállás</button>
@@ -31,7 +31,7 @@
                 <?php foreach($params['accmTypes'] as $accmType) : ?>
                     <div class="form-check">
                         <label class="form-check-label" for="type">
-                        <input class="form-check-input" type="checkbox"  name="type[]" value="<?= $accmType['type_code']?>" <?= strpos(" " /*meghekkelt megoldás :) */ . $params['typeFilter'], $accmType['type_code']) ? "checked" : "" ?>>
+                        <input class="form-check-input" type="checkbox"  name="type[]" value="<?= $accmType['type_code']?>" <?= strpos(' ' /*meghekkelt megoldás :) */ . $params['typeFilter'], $accmType['type_code']) ? 'checked' : '' ?>>
                             <?= $accmType['name']?>
                         </label>
                     </div>
@@ -50,7 +50,7 @@
                 <?php foreach($params['accmFacilities'] as $accmFacility) : ?>
                     <div class="form-check">
                         <label class="form-check-label" for="facility">
-                        <input class="form-check-input" type="checkbox"  name="facility[]" value="<?= $accmFacility['facility_code']?>" <?= strpos(" " /*meghekkelt megoldás :) */ . $params['facilityFilter'], $accmFacility['facility_code']) ? "checked" : "" ?>>
+                        <input class="form-check-input" type="checkbox"  name="facility[]" value="<?= $accmFacility['facility_code']?>" <?= strpos(' ' /*meghekkelt megoldás :) */ . $params['facilityFilter'], $accmFacility['facility_code']) ? 'checked' : '' ?>>
                             <?= $accmFacility['name']?>
                         </label>
                     </div>
@@ -89,11 +89,11 @@
             </div>
             <div class="me-sm-2" style="max-width: 11rem;">
                 <label for="checkin">Érkezés</label>
-                <input class="form-control" type="date" name="checkin" min="<?= date("Y-m-d"); ?>" value="<?= $params['checkinFilter']?>" autocomplete="off"/>
+                <input class="form-control" type="date" name="checkin" min="<?= date('Y-m-d'); ?>" value="<?= $params['checkinFilter']?>" autocomplete="off"/>
             </div>
             <div class="me-sm-2" style="max-width: 11rem;">
                 <label for="checkout">Távozás</label>
-                <input class="form-control" type="date" name="checkout" min="<?= date("Y-m-d"); ?>" value="<?= $params['checkoutFilter']?>" autocomplete="off"/>
+                <input class="form-control" type="date" name="checkout" min="<?= date('Y-m-d'); ?>" value="<?= $params['checkoutFilter']?>" autocomplete="off"/>
             </div>
             <div class="me-sm-2" style="max-width: 6rem;">
                 <label for="guests">Felnőttek</label>
@@ -107,7 +107,7 @@
         </div>
     </div>
     <div class="row">
-        <p class="col-md-8" style="max-height:1rem"><?= count($params['accms']) . " találat"?></p>
+        <p class="col-md-8" style="max-height:1rem"><?= ($params['accms'] === 0 ? '0' : count($params['accms'])) . " találat"?></p>
         <div class="col-md-4">
             <select name="sort" class="form-control-sm" style="max-width:11rem;">
                 <option value="default">Alapértelmezett</option>
@@ -119,48 +119,50 @@
     </div>
     </form>   
     <br>
-    <?php foreach($params['accms'] as $accm): ?>
-        <div class="card border-success mb-5" style="height:18rem" id="<?php echo $accm['id']?>">
-            <div class="card-header h4">
-                <?php echo $accm['name'] . " " . $accm['location'];?>
-            </div>
-            <div class="row card-body container-fluid">
-                <div class="col-md-4">
-                    <img class="img-fluid img-thumbnail" src="
-                    <?php foreach($params['images'] as $image){
-                        if($image['accm_id'] === $accm['id']){
-                            echo $image['path'];
-                        }
-                        }
-                    ?>" 
-                    alt="<?php echo $accm['name'] ?>" style="width:350px">
+    <?php if($params['accms'] !== 0): ?>
+        <?php foreach($params['accms'] as $accm): ?>
+            <div class="card border-success mb-5" style="height:18rem" id="<?php echo $accm['id']?>">
+                <div class="card-header h4">
+                    <?php echo $accm['name'] . " " . $accm['location'];?>
                 </div>
-                <div class="col-md-8">
-                    <div class="row align-middle ms-3 mb-4" style="height:65%">
-                        <ul class="mt-4 col-md-9">
-                            <li><?= $accm['capacity'] . " férőhely" ?></li>
-                            <li><?= $accm['rooms'] . " szoba" ?></li>
-                            <li><?= $accm['bathrooms'] . " fürdőszoba" ?></li>
-                        </ul>
-                        <div class="col-md-3">
-                            <span class="fw-bold float-end"><?= $accm['best_price'] . " RON" ?></span><br>
-                            <span class="small float-end"><?= $params['userInput']['nights'] . " éj, " . $params['userInput']['guests'] . " főnek "?></span>
+                <div class="row card-body container-fluid">
+                    <div class="col-md-4">
+                        <img class="img-fluid img-thumbnail" src="
+                        <?php foreach($params['images'] as $image){
+                            if($image['accm_id'] === $accm['id']){
+                                echo $image['path'];
+                            }
+                            }
+                        ?>" 
+                        alt="<?php echo $accm['name'] ?>" style="width:350px">
+                    </div>
+                    <div class="col-md-8">
+                        <div class="row align-middle ms-3 mb-4" style="height:65%">
+                            <ul class="mt-4 col-md-9">
+                                <li><?= $accm['capacity'] . ' férőhely' ?></li>
+                                <li><?= $accm['rooms'] . ' szoba' ?></li>
+                                <li><?= $accm['bathrooms'] . ' fürdőszoba' ?></li>
+                            </ul>
+                            <div class="col-md-3">
+                                <span class="fw-bold float-end"><?= $accm['best_price'] . ' RON' ?></span><br>
+                                <span class="small float-end"><?= $params['userInput']['nights'] . ' éj, ' . $params['userInput']['guests'] . ' főnek '?></span>
+                            </div>
+                        </div>
+                        <div class="btn-group float-end">
+                            <a href="/szallasok/<?php echo $accm['slug'] ?>">
+                                <button class="btn btn-sm btn-outline-success float-end">Részletek</button>
+                            </a>
+                            <?php if($params['isAuthorized'] AND $params['isAdmin'] === '1'): ?>
+                                <form action="/delete-accm/<?php echo $accm['id'] ?>" method="post">
+                                    <button type="submit" class="btn btn-sm btn-danger float-end">Törlés</button>
+                                </form>
+                            <?php endif; ?>
                         </div>
                     </div>
-                    <div class="btn-group float-end">
-                        <a href="/szallasok/<?php echo $accm["slug"] ?>">
-                            <button class="btn btn-sm btn-outline-success float-end">Részletek</button>
-                        </a>
-                        <?php if($params['isAuthorized'] AND $params['isAdmin'] === "1"): ?>
-                            <form action="/delete-accm/<?php echo $accm['id'] ?>" method="post">
-                                <button type="submit" class="btn btn-sm btn-danger float-end">Törlés</button>
-                            </form>
-                        <?php endif; ?>
-                    </div>
                 </div>
             </div>
-        </div>
-    <?php endforeach; ?>
+        <?php endforeach; ?>
+    <?php endif; ?>
 </div>
 </div>
 <?php if($params['isAuthorized'] AND $params['isAdmin'] === "1"): ?>

@@ -26,7 +26,7 @@ function editAccmHandler($urlParams)
     $statement->execute([$accm['id']]);
     $images = $statement->fetchAll(PDO::FETCH_ASSOC);
     
-    echo render("wrapper.php", [
+    echo render('wrapper.php', [
         'content' => render('accm-settings-page.php', [
             'settingsContent' => render('edit-accm-page.php', [
                 'info' => $_GET['info'] ?? NULL,
@@ -45,7 +45,7 @@ function editAccmHandler($urlParams)
         'activeLink' => '/szallasok',
         'isAuthorized' => isLoggedIn(),
         'isAdmin' => isAdmin() ?? NULL,
-        'title' => "Szerkesztés",
+        'title' => 'Szerkesztés',
         'unreadMessages' => countUnreadMessages(),
         'playChatSound' => playChatSound()
     ]);
@@ -64,9 +64,9 @@ function updateAccmHandler($urlParams)
     $statement->execute([$urlParams['accmId']]);
     $accm = $statement->fetch(PDO::FETCH_ASSOC);
 
-    $slug = strtolower(slugify($_POST["name"] . "-" . $_POST["location"]));
+    $slug = strtolower(slugify($_POST['name'] . '-' . $_POST['location']));
     
-    $table = "accms";
+    $table = 'accms';
     $columns = [
         'name',
         'location',
@@ -89,22 +89,22 @@ function updateAccmHandler($urlParams)
     ];
     $conditions = ['id = '];
     $execute = [
-        $_POST["name"] ?? NULL, 
-        $_POST["location"] ?? NULL, 
+        $_POST['name'] ?? NULL, 
+        $_POST['location'] ?? NULL, 
         $slug ?? NULL,
         createAddressJson() ?? NULL,
-        $_POST["type"] ?? NULL,
-        $_POST["price"] ?? NULL,
-        $_POST["capacity"] ?? NULL,
-        $_POST["rooms"] ?? NULL,
-        $_POST["bathrooms"] ?? NULL,
+        $_POST['type'] ?? NULL,
+        $_POST['price'] ?? NULL,
+        $_POST['capacity'] ?? NULL,
+        $_POST['rooms'] ?? NULL,
+        $_POST['bathrooms'] ?? NULL,
         json_encode($_POST['facilities'] ?? NULL , true) ?? NULL,
         $_POST['description'] ?? NULL,
         json_encode($_POST['languages'] ?? NULL, true) ?? NULL,
-        $_POST["contactName"] ?? NULL,
-        $_POST["contactEmail"] ?? NULL,
-        $_POST["contactPhone"] ?? NULL,
-        $_POST["webpage"] ?? NULL,
+        $_POST['contactName'] ?? NULL,
+        $_POST['contactEmail'] ?? NULL,
+        $_POST['contactPhone'] ?? NULL,
+        $_POST['webpage'] ?? NULL,
         time() ?? NULL,
         $_SESSION['userId'] ?? NULL,
         $urlParams['accmId'] ?? NULL
@@ -120,7 +120,7 @@ function updateAccmHandler($urlParams)
     ];
     $conditions = ['id ='];
     $execute = [
-        "YES",
+        'YES',
         $primaryImageId,
     ];
     generateUpdateSql($table, $columns, $conditions, $execute);
@@ -142,7 +142,7 @@ function updateAccmHandler($urlParams)
 
 
 
-    urlRedirect('szallasok/' . $slug . "/beallitasok/adatok", [
+    urlRedirect('szallasok/' . $slug . '/beallitasok/adatok', [
         'info'=> 'updated'
     ]);
 }
@@ -187,15 +187,15 @@ function editServicesHandler($urlParams)
     $statement->execute([$urlParams['accmSlug']]);
     $accm = $statement->fetch(PDO::FETCH_ASSOC);
 
-    echo render("wrapper.php", [
+    echo render('wrapper.php', [
         'content' => render('accm-settings-page.php', [
-            'settingsContent' => render("edit-services-page.php", [
+            'settingsContent' => render('edit-services-page.php', [
                 'info' => $_GET['info'] ?? NULL,
                 'accm' => $accm,
-                'meals' => getServicesByCategory("meal"),
-                'mealsStatus' => getServicesStatusByCategory("meal"),
-                'wellnessFacilities' => getServicesByCategory("wellness"),
-                'wellnessStatus' => getServicesStatusByCategory("wellness"),
+                'meals' => getServicesByCategory('meal'),
+                'mealsStatus' => getServicesStatusByCategory('meal'),
+                'wellnessFacilities' => getServicesByCategory('wellness'),
+                'wellnessStatus' => getServicesStatusByCategory('wellness'),
             ]),
             'accm' => $accm,
             'activeTab' => 'services',
@@ -203,7 +203,7 @@ function editServicesHandler($urlParams)
         'activeLink' => '/szallasok',
         'isAuthorized' => isLoggedIn(),
         'isAdmin' => isAdmin() ?? NULL,
-        'title' => "Szolgáltatások",
+        'title' => 'Szolgáltatások',
         'unreadMessages' => countUnreadMessages(),
         'playChatSound' => playChatSound()
     ]);
@@ -222,35 +222,35 @@ function updateMealsHandler($urlParams)
     $statement->execute([$urlParams['accmId']]);
     $accm = $statement->fetch(PDO::FETCH_ASSOC);
 
-    if($_POST['mealOffered'] === "NO"){
-        $_POST['breakfast'] = "NOTPROVIDED";
-        $_POST['lunch'] = "NOTPROVIDED";
-        $_POST['dinner'] = "NOTPROVIDED";
+    if($_POST['mealOffered'] === 'NO'){
+        $_POST['breakfast'] = 'NOTPROVIDED';
+        $_POST['lunch'] = 'NOTPROVIDED';
+        $_POST['dinner'] = 'NOTPROVIDED';
     }
 
-    if(($_POST['breakfast'] === "PAYABLE" AND  empty($_POST['breakfastPrice'])) OR ($_POST['lunch'] === "PAYABLE" AND  empty($_POST['lunchPrice'])) OR ($_POST['dinner'] === "PAYABLE" AND  empty($_POST['dinnerPrice']))){
+    if(($_POST['breakfast'] === 'PAYABLE' AND  empty($_POST['breakfastPrice'])) OR ($_POST['lunch'] === 'PAYABLE' AND  empty($_POST['lunchPrice'])) OR ($_POST['dinner'] === 'PAYABLE' AND  empty($_POST['dinnerPrice']))){
         return urlRedirect('szallasok/' . $accm['slug'] . '/beallitasok/szolgaltatasok', [
                     'info' => 'mealsEmptyPrice#editMealsMessage'
                 ]);
     }
 
-    if($_POST['mealOffered'] === "YES" AND $_POST['breakfast'] === "NOTPROVIDED" AND $_POST['lunch'] === "NOTPROVIDED" AND $_POST['dinner'] === "NOTPROVIDED"){
+    if($_POST['mealOffered'] === 'YES' AND $_POST['breakfast'] === 'NOTPROVIDED' AND $_POST['lunch'] === 'NOTPROVIDED' AND $_POST['dinner'] === 'NOTPROVIDED'){
         return urlRedirect('szallasok/' . $accm['slug'] . '/beallitasok/szolgaltatasok', [
                     'info' => 'mealsNotSpecified#editMealsMessage'
                 ]);
     }
 
-    if($_POST['breakfast'] !== "PAYABLE"){
+    if($_POST['breakfast'] !== 'PAYABLE'){
         $_POST['breakfastPrice'] = NULL;
     }
-    if($_POST['lunch'] !== "PAYABLE"){
+    if($_POST['lunch'] !== 'PAYABLE'){
         $_POST['lunchPrice'] = NULL;
     }
-    if($_POST['dinner'] !== "PAYABLE"){
+    if($_POST['dinner'] !== 'PAYABLE'){
         $_POST['dinnerPrice'] = NULL;
     }
 
-    $table = "accm_meals";
+    $table = 'accm_meals';
     $columns = [
         'meal_offered',
         'breakfast',
@@ -274,7 +274,7 @@ function updateMealsHandler($urlParams)
 
     generateUpdateSql($table, $columns, $conditions, $execute);
 
-    $table ="accms";
+    $table ='accms';
     $columns = [
         'last_modified',
         'last_modified_by_user_id',
@@ -306,21 +306,21 @@ function updateWellnessHandler($urlParams)
     $statement->execute([$urlParams['accmId']]);
     $accm = $statement->fetch(PDO::FETCH_ASSOC);
 
-    if($_POST['wellnessOffered'] === "NO"){
+    if($_POST['wellnessOffered'] === 'NO'){
         $_POST['pool'] = NULL;
         $_POST['sauna'] = NULL;
         $_POST['jacuzzi'] = NULL;
         $_POST['tub'] = NULL;
         $_POST['fitness'] = NULL;
-        $_POST['wellnessStatus'] = "NOTPROVIDED";
+        $_POST['wellnessStatus'] = 'NOTPROVIDED';
         $_POST['wellnessPrice'] = NULL;
     }
 
-    if($_POST['wellnessStatus'] === "INPRICE"){
+    if($_POST['wellnessStatus'] === 'INPRICE'){
         $_POST['wellnessPrice'] = NULL;
     }
 
-    if($_POST['wellnessStatus'] === "PAYABLE" AND empty($_POST['wellnessPrice'])){
+    if($_POST['wellnessStatus'] === 'PAYABLE' AND empty($_POST['wellnessPrice'])){
         return urlRedirect('szallasok/' . $accm['slug'] . '/beallitasok/szolgaltatasok', [
                     'info' => 'wellnessEmptyPrice#editWellnessMessage'
                 ]);
@@ -331,18 +331,18 @@ function updateWellnessHandler($urlParams)
         $facilityValues[] = $facility['value'];
     }
 
-    $submitFacilities = "";
+    $submitFacilities = '';
     for($i = 0; $i<count($facilityValues); $i++){
         $submitFacilities .= $_POST[$facilityValues[$i]] ?? NULL;
     }
 
-    if($_POST['wellnessOffered'] === "YES" AND ((strlen($submitFacilities) === 0) OR !isset($_POST['wellnessStatus']))){
+    if($_POST['wellnessOffered'] === 'YES' AND ((strlen($submitFacilities) === 0) OR !isset($_POST['wellnessStatus']))){
         return urlRedirect('szallasok/' . $accm['slug'] . '/beallitasok/szolgaltatasok', [
                     'info' => 'wellnessFacilitiesNotSpecified#editWellnessMessage'
                 ]);
     }
 
-    $table = "accm_wellness";
+    $table = 'accm_wellness';
     $columns = [
         'wellness_offered',
         'pool',
@@ -367,7 +367,7 @@ function updateWellnessHandler($urlParams)
     ];
     generateUpdateSql($table, $columns, $conditions, $execute);
 
-    $table ="accms";
+    $table ='accms';
     $columns = [
         'last_modified',
         'last_modified_by_user_id',
@@ -403,7 +403,7 @@ function editDiscountsHandler($urlParams)
     $statement->execute([$urlParams['accmSlug']]);
     $accm = $statement->fetch(PDO::FETCH_ASSOC);
 
-    echo render("wrapper.php", [
+    echo render('wrapper.php', [
         'content' => render('accm-settings-page.php', [
             'settingsContent' => render('edit-discounts-page.php', [
                 'accm' => $accm,
@@ -415,7 +415,7 @@ function editDiscountsHandler($urlParams)
         'activeLink' => '/szallasok',
         'isAuthorized' => isLoggedIn(),
         'isAdmin' => isAdmin() ?? NULL,
-        'title' => "Kedvezmények",
+        'title' => 'Kedvezmények',
         'unreadMessages' => countUnreadMessages(),
         'playChatSound' => playChatSound()
     ]);
@@ -463,7 +463,7 @@ function updateDiscountsHandler($urlParams)
                     ]);
         }
 
-    $table = "accm_discounts";
+    $table = 'accm_discounts';
     $columns = [
         'children_discount',
         'children_discount_percent',
@@ -500,7 +500,7 @@ function updateDiscountsHandler($urlParams)
     ];
     generateUpdateSql($table, $columns, $conditions, $execute);
 
-    $table ="accms";
+    $table ='accms';
     $columns = [
         'last_modified',
         'last_modified_by_user_id',
@@ -541,7 +541,7 @@ function unitListHandler($urlParams)
     $statement->execute([$accm['id']]);
     $units = $statement->fetchAll(PDO::FETCH_ASSOC);
 
-    echo render("wrapper.php", [
+    echo render('wrapper.php', [
         'content' => render('accm-settings-page.php', [
             'settingsContent' => render('accm-units-list.php', [
                 'accm' => $accm,
@@ -554,7 +554,7 @@ function unitListHandler($urlParams)
         'activeLink' => '/szallasok',
         'isAuthorized' => isLoggedIn(),
         'isAdmin' => isAdmin() ?? NULL,
-        'title' => "Szobák",
+        'title' => 'Szobák',
         'unreadMessages' => countUnreadMessages(),
         'playChatSound' => playChatSound()
     ]);
@@ -594,7 +594,7 @@ function newUnitHandler($urlParams)
         'activeLink' => '/szallasok',
         'isAuthorized' => isLoggedIn(),
         'isAdmin' => isAdmin() ?? NULL,
-        'title' => "Új szoba",
+        'title' => 'Új szoba',
         'unreadMessages' => countUnreadMessages(),
         'playChatSound' => playChatSound()
     ]);
@@ -626,9 +626,9 @@ function createUnitHandler($urlParams)
         $bedNumber += $bedType;
     }
 
-    if(($_GET['type'] === "room" AND (empty($_POST['name']) OR $bedNumber === 0 OR !isset($_POST['bathroomType']) OR empty($_POST['price']) OR empty($_POST['count'])))
-        OR ($_GET['type'] === "apartment" AND (empty($_POST['name']) OR empty($_POST['roomsCount']) OR $bedNumber === 0 OR !isset($_POST['bathroomType']) OR empty($_POST['bathroomsCount']) OR empty($_POST['price']) OR empty($_POST['count'])))
-        OR ($_GET['type'] === "complete" AND (empty($_POST['roomsCount']) OR empty($_POST['bathroomsCount']) OR $bedNumber === 0 OR empty($_POST['price'])))){
+    if(($_GET['type'] === 'room' AND (empty($_POST['name']) OR $bedNumber === 0 OR !isset($_POST['bathroomType']) OR empty($_POST['price']) OR empty($_POST['count'])))
+        OR ($_GET['type'] === 'apartment' AND (empty($_POST['name']) OR empty($_POST['roomsCount']) OR $bedNumber === 0 OR !isset($_POST['bathroomType']) OR empty($_POST['bathroomsCount']) OR empty($_POST['price']) OR empty($_POST['count'])))
+        OR ($_GET['type'] === 'complete' AND (empty($_POST['roomsCount']) OR empty($_POST['bathroomsCount']) OR $bedNumber === 0 OR empty($_POST['price'])))){
             urlRedirect('szallasok/' . $accm['slug'] . '/beallitasok/szobak/uj-szoba', [
                 'type' => $_GET['type'],
                 'info' => 'emptyValue'
@@ -636,8 +636,8 @@ function createUnitHandler($urlParams)
     };
 
     if($_GET['type'] === 'complete'){
-        $_POST['name'] = "Teljes " . $accm['type'];
-        $_POST['count'] = "1";
+        $_POST['name'] = 'Teljes ' . $accm['type'];
+        $_POST['count'] = '1';
     }
 
     $capacity = 0;
@@ -646,14 +646,7 @@ function createUnitHandler($urlParams)
     }
     $totalCapacity = $capacity*($_POST['count'] ?? 1);
 
-    /*echo "<pre>";
-    echo $bedNumber . "<br>";
-    echo $capacity . "<br>";
-    echo $totalCapacity . "<br>";
-    var_dump($_POST);
-    exit;*/
-
-    $table = "accm_units";
+    $table = 'accm_units';
     $columns = [
         'accm_id',
         'name',
@@ -733,7 +726,7 @@ function editUnitHandler($urlParams)
         'activeLink' => '/szallasok',
         'isAuthorized' => isLoggedIn(),
         'isAdmin' => isAdmin() ?? NULL,
-        'title' => "Szoba szerkesztése",
+        'title' => 'Szoba szerkesztése',
         'unreadMessages' => countUnreadMessages(),
         'playChatSound' => playChatSound()
     ]);
@@ -774,17 +767,17 @@ function updateUnitHandler($urlParams)
         $bedNumber += $bedType;
     }
 
-    if(($unit['unit_type'] === "room" AND (empty($_POST['name']) OR $bedNumber === 0 OR !isset($_POST['bathroomType']) OR empty($_POST['price']) OR empty($_POST['count'])))
-        OR ($unit['unit_type'] === "apartment" AND (empty($_POST['name']) OR empty($_POST['roomsCount']) OR $bedNumber === 0 OR !isset($_POST['bathroomType']) OR empty($_POST['bathroomsCount']) OR empty($_POST['price']) OR empty($_POST['count'])))
-        OR ($unit['unit_type'] === "complete" AND (empty($_POST['roomsCount']) OR empty($_POST['bathroomsCount']) OR $bedNumber === 0 OR empty($_POST['price'])))){
+    if(($unit['unit_type'] === 'room' AND (empty($_POST['name']) OR $bedNumber === 0 OR !isset($_POST['bathroomType']) OR empty($_POST['price']) OR empty($_POST['count'])))
+        OR ($unit['unit_type'] === 'apartment' AND (empty($_POST['name']) OR empty($_POST['roomsCount']) OR $bedNumber === 0 OR !isset($_POST['bathroomType']) OR empty($_POST['bathroomsCount']) OR empty($_POST['price']) OR empty($_POST['count'])))
+        OR ($unit['unit_type'] === 'complete' AND (empty($_POST['roomsCount']) OR empty($_POST['bathroomsCount']) OR $bedNumber === 0 OR empty($_POST['price'])))){
             urlRedirect('szallasok/' . $accm['slug'] . '/beallitasok/szobak/szoba-szerkesztese/' . $urlParams['unitId'], [
                 'info' => 'emptyValue'
             ]);
     };
 
     if($unit['unit_type'] === 'complete'){
-        $_POST['name'] = "Teljes " . $accm['type'];
-        $_POST['count'] = "1";
+        $_POST['name'] = 'Teljes ' . $accm['type'];
+        $_POST['count'] = '1';
     }
 
     $capacity = 0;
@@ -793,11 +786,7 @@ function updateUnitHandler($urlParams)
     }
     $totalCapacity = $capacity*($_POST['count'] ?? 1);
 
-    /*echo "<pre>";
-    var_dump($_POST);
-    exit;*/
-
-    $table = "accm_units";
+    $table = 'accm_units';
     $columns = [
         'name',
         'rooms_count',        
@@ -825,7 +814,7 @@ function updateUnitHandler($urlParams)
 
     generateUpdateSql($table, $columns, $conditions, $execute);
 
-    $table ="accms";
+    $table ='accms';
     $columns = [
         'last_modified',
         'last_modified_by_user_id',
@@ -862,7 +851,7 @@ function deleteUnitHandler($urlParams)
         WHERE id = ?');
     $statement->execute([$urlParams['unitId']]);
 
-    urlRedirect('szallasok/' . $unit['slug'] . "/beallitasok/szobak", [
+    urlRedirect('szallasok/' . $unit['slug'] . '/beallitasok/szobak', [
         'info' => 'deleted'
     ]);
 

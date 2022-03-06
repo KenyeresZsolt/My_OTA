@@ -15,18 +15,13 @@ function generateInsertSql($table, $columns, $execute)
 {
     $pdo = getConnection();
 
-    $col = implode(", ", $columns);
+    $col = implode(', ', $columns);
     $val = [];
     for($i = 0; $i < count($columns); $i++){
-        $val[] = "?";
+        $val[] = '?';
     }
-    $val = implode(", ", $val);
+    $val = implode(', ', $val);
     $sql = "INSERT INTO $table ($col) VALUES ($val)";
-    
-    /*echo $sql;
-    echo "<pre>";
-    var_dump($execute);
-    exit;*/
 
     $stmt = $pdo->prepare($sql);
     $stmt->execute($execute);
@@ -37,8 +32,8 @@ function generateUpdateSql($table, $columns, $conditions, $execute)
 {
     $pdo = getConnection();
         
-    $col = implode(" = ?, ", $columns);
-    $cond = implode(" ? AND ", $conditions);
+    $col = implode(' = ?, ', $columns);
+    $cond = implode(' ? AND ', $conditions);
     $sql = "UPDATE $table SET $col = ? WHERE $cond ?";
 
     /*echo $sql;

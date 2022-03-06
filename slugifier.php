@@ -1,6 +1,6 @@
 <?php
 
-
+//forrás: Kódbázis videó
 function slugify(string $text): string
 {
     $charMap = [

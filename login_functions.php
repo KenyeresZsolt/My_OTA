@@ -24,7 +24,7 @@ function emailUsed():bool
 
 function registrationHandler()
 {
-    if (empty($_POST["name"]) OR empty($_POST["email"]) OR empty($_POST["password"])) {
+    if (empty($_POST['name']) OR empty($_POST['email']) OR empty($_POST['password'])) {
         urlRedirect('bejelentkezes', [
             'isRegistration' => 1,
             'info' => 'emptyValue'
@@ -37,9 +37,8 @@ function registrationHandler()
             'info' => 'emailUsed'
         ]);
     }
-    //ellenőrzés vége
 
-    $table = "users";
+    $table = 'users';
     $columns = [
         'name',
         'email', 
@@ -49,12 +48,12 @@ function registrationHandler()
         'last_modified'
     ];
     $execute = [
-        $_POST["name"],
-        $_POST["email"],
-        password_hash($_POST["password"], PASSWORD_DEFAULT),
-        "0",
+        $_POST['name'],
+        $_POST['email'],
+        password_hash($_POST['password'], PASSWORD_DEFAULT),
+        '0',
         time(),
-        "0"
+        '0'
     ];
 
     generateInsertSql($table, $columns, $execute);
@@ -66,14 +65,14 @@ function registrationHandler()
     //email
     $statement = insertMailSql();
 
-    $body = render("registration-email-template.php", [
+    $body = render('registration-email-template.php', [
         'name' =>  $_POST['name'] ?? NULL,
         'email' =>  $_POST['email'] ?? NULL
     ]);
 
     $statement->execute([
         $_POST['email'],
-        "Sikeres regisztráció!",
+        'Sikeres regisztráció!',
         $body,
         'notSent',
         0,
@@ -154,7 +153,7 @@ function isAdmin()
         session_start();
     }
 
-    $userId = $_SESSION["userId"] ?? "";
+    $userId = $_SESSION['userId'] ?? '';
 
     $pdo = getConnection();
     $statement = $pdo->prepare(
@@ -164,7 +163,7 @@ function isAdmin()
     $statement->execute([$userId]);
     $user = $statement->fetch(PDO::FETCH_ASSOC);
 
-    return $user['is_admin'] ?? "";
+    return $user['is_admin'] ?? '';
         
 }
 
@@ -197,13 +196,13 @@ function subsFormHandler()
         urlRedirect('');
     }
 
-    echo render("wrapper.php",[
+    echo render('wrapper.php',[
         'content' => render('subscriptionForm.php',[
             'info' => $_GET['info'] ?? NULL,
             'isRegistration' => isset($_GET['isRegistration'])
         ]),
         'isAuthorized' => false,
-        'title' => "Bejelentkezés",
+        'title' => 'Bejelentkezés',
         'activeLink' => '/bejelentkezes',
         'playChatSound' => false
     ]);
@@ -214,15 +213,15 @@ function profilHandler()
     redirectToLoginIfNotLoggedIn();
     
     echo render('wrapper.php', [
-        'content' => render("profile-page.php", [
-            "user" => getUserById(),
+        'content' => render('profile-page.php', [
+            'user' => getUserById(),
             'isAdmin' => isAdmin(),
-            'info' => $_GET['info'] ?? ""
+            'info' => $_GET['info'] ?? ''
         ]),
         'activeLink' => '/profil',
-        "isAuthorized" => true,
+        'isAuthorized' => true,
         'isAdmin' => isAdmin(),
-        'title' => "Profil",
+        'title' => 'Profil',
         'unreadMessages' => countUnreadMessages(),
         'playChatSound' => playChatSound()
     ]);    
@@ -255,7 +254,7 @@ function updateProfilHandler()
         }
     }
 
-    $table = "users";
+    $table = 'users';
     $columns = [
         'name',
         'phone',
@@ -268,7 +267,7 @@ function updateProfilHandler()
         $_POST['name'],
         $_POST['phone'],
         $_POST['email'],
-        empty($_POST['newPassword']) ? $user['password'] : password_hash($_POST["newPassword"], PASSWORD_DEFAULT),
+        empty($_POST['newPassword']) ? $user['password'] : password_hash($_POST['newPassword'], PASSWORD_DEFAULT),
         time(),
         $_SESSION['userId']
     ];

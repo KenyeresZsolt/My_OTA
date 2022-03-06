@@ -12,23 +12,23 @@ function userListHandler()
     $statement->execute();
     $users = $statement->fetchAll(PDO::FETCH_ASSOC);
 
-    $isAdded = isset($_GET["added"]);
-    $isUpdated =isset($_GET["updated"]);
-    $isDeleted = isset($_GET["deleted"]);
+    $isAdded = isset($_GET['added']);
+    $isUpdated =isset($_GET['updated']);
+    $isDeleted = isset($_GET['deleted']);
 
-    $userListTemplate = render("user-list.php", [
-        "users" => $users,
-        "isAdded" => $isAdded,
-        "isUpdated" => $isUpdated,
-        "isDeleted" => $isDeleted,
-        "editedUserId" => $_GET["edit"] ?? NULL
+    $userListTemplate = render('user-list.php', [
+        'users' => $users,
+        'isAdded' => $isAdded,
+        'isUpdated' => $isUpdated,
+        'isDeleted' => $isDeleted,
+        'editedUserId' => $_GET['edit'] ?? NULL
     ]);
     echo render('wrapper.php', [
         'content' => $userListTemplate,
         'activeLink' => '/user',
-        "isAuthorized" => true,
+        'isAuthorized' => true,
         'isAdmin' => isAdmin(),
-        'title' => "Felhasználók",
+        'title' => 'Felhasználók',
         'unreadMessages' => countUnreadMessages(),
         'playChatSound' => playChatSound()
     ]);
@@ -39,7 +39,7 @@ function createUserHandler()
 {
     redirectToLoginIfNotLoggedIn();
 
-    $table = "users";
+    $table = 'users';
     $columns = [
         'name', 
         'email', 
@@ -47,16 +47,16 @@ function createUserHandler()
         'registered'
     ];
     $execute = [
-        $_POST["name"],
-        $_POST["email"],
-        password_hash($_POST["password"], PASSWORD_DEFAULT),
+        $_POST['name'],
+        $_POST['email'],
+        password_hash($_POST['password'], PASSWORD_DEFAULT),
         time()
     ];
 
     generateInsertSql($table, $columns, $execute);
 
     urlRedirect('felhasznalok', [
-        'added' => "1" 
+        'added' => '1' 
     ]);
 }
 
@@ -65,7 +65,7 @@ function updateUserHandler()
     redirectToLoginIfNotLoggedIn();
     $updateUserId = $_GET['id'] ?? NULL;
 
-    $table = "users";
+    $table = 'users';
     $columns = [
         'name',
         'email',
@@ -73,16 +73,16 @@ function updateUserHandler()
     ];
     $conditions = ['id ='];
     $execute = [
-        $_POST["name"],
-        $_POST["email"],
-        $_POST["isAdmin"],
+        $_POST['name'],
+        $_POST['email'],
+        $_POST['isAdmin'],
         $updateUserId
     ];
 
     generateUpdateSql($table, $columns, $conditions, $execute);
 
     urlRedirect('felhasznalok', [
-        'updated' => "1" 
+        'updated' => '1' 
     ]);
 }
 
@@ -98,7 +98,7 @@ function deleteUserHandler()
     $statement->execute([$_GET['id']]);
     
     urlRedirect('felhasznalok', [
-        'deleted' => "1" 
+        'deleted' => '1' 
     ]);
 }
 

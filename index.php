@@ -4,7 +4,7 @@ require './router.php';
 require './slugifier.php';
 require './functions_db.php';
 
-$method = $_SERVER["REQUEST_METHOD"];
+$method = $_SERVER['REQUEST_METHOD'];
 $parsed = parse_url($_SERVER['REQUEST_URI']);
 $path = $parsed['path'];
 
@@ -124,12 +124,9 @@ Megnevezések:
 
 Kérdések:
 
-- http://localhost:1012/csomagok - itt az Új csomag gomb az egész sorban kattintható, míg a többi gomb nem. Ugyanolyan a formázásuk. Honnan jön a különbség?
 - updateProfilHandler() - hogyha nem akarom a jelszót megváltoztatni (tehát üresen hagyom a mezőt), akkor felülírja a jelszót az üres mezővel. Jól oldottam meg, hogy ne írja felül?
-- hogyan működik a router.php?
 - pck-lis.php-ban strpos() függvény használata a checkboxoknál. Így biztos nem jó, hogy lehetne egyszerűbben?
-- deleteConversationHandler() - lehetne-e mindent egyszerre törölni?
-- SQL-ben aliasokat csak SELECT esetén lehet adni, pl DELETE-nél nem?
+- deleteConversationHandler() - lehetne-e mindent egyszerre törölni? - adatbázisban kapcsoljam össze a táblákat
 
 */
 ?>

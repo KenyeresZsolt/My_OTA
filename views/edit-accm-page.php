@@ -70,6 +70,7 @@
                                     <td>
                                         <input class="form-check-input text-center" type="radio"  name="isPrimary" value="<?=$image['id']?>" <?=$image['is_primary'] === "YES" ? "checked" : "" ?>>
                                     </td>
+                                    <?=$image['is_primary'] === "YES" ? '<td>(listában megjelenő fő kép)</td>' : "" ?>
                                 </tr>
                             <?php endforeach; ?>
                         </table>

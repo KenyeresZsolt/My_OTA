@@ -13,7 +13,7 @@ function chatPageHandler()
         FROM conversations c
         LEFT JOIN conversation_users cu ON c.id = cu.conversation_id
         WHERE cu.member_user_id = ?');
-    $statement->execute([$_SESSION["userId"]]);
+    $statement->execute([$_SESSION['userId']]);
     $conversations = $statement->fetchAll(PDO::FETCH_ASSOC);
     
     //hozzáfűzöm a beszélgetésekhez az üzeneteket
@@ -35,7 +35,7 @@ function chatPageHandler()
         FROM users u
         WHERE u.id <> ?'
     );
-    $statement->execute([$_SESSION["userId"]]);
+    $statement->execute([$_SESSION['userId']]);
     $allUsers = $statement->fetchAll(PDO::FETCH_ASSOC);
 
     //lekérem a beszélgetések tagjait
@@ -49,7 +49,7 @@ function chatPageHandler()
 
     //látta beállítása
 
-    $table = "chat_messages cm LEFT JOIN conversation_users cu on cm.conversation_id = cu.conversation_id";
+    $table = 'chat_messages cm LEFT JOIN conversation_users cu on cm.conversation_id = cu.conversation_id';
     $columns = [
         'cm.seen',
         'cm.seen_at'
@@ -60,28 +60,28 @@ function chatPageHandler()
         'cm.from_user_id <>'
     ];
     $execute = [
-        "1",
+        '1',
         time(),
-        "0",
-        $_SESSION["userId"],
-        $_SESSION["userId"]
+        '0',
+        $_SESSION['userId'],
+        $_SESSION['userId']
     ];
 
     generateUpdateSql($table, $columns, $conditions, $execute);
 
     echo render('wrapper.php', [
-        'content' => render("chat-page.php", [
-            "conversationsWithMessages" => $conversations,
-            "userId" => $_SESSION["userId"],
-            "info" => $_GET['info'] ?? NULL,
-            "manageMembers" => $_GET['manage-members'] ?? NULL,
-            "allUsers" => $allUsers,
-            "convMembers" => $convMembers
+        'content' => render('chat-page.php', [
+            'conversationsWithMessages' => $conversations,
+            'userId' => $_SESSION['userId'],
+            'info' => $_GET['info'] ?? NULL,
+            'manageMembers' => $_GET['manage-members'] ?? NULL,
+            'allUsers' => $allUsers,
+            'convMembers' => $convMembers
         ]),
         'activeLink' => '/chat',
-        "isAuthorized" => true,
+        'isAuthorized' => true,
         'isAdmin' => isAdmin(),
-        'title' => "Chat",
+        'title' => 'Chat',
         'unreadMessages' => countUnreadMessages(),
         'playChatSound' => $playChatSound
     ]);
@@ -93,10 +93,10 @@ function newConversationHandler()
 {
     redirectToLoginIfNotLoggedIn();
 
-    $startUser = $_SESSION["userId"];
+    $startUser = $_SESSION['userId'];
     $startTime = time();
 
-    $table = "conversations";
+    $table = 'conversations';
     $columns = [
         'name', 
         'started_by_user_id', 
@@ -123,7 +123,7 @@ function newConversationHandler()
 
     $newConvId = $startedConv[0]['id'];
 
-    $table = "conversation_users";
+    $table = 'conversation_users';
     $columns = [
         'conversation_id', 
         'member_user_id'
@@ -147,7 +147,7 @@ function sendMessageHandler()
 
     $convId = $_GET['convId'];
 
-    $table = "chat_messages";
+    $table = 'chat_messages';
     $columns = [
         'conversation_id', 
         'from_user_id', 
@@ -160,7 +160,7 @@ function sendMessageHandler()
         $_SESSION['userId'],
         time(),
         $_POST['message'],
-        "0",
+        '0',
     ];
     generateInsertSql($table, $columns, $execute);
 
@@ -175,7 +175,7 @@ function addMemberHandler()
 
     $convId = $_GET['convId'];
 
-    $table = "conversation_users";
+    $table = 'conversation_users';
     $columns = [
         'conversation_id', 
         'member_user_id'
@@ -239,6 +239,7 @@ function deleteConversationHandler()
         'info' => 'deleted'
     ]);
     
+    // nem kell mindent külön-külön törölni, adatbázisban össze kell kapcsoljam a táblákat
 }
 
 function countUnreadMessages()
@@ -259,8 +260,8 @@ function countUnreadMessages()
         WHERE cm.seen = "0" AND cu.member_user_id = ? and cm.from_user_id <> ?'
         );
     $stmt->execute([
-        $_SESSION["userId"],
-        $_SESSION["userId"]
+        $_SESSION['userId'],
+        $_SESSION['userId']
     ]);
     $unreadMessages = $stmt->fetch(PDO::FETCH_ASSOC);
 

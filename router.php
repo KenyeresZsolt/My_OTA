@@ -1,6 +1,6 @@
 <?php
 
-//ezt egyelőre még nem értem
+//forrás: Kódbázis videó
 function registerRoutes($routes)
 {
     return function ($method, $path) use ($routes) {
