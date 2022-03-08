@@ -61,9 +61,11 @@ function submitMailHandler()
         time()
     ]);
 
-    urlRedirect('kapcsolat', [
+    /*urlRedirect('kapcsolat', [
         'info' => 'kuldesSikeres#contactForm'
-    ]);
+    ]);*/
+
+    header('Location: /kapcsolat?info=kuldesSikeres#contactForm');
 
     sendMailsHandler();
 }
